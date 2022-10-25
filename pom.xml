@@ -30,6 +30,8 @@
         <module>cmsint-pac-poller</module>
         <module>cmsint-pac-consumer-models</module>
         <module>cmsint-pac-code-coverage</module>
+        <module>cmsint-pac-consumer</module>
+        <module>icon-two-common-models</module>
     </modules>
     <build>
         <plugins>

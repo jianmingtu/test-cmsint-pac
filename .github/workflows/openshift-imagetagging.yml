@@ -4,10 +4,14 @@ name: Trigger deployment to test and prod Openshift environnment by Image stream
 on:
   workflow_dispatch:
     inputs:
-      app:
+      app1:
         description: 'App Name (jag-cmsint-pac)'
         required: true
         default: 'jag-cmsint-pac'
+      app2:
+        description: 'App Name (jag-cmsint-pac-consumer)'
+        required: true
+        default: 'jag-cmsint-pac-consumer'
       imageSourceEnv:
         description: 'Image Source Env'
         required: true
@@ -40,7 +44,8 @@ jobs:
       # Prints vital release paramters used
       - name: Print Release Variables
         run: |
-          echo "Release Application 1: ${{ github.event.inputs.app }}"
+          echo "Release Application 1: ${{ github.event.inputs.app1 }}"
+          echo "Release Application 2: ${{ github.event.inputs.app2 }}"
           echo "Release Environment: ${{ github.event.inputs.imageTargetEnv }}"
           echo "Release Version: ${{ env.releaseVersion }}"
           echo "Release Git Sha: ${{env.gitsha}}"
@@ -60,7 +65,22 @@ jobs:
       # It also creates a tag with release version number to use it in case of rollback..
       - name: Retag jag-cmsint-pac image to release env and version - Kamloops (OC PROD)
         env:
-          appName: ${{ github.event.inputs.app5 }}
+          appName: ${{ github.event.inputs.app1 }}
+          imageSourceEnv: ${{ github.event.inputs.imageSourceEnv }}
+          imageTargetEnv: ${{ github.event.inputs.imageTargetEnv }}
+          openshiftToolsNamespace: ${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}
+          openshiftIImageRegistry: ${{secrets.OPENSHIFT_INTERNAL_REPOSITORY}}
+          releaseVersion: ${{ env.releaseVersion }}
+          gitSha: ${{ env.gitsha }}
+        run: |
+          oc tag ${openshiftIImageRegistry}/${openshiftToolsNamespace}/${appName}:${imageSourceEnv} ${appName}:${imageTargetEnv}
+          oc tag ${openshiftIImageRegistry}/${openshiftToolsNamespace}/${appName}:${imageTargetEnv} ${appName}:${releaseVersion}.${gitSha}
+
+      # Re-Tag latest dev (source) jag-cmsint-pac-consumer image to other env to trigger openshift deployment via DeploymentConfig
+      # It also creates a tag with release version number to use it in case of rollback..
+      - name: Retag jag-cmsint-pac image to release env and version - Kamloops (OC PROD)
+        env:
+          appName: ${{ github.event.inputs.app2 }}
           imageSourceEnv: ${{ github.event.inputs.imageSourceEnv }}
           imageTargetEnv: ${{ github.event.inputs.imageTargetEnv }}
           openshiftToolsNamespace: ${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}
@@ -86,7 +106,7 @@ jobs:
       - name: Labelling jag-cmsint-pac DC to release version - Kamloops (OC PROD)
         env:
           releaseVersion: ${{ env.releaseVersion }}
-          appName: ${{ github.event.inputs.app }}
+          appName: ${{ github.event.inputs.ap1 }}
           openshiftEnvNamespace: ${{secrets.OPENSHIFT_LICENSE_PLATE}}-${{ github.event.inputs.imageTargetEnv }}
         run: |
           oc patch dc ${appName} -n ${openshiftEnvNamespace} --patch '{"spec":{"template":{"metadata":{"labels":{"version":"${{ env.releaseVersion }}.${{ env.gitsha }}"}}}}}'
@@ -94,7 +114,24 @@ jobs:
       # Wait to jag-cmsint-pac DC rollout to get completed before proceeding next stage - Kamloops (OC PROD)
       - name: Wait for jag-cmsint-pac DC rollout - Kamloops (OC PROD)
         env:
-          appName: ${{ github.event.inputs.app }}
+          appName: ${{ github.event.inputs.app1 }}
+          openshiftEnvNamespace: ${{secrets.OPENSHIFT_LICENSE_PLATE}}-${{ github.event.inputs.imageTargetEnv }}
+        run: |
+          oc rollout status -n ${openshiftEnvNamespace} dc/${appName} --watch
+
+      # Labels the deployment config of the jag-cmsint-pac-consumer application with release version number to spin up the pods labelled in same version - Kamloops (OC PROD)
+      - name: Labelling jag-cmsint-pac-consumer DC to release version - Kamloops (OC PROD)
+        env:
+          releaseVersion: ${{ env.releaseVersion }}
+          appName: ${{ github.event.inputs.ap2 }}
+          openshiftEnvNamespace: ${{secrets.OPENSHIFT_LICENSE_PLATE}}-${{ github.event.inputs.imageTargetEnv }}
+        run: |
+          oc patch dc ${appName} -n ${openshiftEnvNamespace} --patch '{"spec":{"template":{"metadata":{"labels":{"version":"${{ env.releaseVersion }}.${{ env.gitsha }}"}}}}}'
+
+      # Wait to jag-cmsint-pac-consumer DC rollout to get completed before proceeding next stage - Kamloops (OC PROD)
+      - name: Wait for jag-cmsint-pac-consumer DC rollout - Kamloops (OC PROD)
+        env:
+          appName: ${{ github.event.inputs.app2 }}
           openshiftEnvNamespace: ${{secrets.OPENSHIFT_LICENSE_PLATE}}-${{ github.event.inputs.imageTargetEnv }}
         run: |
           oc rollout status -n ${openshiftEnvNamespace} dc/${appName} --watch
@@ -114,7 +151,22 @@ jobs:
       # It also creates a tag with release version number to use it in case of rollback.
       - name: Retag jag-cmsint-pac image to release env and version - Calgary (OC DR)
         env:
-          appName: ${{ github.event.inputs.app }}
+          appName: ${{ github.event.inputs.app1 }}
+          imageSourceEnv: ${{ github.event.inputs.imageSourceEnv }}
+          imageTargetEnv: ${{ github.event.inputs.imageTargetEnv }}
+          openshiftToolsNamespace: ${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}
+          openshiftIImageRegistry: ${{secrets.OPENSHIFT_INTERNAL_REPOSITORY}}
+          releaseVersion: ${{ env.releaseVersion }}
+          gitSha: ${{ env.gitsha }}
+        run: |
+          oc tag ${openshiftIImageRegistry}/${openshiftToolsNamespace}/${appName}:${imageSourceEnv} ${appName}:${imageTargetEnv}
+          oc tag ${openshiftIImageRegistry}/${openshiftToolsNamespace}/${appName}:${imageTargetEnv} ${appName}:${releaseVersion}.${gitSha}
+
+      # Re-Tag latest dev (source) jag-cmsint-pac-consumer image to other env to trigger openshift deployment via DeploymentConfig
+      # It also creates a tag with release version number to use it in case of rollback.
+      - name: Retag jag-cmsint-pac-consumer image to release env and version - Calgary (OC DR)
+        env:
+          appName: ${{ github.event.inputs.app2 }}
           imageSourceEnv: ${{ github.event.inputs.imageSourceEnv }}
           imageTargetEnv: ${{ github.event.inputs.imageTargetEnv }}
           openshiftToolsNamespace: ${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}
@@ -140,7 +192,7 @@ jobs:
       - name: Labelling jag-cmsint-pac DC to release version - Calgary (OC DR)
         env:
           releaseVersion: ${{ env.releaseVersion }}
-          appName: ${{ github.event.inputs.app5 }}
+          appName: ${{ github.event.inputs.app1 }}
           openshiftEnvNamespace: ${{secrets.OPENSHIFT_LICENSE_PLATE}}-${{ github.event.inputs.imageTargetEnv }}
         run: |
           oc patch dc ${appName} -n ${openshiftEnvNamespace} --patch '{"spec":{"template":{"metadata":{"labels":{"version":"${{ env.releaseVersion }}.${{ env.gitsha }}"}}}}}'
@@ -149,7 +201,25 @@ jobs:
       # Wait to jag-cmsint-pac DC rollout to get completed before proceeding next stage - Calgary (OC DR)
       - name: Wait for jag-cmsint-pac DC rollout - Calgary (OC DR)
         env:
-          appName: ${{ github.event.inputs.app }}
+          appName: ${{ github.event.inputs.app1 }}
+          openshiftEnvNamespace: ${{secrets.OPENSHIFT_LICENSE_PLATE}}-${{ github.event.inputs.imageTargetEnv }}
+        run: |
+          oc rollout status -n ${openshiftEnvNamespace} dc/${appName} --watch
+
+      # Labels the deployment config of the jag-cmsint-pac-consumer application with release version number to spin up the pods labelled in same version - Calgary (OC DR)
+      - name: Labelling jag-cmsint-pac-consumer DC to release version - Calgary (OC DR)
+        env:
+          releaseVersion: ${{ env.releaseVersion }}
+          appName: ${{ github.event.inputs.app2 }}
+          openshiftEnvNamespace: ${{secrets.OPENSHIFT_LICENSE_PLATE}}-${{ github.event.inputs.imageTargetEnv }}
+        run: |
+          oc patch dc ${appName} -n ${openshiftEnvNamespace} --patch '{"spec":{"template":{"metadata":{"labels":{"version":"${{ env.releaseVersion }}.${{ env.gitsha }}"}}}}}'
+
+
+      # Wait to jag-cmsint-pac-consumer DC rollout to get completed before proceeding next stage - Calgary (OC DR)
+      - name: Wait for jag-cmsint-pac-consumer DC rollout - Calgary (OC DR)
+        env:
+          appName: ${{ github.event.inputs.app2 }}
           openshiftEnvNamespace: ${{secrets.OPENSHIFT_LICENSE_PLATE}}-${{ github.event.inputs.imageTargetEnv }}
         run: |
           oc rollout status -n ${openshiftEnvNamespace} dc/${appName} --watch

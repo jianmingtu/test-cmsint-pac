@@ -85,7 +85,7 @@ jobs:
 
         # Formatting the Code Coverage Report
       - name: Format the coverage report
-        run: JACOCO_SOURCE_PATH="cmsint-pac-consumer-models/target/generated-sources/xjc cmsint-pac-poller/src/main/java icon-two-rabbit-consumer/src/main/java" ./cc-test-reporter format-coverage icon-two-code-coverage/target/site/jacoco-aggregate/jacoco-codeclimatecompat.xml --input-type jacoco -o ./target/site/jacoco/codeclimate.json
+        run: JACOCO_SOURCE_PATH="cmsint-pac-consumer-models/target/generated-sources/xjc cmsint-pac-poller/src/main/java cmsint-pac-consumer/src/main/java" ./cc-test-reporter format-coverage icon-two-code-coverage/target/site/jacoco-aggregate/jacoco-codeclimatecompat.xml --input-type jacoco -o ./target/site/jacoco/codeclimate.json
 
 # Upload JSON for debugging purposes
       - name: Upload JSON for debugging purposes

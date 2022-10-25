@@ -39,6 +39,41 @@ jobs:
         run: |
           docker build -t cmsint-pac-poller:${{ github.sha }} ${CONTEXT}
 
+      #Run Vulnerability Scan usinig Trivy scanner
+      - name: Run Trivy vulnerability scanner for cmsint-pac-poller
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: image
+          image-ref: cmsint-pac-poller:${{ github.sha }}
+          format: template
+          template: '@/contrib/sarif.tpl'
+          output: trivy-results.sarif
+          exit-code: 1
+          ignore-unfixed: true
+          severity: HIGH,CRITICAL
+
+      #Build image for scanning
+      - name: Build image cmsint-pac-consumer image from Dockerfile
+        env:
+          COMPOSE_DOCKER_CLI_BUILD: 1
+          DOCKER_BUILDKIT: 1
+          CONTEXT: ./cmsint-pac-consumer
+        run: |
+          docker build -t cmsint-pac-consumer:${{ github.sha }} ${CONTEXT}
+
+      #Run Vulnerability Scan usinig Trivy scanner
+      - name: Run Trivy vulnerability scanner for cmsint-pac-consumer
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: image
+          image-ref: cmsint-pac-consumer:${{ github.sha }}
+          format: template
+          template: '@/contrib/sarif.tpl'
+          output: trivy-results.sarif
+          exit-code: 1
+          ignore-unfixed: true
+          severity: HIGH,CRITICAL
+
       #Upload results to the Github security tab.
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v1
