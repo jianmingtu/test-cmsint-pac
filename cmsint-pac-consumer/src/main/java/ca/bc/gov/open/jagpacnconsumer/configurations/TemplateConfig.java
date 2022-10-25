@@ -1,4 +1,4 @@
-package ca.bc.gov.open.jagiconconsumer.configurations;
+package ca.bc.gov.open.jagpacnconsumer.configurations;
 
 import ca.bc.gov.open.pac.models.serializers.InstantDeserializer;
 import ca.bc.gov.open.pac.models.serializers.InstantSerializer;

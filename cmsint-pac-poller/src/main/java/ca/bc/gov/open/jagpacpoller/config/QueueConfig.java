@@ -8,18 +8,18 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 public class QueueConfig {
 
-    @Value("${icon.exchange-name}")
+    @Value("${pac.exchange-name}")
     private String topicExchangeName;
 
-    @Value("${icon.pac-queue}")
+    @Value("${pac.pac-queue}")
     private String pacQueueName;
 
-    @Value("${icon.ping-queue}")
+    @Value("${pac.ping-queue}")
     private String pingQueueName;
 
-    @Value("${icon.pac-routing-key}")
+    @Value("${pac.pac-routing-key}")
     private String pacRoutingkey;
 
-    @Value("${icon.ping-routing-key}")
+    @Value("${pac.ping-routing-key}")
     private String pingRoutingKey;
 }

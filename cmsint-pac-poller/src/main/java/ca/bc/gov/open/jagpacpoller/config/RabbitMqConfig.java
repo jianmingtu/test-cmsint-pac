@@ -12,10 +12,10 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class RabbitMqConfig {
 
-    private final QueueConfig queueConfig;
+    private final ca.bc.gov.open.jagiconpoller.config.QueueConfig queueConfig;
 
     @Autowired
-    public RabbitMqConfig(QueueConfig queueConfig) {
+    public RabbitMqConfig(ca.bc.gov.open.jagiconpoller.config.QueueConfig queueConfig) {
         this.queueConfig = queueConfig;
     }
 

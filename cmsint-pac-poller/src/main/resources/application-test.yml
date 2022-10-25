@@ -1,4 +1,4 @@
-icon:
+pac:
   ords-host: http://127.0.0.1/
   pac-queue: pac-queue
   pac-routing-key: PAC
