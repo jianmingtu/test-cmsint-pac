@@ -1,7 +1,7 @@
 package ca.bc.gov.open.jagiconconsumer.configurations;
 
-import ca.bc.gov.open.icon.models.serializers.InstantDeserializer;
-import ca.bc.gov.open.icon.models.serializers.InstantSerializer;
+import ca.bc.gov.open.pac.models.serializers.InstantDeserializer;
+import ca.bc.gov.open.pac.models.serializers.InstantSerializer;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -49,18 +49,6 @@ public class TemplateConfig {
         module.addSerializer(Instant.class, new InstantSerializer());
         objectMapper.registerModule(module);
         return objectMapper;
-    }
-
-    @Bean
-    public WebServiceTemplate webServiceTemplate() {
-        WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
-        Jaxb2Marshaller jaxb2Marshaller = new Jaxb2Marshaller();
-        webServiceTemplate.setMessageFactory(messageFactory());
-        jaxb2Marshaller.setContextPaths("ca.bc.gov.open.icon.hsrservice");
-        webServiceTemplate.setMarshaller(jaxb2Marshaller);
-        webServiceTemplate.setUnmarshaller(jaxb2Marshaller);
-        webServiceTemplate.afterPropertiesSet();
-        return webServiceTemplate;
     }
 
     @Bean

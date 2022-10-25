@@ -1,7 +1,7 @@
 package ca.bc.gov.open.jagiconpoller.services;
 
-import ca.bc.gov.open.icon.models.PACModel;
-import ca.bc.gov.open.icon.models.PingModel;
+import ca.bc.gov.open.pac.models.PACModel;
+import ca.bc.gov.open.pac.models.PingModel;
 import ca.bc.gov.open.jagiconpoller.config.QueueConfig;
 import java.util.List;
 import javax.annotation.PostConstruct;

@@ -2,7 +2,7 @@ package ca.bc.gov.open.jagiconpoller;
 
 import static org.mockito.Mockito.when;
 
-import ca.bc.gov.open.icon.models.PACModel;
+import ca.bc.gov.open.pac.models.PACModel;
 import ca.bc.gov.open.jagiconpoller.config.QueueConfig;
 import ca.bc.gov.open.jagiconpoller.services.PACPollerService;
 import com.fasterxml.jackson.core.JsonProcessingException;

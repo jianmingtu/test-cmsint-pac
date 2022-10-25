@@ -1,10 +1,8 @@
 package ca.bc.gov.open.jagiconconsumer.services;
 
-import ca.bc.gov.open.icon.models.HealthServicePub;
-import ca.bc.gov.open.icon.models.PingModel;
+import ca.bc.gov.open.pac.models.PingModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,25 +13,11 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class ConsumerService {
-    private final HSRService hsrService;
-
     private final ObjectMapper objectMapper;
 
     @Autowired
-    public ConsumerService(ObjectMapper objectMapper, HSRService hsrService) {
+    public ConsumerService(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
-        this.hsrService = hsrService;
-    }
-
-    @RabbitListener(queues = "${icon.hsr-queue}")
-    public void receiveHSRMessage(@Payload Message<HealthServicePub> message)
-            throws IOException, InterruptedException {
-        try {
-            hsrService.processHSR(message.getPayload());
-        } catch (Exception ignored) {
-            log.error("ERROR: " + message + " not processed successfully");
-        }
-        System.out.println(objectMapper.writeValueAsString(message.getPayload()));
     }
 
     //    Disable PAC Queue until PAC is ready to go
