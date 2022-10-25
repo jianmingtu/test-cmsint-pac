@@ -3,6 +3,7 @@ package ca.bc.gov.open.jagiconpoller.services;
 import ca.bc.gov.open.icon.models.PACModel;
 import ca.bc.gov.open.icon.models.PingModel;
 import ca.bc.gov.open.jagiconpoller.config.QueueConfig;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpAdmin;
@@ -18,8 +19,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.List;
 
 @Service
 @Slf4j
@@ -80,7 +79,7 @@ public class PACPollerService {
     }
 
     //  Scheduled every minute in MS
-    @Scheduled(fixedDelay = 5000)
+    @Scheduled(fixedDelay = 60 * 1000)
     private void pollOrdsForNewRecords() {
         log.info("Polling db for new records");
 

@@ -7,12 +7,13 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.5.14</version>
+        <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>ca.bc.gov.open</groupId>
-    <artifactId>jag-icon-two-pac</artifactId>
+    <artifactId>jag-cmsint-pac</artifactId>
     <version>1.0.0</version>
-    <name>jag-icon-two-pac</name>
-    <description>Demo project for Spring Boot</description>
+    <name>jag-cmsint-pac</name>
+    <description>jag-cmsint-pac Application</description>
     <properties>
         <java.version>11</java.version>
         <log4j2.version>2.17.1</log4j2.version>
@@ -26,13 +27,10 @@
     </repositories>
 
     <modules>
-        <module>icon-two-poller</module>
+        <module>cmsint-pac-poller</module>
+        <module>cmsint-pac-consumer-models</module>
+        <module>cmsint-pac-code-coverage</module>
     </modules>
-
-    <dependencies>
-
-    </dependencies>
-
     <build>
         <plugins>
             <plugin>

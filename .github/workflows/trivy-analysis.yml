@@ -13,9 +13,6 @@ jobs:
   build-scan-image:
     name: Build & Scan Image
     runs-on: ubuntu-20.04
-    env:
-      BASIC_AUTH_USER: ${{ secrets.BASIC_AUTH_USER }}
-      BASIC_AUTH_PASS: ${{ secrets.BASIC_AUTH_PASS }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -34,13 +31,13 @@ jobs:
         run: mvn -ntp clean verify
 
       #Build image for scanning
-      - name: Build image icon-two-poller image from Dockerfile
+      - name: Build image cmsint-pac-poller image from Dockerfile
         env:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
-          CONTEXT: ./icon-two-poller
+          CONTEXT: ./icmsint-pac
         run: |
-          docker build -t icon-two-rabbit-poller:${{ github.sha }} ${CONTEXT}
+          docker build -t cmsint-pac-poller:${{ github.sha }} ${CONTEXT}
 
       #Upload results to the Github security tab.
       - name: Upload Trivy scan results to GitHub Security tab

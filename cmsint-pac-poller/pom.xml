@@ -4,15 +4,15 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<artifactId>jag-icon-two-pac</artifactId>
+		<artifactId>jag-cmsint-pac</artifactId>
 		<groupId>ca.bc.gov.open</groupId>
 		<version>1.0.0</version>
 	</parent>
 
-	<artifactId>icon-two-poller</artifactId>
+	<artifactId>cmsint-pac-poller</artifactId>
 	<version>1.0.0</version>
-	<name>jag-icon-poller</name>
-	<description>jag-icon-two-pac</description>
+	<name>cmsint-pac-poller</name>
+	<description>cmsint-pac-poller</description>
 	<dependencies>
 
 		<dependency>
@@ -56,7 +56,7 @@
 		</dependency>
 		<dependency>
 			<groupId>ca.bc.gov.open</groupId>
-			<artifactId>icon-two-consumer-models</artifactId>
+			<artifactId>cmsint-pac-consumer-models</artifactId>
 			<version>1.0.0</version>
 			<scope>compile</scope>
 		</dependency>
@@ -78,15 +78,10 @@
 			<artifactId>logback-core</artifactId>
 			<version>1.2.10</version>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.ws</groupId>
-			<artifactId>spring-ws-core</artifactId>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 
 	<build>
-		<finalName>icon-two-poller</finalName>
+		<finalName>cmsint-pac-poller</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

@@ -18,8 +18,8 @@
         <url>${SPLUNK_HTTP_URL}</url>
         <token>${SPLUNK_TOKEN}</token>
         <index>${SPLUNK_INDEX}</index>
-        <source>icon-two-poller</source>
-        <sourcetype>icon-two-logs</sourcetype>
+        <source>cmsint-pac-poller</source>
+        <sourcetype>cmsint-pac-logs</sourcetype>
         <disableCertificateValidation>true</disableCertificateValidation>
         <batch_size_count>1</batch_size_count>
         <connectTimeout>5000</connectTimeout>

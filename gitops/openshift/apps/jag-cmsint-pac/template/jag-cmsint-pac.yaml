@@ -2,7 +2,7 @@ apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
   name: ${APP_NAME}
-  description: Deployment template for the JAG-ICON2-PAC
+  description: Deployment template for the JAG-CMSINT-PAC
 
 labels:
   app: ${APP_NAME}
@@ -15,12 +15,12 @@ parameters:
   - name: APP_NAME
     description: The application name that each component is part of
     required: false
-    value: jag-icon2
+    value: jag-cmnint-pac
 
   - name: COMPONENT_NAME
     description: The application name that each component is part of
     required: false
-    value: jag-icon2-pac
+    value: jag-cmsint-pac
 
   - name: OC_NAMESPACE
     description: The OpenShift namespace prefix
@@ -50,7 +50,7 @@ parameters:
 
 objects:
 
-  ### JAG-ICON2-PAC Deployment Config ###
+  ### JAG-CMSINT-PAC Deployment Config ###
   - apiVersion: apps.openshift.io/v1
     kind: DeploymentConfig
     metadata:
@@ -83,22 +83,22 @@ objects:
                 - name: SPRING_PROFILES_ACTIVE
                   valueFrom:
                     secretKeyRef:
-                      name: jag-icon2-pac-application-secrets
+                      name: jag-cmsint-pac-application-secrets
                       key: SPRING_PROFILE
                 - name: SPLUNK_HTTP_URL
                   valueFrom:
                     secretKeyRef:
-                      name: jag-icon2-splunk-config
+                      name: jag-cmnint-pac-splunk-config
                       key: SPLUNK_HTTP_URL
                 - name: SPLUNK_TOKEN
                   valueFrom:
                     secretKeyRef:
-                      name: jag-icon2-splunk-config
+                      name: jag-cmnint-pac-splunk-config
                       key: SPLUNK_TOKEN
                 - name: SPLUNK_INDEX
                   valueFrom:
                     secretKeyRef:
-                      name: jag-icon2-splunk-config
+                      name: jag-cmnint-pac-splunk-config
                       key: SPLUNK_INDEX
               resources:
                 limits:
@@ -146,7 +146,7 @@ objects:
               name: ${COMPONENT_NAME}:${OC_ENV}
     status: {}
 
-  ### JAG-ICON2-PAC Service ###
+  ### JAG-CMSINT-PAC Service ###
   - apiVersion: v1
     kind: Service
     metadata:
@@ -163,7 +163,7 @@ objects:
       sessionAffinity: None
       type: ClusterIP
 
-  ### JAG-ICON2-PAC route ###
+  ### JAG-CMSINT-PAC route ###
   - apiVersion: route.openshift.io/v1
     kind: Route
     metadata:
