@@ -1,4 +1,4 @@
-package ca.bc.gov.open.jagpacnconsumer;
+package ca.bc.gov.pac.open.jagpacnconsumer;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

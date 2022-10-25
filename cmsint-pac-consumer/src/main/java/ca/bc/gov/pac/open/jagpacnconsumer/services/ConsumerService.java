@@ -1,4 +1,4 @@
-package ca.bc.gov.open.jagpacnconsumer.services;
+package ca.bc.gov.pac.open.jagpacnconsumer.services;
 
 import ca.bc.gov.open.pac.models.PACModel;
 import ca.bc.gov.open.pac.models.PingModel;

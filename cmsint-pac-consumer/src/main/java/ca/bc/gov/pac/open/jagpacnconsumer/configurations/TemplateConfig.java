@@ -1,4 +1,4 @@
-package ca.bc.gov.open.jagpacnconsumer.configurations;
+package ca.bc.gov.pac.open.jagpacnconsumer.configurations;
 
 import ca.bc.gov.open.pac.models.serializers.InstantDeserializer;
 import ca.bc.gov.open.pac.models.serializers.InstantSerializer;
@@ -15,9 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 

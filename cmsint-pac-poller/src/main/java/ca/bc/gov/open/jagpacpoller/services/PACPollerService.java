@@ -1,8 +1,8 @@
-package ca.bc.gov.open.jagiconpoller.services;
+package ca.bc.gov.open.jagpacpoller.services;
 
+import ca.bc.gov.open.jagpacpoller.config.QueueConfig;
 import ca.bc.gov.open.pac.models.PACModel;
 import ca.bc.gov.open.pac.models.PingModel;
-import ca.bc.gov.open.jagiconpoller.config.QueueConfig;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Slf4j
 public class PACPollerService {
 
-    @Value("${icon.ords-host}")
+    @Value("${pac.ords-host}")
     private String ordsHost = "https://127.0.0.1/";
 
     private final Queue pacQueue;

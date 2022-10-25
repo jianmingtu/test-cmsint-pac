@@ -1,4 +1,4 @@
-package ca.bc.gov.open.jagiconpoller.config;
+package ca.bc.gov.open.jagpacpoller.config;
 
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -12,10 +12,10 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class RabbitMqConfig {
 
-    private final ca.bc.gov.open.jagiconpoller.config.QueueConfig queueConfig;
+    private final QueueConfig queueConfig;
 
     @Autowired
-    public RabbitMqConfig(ca.bc.gov.open.jagiconpoller.config.QueueConfig queueConfig) {
+    public RabbitMqConfig(QueueConfig queueConfig) {
         this.queueConfig = queueConfig;
     }
 

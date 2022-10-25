@@ -1,10 +1,10 @@
-package ca.bc.gov.open.jagiconpoller;
+package ca.bc.gov.open.jagpacpoller;
 
 import static org.mockito.Mockito.when;
 
+import ca.bc.gov.open.jagpacpoller.config.QueueConfig;
+import ca.bc.gov.open.jagpacpoller.services.PACPollerService;
 import ca.bc.gov.open.pac.models.PACModel;
-import ca.bc.gov.open.jagiconpoller.config.QueueConfig;
-import ca.bc.gov.open.jagiconpoller.services.PACPollerService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.URI;
@@ -30,7 +30,7 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-class IconPollerApplicationTests {
+class pacPollerApplicationTests {
 
     @Qualifier("pac-queue")
     private org.springframework.amqp.core.Queue pacQueue;
