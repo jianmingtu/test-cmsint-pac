@@ -1,4 +1,4 @@
-package ca.bc.gov.open.icon.models;
+package ca.bc.gov.open.pac.models;
 
 import java.io.Serializable;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package ca.bc.gov.open.icon.models.serializers;
+package ca.bc.gov.open.pac.models.serializers;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;

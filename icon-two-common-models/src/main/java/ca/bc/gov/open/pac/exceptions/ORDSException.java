@@ -9,8 +9,4 @@ public class ORDSException extends RuntimeException {
         super(
                 "An error response was received from ORDS please check that your request is of valid form");
     }
-
-    public ORDSException(String message) {
-        super(message);
-    }
 }
