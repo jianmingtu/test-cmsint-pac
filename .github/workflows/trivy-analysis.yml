@@ -8,6 +8,8 @@ on:
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ main, release/*]
+  workflow_dispatch:
+    branches: [ main, release/*]
 
 jobs:
   build-scan-image:
@@ -30,12 +32,12 @@ jobs:
       - name: Maven Verify
         run: mvn -ntp clean verify
 
-      #Build image for scanning
-      - name: Build image cmsint-pac-poller image from Dockerfile
+      #Build cmsint-pac-poller image for scanning
+      - name: Build cmsint-pac-poller image from Dockerfile
         env:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
-          CONTEXT: ./image cmsint-pac-poller
+          CONTEXT: ./cmsint-pac-poller
         run: |
           docker build -t cmsint-pac-poller:${{ github.sha }} ${CONTEXT}
 
@@ -45,15 +47,16 @@ jobs:
         with:
           scan-type: image
           image-ref: cmsint-pac-poller:${{ github.sha }}
-          format: template
-          template: '@/contrib/sarif.tpl'
-          output: trivy-results.sarif
-          exit-code: 1
+          #format: template
+          #template: '@/contrib/sarif.tpl'
+          #output: trivy-results.sarif
+          format: table
+          #exit-code: 1
           ignore-unfixed: true
           severity: HIGH,CRITICAL
 
-      #Build image for scanning
-      - name: Build image cmsint-pac-consumer image from Dockerfile
+      #Build cmsint-pac-consumer image for scanning
+      - name: Build cmsint-pac-consumer image from Dockerfile
         env:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
@@ -67,17 +70,18 @@ jobs:
         with:
           scan-type: image
           image-ref: cmsint-pac-consumer:${{ github.sha }}
-          format: template
-          template: '@/contrib/sarif.tpl'
-          output: trivy-results.sarif
-          exit-code: 1
+          #format: template
+          #template: '@/contrib/sarif.tpl'
+          #output: trivy-results.sarif
+          #exit-code: 1
+          format: table
           ignore-unfixed: true
           severity: HIGH,CRITICAL
 
       #Upload results to the Github security tab.
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v1
-        if: always()
-        with:
-          sarif_file: trivy-results.sarif
+      #- name: Upload Trivy scan results to GitHub Security tab
+      #  uses: github/codeql-action/upload-sarif@v1
+      #  if: always()
+      #  with:
+      #    sarif_file: trivy-results.sarif
           
