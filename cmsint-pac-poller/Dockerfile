@@ -1,4 +1,6 @@
-FROM openjdk:11-jre-slim
+#FROM openjdk:11-jre-slim
+
+FROM openjdk:18.0.2.1-slim
 
 COPY ./target/cmsint-pac-poller.jar cmsint-pac-poller.jar
 
