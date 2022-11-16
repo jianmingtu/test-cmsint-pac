@@ -1,15 +1,27 @@
 pac:
-  ords-host: ${ORDS_HOST}
-  pac-queue: ${PAC_QUEUE_NAME}
-  pac-routing-key: ${PAC_ROUTING_KEY}
-  ping-queue: ${PING_QUEUE_NAME}
-  ping-routing-key: ${PING_ROUTING_KEY}
-  exchange-name: ${RABBIT_EXCHANGE_NAME}
+  ords:
+    host: "https://dev.jag.gov.bc.ca/ords/devj/cmsintords/pac/v1/"
+#    host: ${ORDS_HOST:127.0.0.1}
+    endpoints:
+      poll: "pac/poll"
+      success: "pac/success"
+      events:
+        type: "event/type"
+  pac-queue: ${PAC_QUEUE_NAME:pac-queue}
+  pac-routing-key: ${PAC_ROUTING_KEY:PAC}
+  exchange-name: ${RABBIT_EXCHANGE_NAME:EXCHANGE}
 
 
 spring:
   rabbitmq:
-    host: ${RABBIT_MQ_HOST}
+    host: ${RABBIT_MQ_HOST:127.0.0.1}
     port: 5672
+    username: ${RABBIT_MQ_HOST:guest}
+    password: ${RABBIT_MQ_HOST:guest}
+
 server:
-  port: 8084
+  port: ${POLLER_SERVER_PORT:8080}
+
+management:
+  server:
+    port: ${MANAGEMENT_SERVER_PORT:8081}
