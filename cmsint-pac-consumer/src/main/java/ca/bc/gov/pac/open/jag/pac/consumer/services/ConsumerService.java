@@ -36,9 +36,4 @@ public class ConsumerService {
         System.out.println(new ObjectMapper().writeValueAsString(message.getPayload()));
     }
 
-    @RabbitListener(queues = "${pac.ping-queue}")
-    public void receivePingMessage(@Payload Message<PingModel> message)
-            throws JsonProcessingException {
-        System.out.println(new ObjectMapper().writeValueAsString(message.getPayload()));
-    }
 }
