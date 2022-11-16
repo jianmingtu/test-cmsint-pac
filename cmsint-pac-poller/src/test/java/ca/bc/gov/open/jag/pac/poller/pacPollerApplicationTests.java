@@ -67,6 +67,6 @@ class pacPollerApplicationTests {
 
         PACPollerService pacPollerService =
                 new PACPollerService(
-                        pacQueue, pingQueue, restTemplate, rabbitTemplate, amqpAdmin, queueConfig);
+                        pacQueue, restTemplate, rabbitTemplate, amqpAdmin, queueConfig);
     }
 }

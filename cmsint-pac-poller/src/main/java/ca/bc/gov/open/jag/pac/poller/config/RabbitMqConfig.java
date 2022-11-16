@@ -29,11 +29,6 @@ public class RabbitMqConfig {
         return new Queue(queueConfig.getPacQueueName(), false);
     }
 
-    @Bean(name = "ping-queue")
-    public Queue testQueue() {
-        return new Queue(queueConfig.getPingQueueName(), false);
-    }
-
     @Bean
     public DirectExchange exchange() {
         return new DirectExchange(queueConfig.getTopicExchangeName());
@@ -45,12 +40,8 @@ public class RabbitMqConfig {
     }
 
     @Bean
-    public Declarables binding(
-            @Qualifier("pac-queue") Queue pacQueue,
-            @Qualifier("ping-queue") Queue testQueue,
-            DirectExchange exchange) {
+    public Declarables binding(@Qualifier("pac-queue") Queue pacQueue, DirectExchange exchange) {
         return new Declarables(
-                BindingBuilder.bind(pacQueue).to(exchange).with(queueConfig.getPacRoutingkey()),
-                BindingBuilder.bind(testQueue).to(exchange).with(queueConfig.getPingRoutingKey()));
+                BindingBuilder.bind(pacQueue).to(exchange).with(queueConfig.getPacRoutingkey()));
     }
 }

@@ -57,25 +57,6 @@ public class PACPollerService {
     @PostConstruct
     public void createQueues() {
         amqpAdmin.declareQueue(pacQueue);
-        amqpAdmin.declareQueue(pingQueue);
-    }
-
-    private void sendToRabbitMq(List<Client> items) {
-        items.forEach(
-                i ->
-                        this.rabbitTemplate.convertAndSend(
-                                queueConfig.getTopicExchangeName(),
-                                queueConfig.getPacRoutingkey(),
-                                i));
-    }
-
-    @Scheduled(fixedDelay = 5000)
-    private void ping() {
-        PingModel p = new PingModel();
-        p.setSource("ping");
-        log.info("Sending ping with source " + p.getSource());
-        this.rabbitTemplate.convertAndSend(
-                queueConfig.getTopicExchangeName(), queueConfig.getPingRoutingKey(), p);
     }
 
     //  Scheduled every minute in MS
