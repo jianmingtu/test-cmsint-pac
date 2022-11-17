@@ -6,17 +6,12 @@ import ca.bc.gov.open.pac.models.Client;
 import ca.bc.gov.open.pac.models.OrdsErrorLog;
 import ca.bc.gov.open.pac.models.RequestSuccessLog;
 import ca.bc.gov.open.pac.models.exceptions.ORDSException;
-
+import ca.bc.gov.open.pac.models.ords.EventTypeCodeEntity;
+import ca.bc.gov.open.pac.models.ords.NewEventEntity;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import javax.annotation.PostConstruct;
-
-import ca.bc.gov.open.pac.models.ords.EventsEntity;
-import ca.bc.gov.open.pac.models.ords.NewEventEntity;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.amqp.core.AmqpAdmin;
@@ -34,7 +29,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
-//@Slf4j
+// @Slf4j
 public class PACPollerService {
     private static final Logger log = LogManager.getLogger(PACPollerService.class);
 
@@ -81,10 +76,9 @@ public class PACPollerService {
                 List<NewEventEntity> newEventsEnity = Arrays.asList(eventsEntity.getBody());
                 log.info("Pulled " + newEventsEnity.size() + " new records");
 
-//                newEventsEnity.stream()
-//                        .map(this::getEventType)
-//                        .map(this::pacUpdateClient)
-//                        .forEach(this::sendToRabbitMq);
+                newEventsEnity.stream().map(this::getEventType);
+                //                        .map(this::pacUpdateClient)
+                //                        .forEach(this::sendToRabbitMq);
             }
         } catch (Exception ex) {
             log.error("Failed to pull new records from the db: " + ex.getMessage());
@@ -92,10 +86,11 @@ public class PACPollerService {
     }
 
     public HttpEntity<NewEventEntity[]> getNewEvents() {
-        URI url = UriComponentsBuilder
-                .fromHttpUrl(ordProperties.getBaseUrl() + ordProperties.getEventsEndpoint())
-                .build()
-                .toUri();
+        URI url =
+                UriComponentsBuilder.fromHttpUrl(
+                                ordProperties.getBaseUrl() + ordProperties.getEventsEndpoint())
+                        .build()
+                        .toUri();
 
         ResponseEntity<NewEventEntity[]> resp =
                 restTemplate.exchange(
@@ -113,29 +108,33 @@ public class PACPollerService {
 
     //  Scheduled every minute in MS
 
-
-    private Client getEventType(Client client) throws ORDSException {
-        UriComponentsBuilder builder =
-                UriComponentsBuilder.fromHttpUrl(ordProperties.getBaseUrl() + ordProperties.getEventsTypeEndpoint())
-                        .queryParam("clientNumber", client.getClientNumber())
-                        .queryParam("eventSeqNum", client.getEventSeqNum());
+    public Client getEventType(NewEventEntity newEventEntity) throws ORDSException {
+        URI uri =
+                UriComponentsBuilder.fromHttpUrl(
+                                ordProperties.getBaseUrl() + ordProperties.getEventsTypeEndpoint())
+                        .queryParam("clientNumber", newEventEntity.getClientNumber())
+                        .queryParam("eventSeqNum", newEventEntity.getEventSeqNum())
+                        .build()
+                        .toUri();
         try {
-            HttpEntity<Map<String, String>> resp =
+            ResponseEntity<EventTypeCodeEntity> resp =
                     restTemplate.exchange(
-                            builder.toUriString(),
-                            HttpMethod.POST,
+                            uri,
+                            HttpMethod.GET,
                             new HttpEntity<>(new HttpHeaders()),
-                            new ParameterizedTypeReference<>() {});
+                            EventTypeCodeEntity.class);
+
             log.info(new RequestSuccessLog("Request Success", "getEventType").toString());
-            return client.getCopyWithNewEventTypeCode(
-                    Objects.requireNonNull(resp.getBody()).get("eventTypeCode"));
+
+            return new Client(newEventEntity, resp.getBody());
+
         } catch (Exception ex) {
             log.error(
                     new OrdsErrorLog(
-                            "Error received from ORDS",
-                            "getEventType",
-                            ex.getMessage(),
-                            client)
+                                    "Error received from ORDS",
+                                    "getEventType",
+                                    ex.getMessage(),
+                                    newEventEntity)
                             .toString());
             throw new ORDSException();
         }
@@ -143,7 +142,8 @@ public class PACPollerService {
 
     private Client pacUpdateClient(Client client) {
         UriComponentsBuilder builder =
-                UriComponentsBuilder.fromHttpUrl(ordProperties.getBaseUrl() + ordProperties.getSuccessEndpoint());
+                UriComponentsBuilder.fromHttpUrl(
+                        ordProperties.getBaseUrl() + ordProperties.getSuccessEndpoint());
         try {
             HttpEntity<Client> respClient =
                     restTemplate.exchange(
@@ -152,17 +152,19 @@ public class PACPollerService {
                             new HttpEntity<>(client, new HttpHeaders()),
                             new ParameterizedTypeReference<>() {});
 
-            log.info(new RequestSuccessLog("Request Success", ordProperties.getSuccessEndpoint()).toString());
+            log.info(
+                    new RequestSuccessLog("Request Success", ordProperties.getSuccessEndpoint())
+                            .toString());
             return respClient.getBody();
 
         } catch (Exception ex) {
 
             log.error(
                     new OrdsErrorLog(
-                            "Error received from ORDS",
-                            ordProperties.getSuccessEndpoint(),
-                            ex.getMessage(),
-                            client)
+                                    "Error received from ORDS",
+                                    ordProperties.getSuccessEndpoint(),
+                                    ex.getMessage(),
+                                    client)
                             .toString());
 
             throw new ORDSException();

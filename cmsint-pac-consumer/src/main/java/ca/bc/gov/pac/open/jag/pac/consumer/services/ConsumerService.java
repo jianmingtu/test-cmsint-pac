@@ -1,8 +1,6 @@
 package ca.bc.gov.pac.open.jag.pac.consumer.services;
 
 import ca.bc.gov.open.pac.models.Client;
-import ca.bc.gov.open.pac.models.PingModel;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
@@ -35,5 +33,4 @@ public class ConsumerService {
         }
         System.out.println(new ObjectMapper().writeValueAsString(message.getPayload()));
     }
-
 }

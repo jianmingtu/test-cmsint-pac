@@ -1,14 +1,17 @@
 package ca.bc.gov.open.pac.models;
 
+import ca.bc.gov.open.pac.models.ords.EventTypeCodeEntity;
+import ca.bc.gov.open.pac.models.ords.NewEventEntity;
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.util.SerializationUtils;
 
 @Data
 @AllArgsConstructor
 public class Client implements Serializable {
-    private final String clientNumber;
+    private String clientNumber;
     private final String csNum;
     private final String eventSeqNum;
     private final String eventTypeCode;
@@ -34,6 +37,34 @@ public class Client implements Serializable {
     private final String livingUnit;
     // to accept the status if update process cancels
     private final String status;
+
+    public Client(NewEventEntity newEventEntity, EventTypeCodeEntity eventTypeCodeEntity) {
+        clientNumber = newEventEntity.getClientNumber();
+        eventSeqNum = newEventEntity.getEventSeqNum();
+        computerSystemCd = newEventEntity.getComputerSystemCd();
+        eventTypeCode = eventTypeCodeEntity.getEventTypeCode();
+        csNum = null;
+        surname = null;
+        givenName1 = null;
+        givenName2 = null;
+        birthDate = null;
+        gender = null;
+        photoGUID = null;
+        probableDischargeDate = null;
+        pacLocationCd = null;
+        outReason = null;
+        newerSequence = null;
+        isActive = null;
+        sysDate = null;
+        fromCsNum = null;
+        userId = null;
+        mergeUserId = null;
+        icsLocationCd = null;
+        isIn = null;
+        custodyCenter = null;
+        livingUnit = null;
+        status = null;
+    }
 
     public Client getCopy() {
         byte[] serializedClient = SerializationUtils.serialize(this);

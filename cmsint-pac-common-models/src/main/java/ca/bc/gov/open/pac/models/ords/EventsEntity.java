@@ -1,11 +1,9 @@
 package ca.bc.gov.open.pac.models.ords;
 
-import lombok.Data;
-import lombok.Getter;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Data;
 
 @Data
 public class EventsEntity extends BaseEntity implements Serializable {
