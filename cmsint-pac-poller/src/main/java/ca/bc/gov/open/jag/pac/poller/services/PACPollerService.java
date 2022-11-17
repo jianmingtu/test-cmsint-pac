@@ -6,8 +6,8 @@ import ca.bc.gov.open.pac.models.Client;
 import ca.bc.gov.open.pac.models.OrdsErrorLog;
 import ca.bc.gov.open.pac.models.RequestSuccessLog;
 import ca.bc.gov.open.pac.models.exceptions.ORDSException;
-import ca.bc.gov.open.pac.models.ords.EventTypeCodeEntity;
-import ca.bc.gov.open.pac.models.ords.NewEventEntity;
+import ca.bc.gov.open.pac.models.ords.EventEntity;
+import ca.bc.gov.open.pac.models.ords.ProcessEntity;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
@@ -70,14 +70,16 @@ public class PACPollerService {
         log.info("Polling db for new records");
 
         try {
-            HttpEntity<NewEventEntity[]> eventsEntity = getNewEvents();
+            HttpEntity<ProcessEntity[]> processesEntity = getNewProcesses();
 
-            if (eventsEntity.hasBody()) {
-                List<NewEventEntity> newEventsEnity = Arrays.asList(eventsEntity.getBody());
+            if (processesEntity.hasBody()) {
+                List<ProcessEntity> newEventsEnity = Arrays.asList(processesEntity.getBody());
                 log.info("Pulled " + newEventsEnity.size() + " new records");
 
-                newEventsEnity.stream().map(this::getEventType);
-                //                        .map(this::pacUpdateClient)
+                newEventsEnity.stream()
+                        .map(this::getEventForProcess)
+                        .map(this::updateEventStatusToPending)
+                        .map(this::getClientNewerSequence);
                 //                        .forEach(this::sendToRabbitMq);
             }
         } catch (Exception ex) {
@@ -85,20 +87,24 @@ public class PACPollerService {
         }
     }
 
-    public HttpEntity<NewEventEntity[]> getNewEvents() {
+    private Client getClientNewerSequence(Client client) {
+        return null;
+    }
+
+    private Client updateEventStatusToPending(Client client) {
+        return null;
+    }
+
+    public HttpEntity<ProcessEntity[]> getNewProcesses() {
         URI url =
                 UriComponentsBuilder.fromHttpUrl(
                                 ordProperties.getBaseUrl() + ordProperties.getEventsEndpoint())
+                        .queryParam("state", "NEW")
                         .build()
                         .toUri();
 
-        ResponseEntity<NewEventEntity[]> resp =
-                restTemplate.exchange(
-                        url,
-                        HttpMethod.GET,
-                        new HttpEntity<>(new HttpHeaders()),
-                        NewEventEntity[].class);
-        return resp;
+        return restTemplate.exchange(
+                url, HttpMethod.GET, new HttpEntity<>(new HttpHeaders()), ProcessEntity[].class);
     }
 
     public void sendToRabbitMq(Client client) {
@@ -108,25 +114,25 @@ public class PACPollerService {
 
     //  Scheduled every minute in MS
 
-    public Client getEventType(NewEventEntity newEventEntity) throws ORDSException {
+    public Client getEventForProcess(ProcessEntity processEntity) throws ORDSException {
         URI uri =
                 UriComponentsBuilder.fromHttpUrl(
                                 ordProperties.getBaseUrl() + ordProperties.getEventsTypeEndpoint())
-                        .queryParam("clientNumber", newEventEntity.getClientNumber())
-                        .queryParam("eventSeqNum", newEventEntity.getEventSeqNum())
+                        .queryParam("clientId", processEntity.getClientNumber())
+                        .queryParam("eventSeqNum", processEntity.getEventSeqNum())
                         .build()
                         .toUri();
         try {
-            ResponseEntity<EventTypeCodeEntity> resp =
+            ResponseEntity<EventEntity> resp =
                     restTemplate.exchange(
                             uri,
                             HttpMethod.GET,
                             new HttpEntity<>(new HttpHeaders()),
-                            EventTypeCodeEntity.class);
+                            EventEntity.class);
 
             log.info(new RequestSuccessLog("Request Success", "getEventType").toString());
 
-            return new Client(newEventEntity, resp.getBody());
+            return new Client(processEntity, resp.getBody());
 
         } catch (Exception ex) {
             log.error(
@@ -134,7 +140,7 @@ public class PACPollerService {
                                     "Error received from ORDS",
                                     "getEventType",
                                     ex.getMessage(),
-                                    newEventEntity)
+                                    processEntity)
                             .toString());
             throw new ORDSException();
         }

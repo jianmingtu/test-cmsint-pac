@@ -7,7 +7,13 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class EventTypeCodeEntity extends BaseEntity implements Serializable {
+public class EventEntity extends BaseEntity implements Serializable {
+    @JsonProperty("clientId")
+    private String clientId;
+
+    @JsonProperty("eventSeqNum")
+    private String eventSeqNum;
+
     @JsonProperty("eventTypeCode")
     private String eventTypeCode;
 }

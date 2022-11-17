@@ -9,9 +9,9 @@ import static org.mockito.Mockito.*;
 import ca.bc.gov.open.jag.pac.poller.config.OrdsProperties;
 import ca.bc.gov.open.pac.models.Client;
 import ca.bc.gov.open.pac.models.exceptions.ORDSException;
-import ca.bc.gov.open.pac.models.ords.EventTypeCodeEntity;
+import ca.bc.gov.open.pac.models.ords.EventEntity;
 import ca.bc.gov.open.pac.models.ords.EventsEntity;
-import ca.bc.gov.open.pac.models.ords.NewEventEntity;
+import ca.bc.gov.open.pac.models.ords.ProcessEntity;
 import java.net.URI;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +43,7 @@ public class PACPollerServiceTest {
     @Mock private OrdsProperties mockOrdsProperties;
 
     private static PACPollerService pacPollerService;
-    private NewEventEntity genericNewEventEntity;
+    private ProcessEntity genericProcessEntity;
 
     @BeforeEach
     void beforeEachSetup() {
@@ -59,19 +59,19 @@ public class PACPollerServiceTest {
         when(mockOrdsProperties.getEventsTypeEndpoint()).thenReturn(testEndpoint);
         when(mockOrdsProperties.getSuccessEndpoint()).thenReturn(testEndpoint);
 
-        genericNewEventEntity = new NewEventEntity("1", "1", "1");
+        genericProcessEntity = new ProcessEntity("1", "1", "1");
     }
 
     @Test
     void pollOrdsForNewRecordsBringsZeroNewRecords(CapturedOutput output) {
-        ResponseEntity<NewEventEntity[]> responseEntity =
-                new ResponseEntity<>(new NewEventEntity[0], HttpStatus.OK);
+        ResponseEntity<ProcessEntity[]> responseEntity =
+                new ResponseEntity<>(new ProcessEntity[0], HttpStatus.OK);
 
         when(mockRestTemplate.exchange(
                         any(URI.class),
                         any(HttpMethod.class),
                         any(HttpEntity.class),
-                        eq(NewEventEntity[].class)))
+                        eq(ProcessEntity[].class)))
                 .thenReturn(responseEntity);
 
         pacPollerService.pollOrdsForNewRecords();
@@ -93,17 +93,15 @@ public class PACPollerServiceTest {
 
     @Test
     void pollOrdsForNewRecordsBringsNewRecords(CapturedOutput output) {
-        NewEventEntity[] newEventsEntity = {
-            genericNewEventEntity, new NewEventEntity("2", "2", "2")
-        };
-        ResponseEntity<NewEventEntity[]> responseEntity =
+        ProcessEntity[] newEventsEntity = {genericProcessEntity, new ProcessEntity("2", "2", "2")};
+        ResponseEntity<ProcessEntity[]> responseEntity =
                 new ResponseEntity<>(newEventsEntity, HttpStatus.OK);
 
         when(mockRestTemplate.exchange(
                         any(URI.class),
                         any(HttpMethod.class),
                         any(HttpEntity.class),
-                        eq(NewEventEntity[].class)))
+                        eq(ProcessEntity[].class)))
                 .thenReturn(responseEntity);
 
         when(mockRabbitTemplate.convertSendAndReceive(anyString(), anyString(), any(Client.class)))
@@ -117,20 +115,20 @@ public class PACPollerServiceTest {
 
     @Test
     void gettingEventTypeReturnsClientObject() {
-        EventTypeCodeEntity eventTypeCodeEntity = new EventTypeCodeEntity("code");
-        ResponseEntity<EventTypeCodeEntity> responseEntity =
-                new ResponseEntity<>(eventTypeCodeEntity, HttpStatus.OK);
+        EventEntity eventEntity = new EventEntity("code");
+        ResponseEntity<EventEntity> responseEntity =
+                new ResponseEntity<>(eventEntity, HttpStatus.OK);
 
-        Client expectedClient = new Client(genericNewEventEntity, eventTypeCodeEntity);
+        Client expectedClient = new Client(genericProcessEntity, eventEntity);
 
         when(mockRestTemplate.exchange(
                         any(URI.class),
                         any(HttpMethod.class),
                         any(HttpEntity.class),
-                        eq(EventTypeCodeEntity.class)))
+                        eq(EventEntity.class)))
                 .thenReturn(responseEntity);
 
-        Client actualClient = pacPollerService.getEventType(genericNewEventEntity);
+        Client actualClient = pacPollerService.getEventForProcess(genericProcessEntity);
         assertEquals(expectedClient, actualClient);
     }
 
@@ -140,10 +138,11 @@ public class PACPollerServiceTest {
                         any(URI.class),
                         any(HttpMethod.class),
                         any(HttpEntity.class),
-                        eq(EventTypeCodeEntity.class)))
+                        eq(EventEntity.class)))
                 .thenThrow(ORDSException.class);
 
         assertThrows(
-                ORDSException.class, () -> pacPollerService.getEventType(genericNewEventEntity));
+                ORDSException.class,
+                () -> pacPollerService.getEventForProcess(genericProcessEntity));
     }
 }

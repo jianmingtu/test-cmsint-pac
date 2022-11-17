@@ -7,13 +7,13 @@ import lombok.Data;
 
 @Data
 public class EventsEntity extends BaseEntity implements Serializable {
-    private final List<NewEventEntity> newEventsEntity;
+    private final List<ProcessEntity> newEventsEntity;
 
     public EventsEntity() {
         newEventsEntity = new ArrayList<>();
     }
 
-    public <T> EventsEntity(List<NewEventEntity> newEventsEntity) {
+    public <T> EventsEntity(List<ProcessEntity> newEventsEntity) {
         this.newEventsEntity = newEventsEntity;
     }
 }

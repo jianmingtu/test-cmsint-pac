@@ -3,8 +3,8 @@ package ca.bc.gov.open.pac.models;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 
-import ca.bc.gov.open.pac.models.ords.EventTypeCodeEntity;
-import ca.bc.gov.open.pac.models.ords.NewEventEntity;
+import ca.bc.gov.open.pac.models.ords.EventEntity;
+import ca.bc.gov.open.pac.models.ords.ProcessEntity;
 import org.junit.jupiter.api.Test;
 
 class ClientTest {
@@ -54,13 +54,13 @@ class ClientTest {
 
     @Test
     void constructorWithNewEventAndEventTypeCodeProperlyMapsTheValuesToTheFields() {
-        EventTypeCodeEntity eventTypeCodeEntity = new EventTypeCodeEntity("code");
-        NewEventEntity newEventEntity = new NewEventEntity("1", "1", "1");
-        Client expectedClient = new Client(newEventEntity, eventTypeCodeEntity);
+        EventEntity eventEntity = new EventEntity("code");
+        ProcessEntity processEntity = new ProcessEntity("1", "1", "1");
+        Client expectedClient = new Client(processEntity, eventEntity);
 
-        assertEquals(expectedClient.getClientNumber(), newEventEntity.getClientNumber());
-        assertEquals(expectedClient.getEventSeqNum(), newEventEntity.getEventSeqNum());
-        assertEquals(expectedClient.getComputerSystemCd(), newEventEntity.getComputerSystemCd());
-        assertEquals(expectedClient.getEventTypeCode(), eventTypeCodeEntity.getEventTypeCode());
+        assertEquals(expectedClient.getClientNumber(), processEntity.getClientNumber());
+        assertEquals(expectedClient.getEventSeqNum(), processEntity.getEventSeqNum());
+        assertEquals(expectedClient.getComputerSystemCd(), processEntity.getComputerSystemCd());
+        assertEquals(expectedClient.getEventTypeCode(), eventEntity.getEventTypeCode());
     }
 }

@@ -1,7 +1,7 @@
 package ca.bc.gov.open.pac.models;
 
-import ca.bc.gov.open.pac.models.ords.EventTypeCodeEntity;
-import ca.bc.gov.open.pac.models.ords.NewEventEntity;
+import ca.bc.gov.open.pac.models.ords.EventEntity;
+import ca.bc.gov.open.pac.models.ords.ProcessEntity;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import lombok.AllArgsConstructor;
@@ -38,11 +38,11 @@ public class Client implements Serializable {
     // to accept the status if update process cancels
     private final String status;
 
-    public Client(NewEventEntity newEventEntity, EventTypeCodeEntity eventTypeCodeEntity) {
-        clientNumber = newEventEntity.getClientNumber();
-        eventSeqNum = newEventEntity.getEventSeqNum();
-        computerSystemCd = newEventEntity.getComputerSystemCd();
-        eventTypeCode = eventTypeCodeEntity.getEventTypeCode();
+    public Client(ProcessEntity processEntity, EventEntity eventEntity) {
+        clientNumber = processEntity.getClientNumber();
+        eventSeqNum = processEntity.getEventSeqNum();
+        computerSystemCd = processEntity.getComputerSystemCd();
+        eventTypeCode = eventEntity.getEventTypeCode();
         csNum = null;
         surname = null;
         givenName1 = null;
@@ -83,5 +83,9 @@ public class Client implements Serializable {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Client updateStatus(String status){
+        return this;
     }
 }
