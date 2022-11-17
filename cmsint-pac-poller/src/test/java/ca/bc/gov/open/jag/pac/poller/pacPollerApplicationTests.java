@@ -2,6 +2,7 @@ package ca.bc.gov.open.jag.pac.poller;
 
 import static org.mockito.Mockito.when;
 
+import ca.bc.gov.open.jag.pac.poller.config.OrdsProperties;
 import ca.bc.gov.open.jag.pac.poller.config.QueueConfig;
 import ca.bc.gov.open.jag.pac.poller.services.PACPollerService;
 import ca.bc.gov.open.pac.models.PACModel;
@@ -35,9 +36,6 @@ class pacPollerApplicationTests {
     @Qualifier("pac-queue")
     private org.springframework.amqp.core.Queue pacQueue;
 
-    @Qualifier("ping-queue")
-    private org.springframework.amqp.core.Queue pingQueue;
-
     @MockBean private RabbitTemplate rabbitTemplate;
     @MockBean private AmqpAdmin amqpAdmin;
 
@@ -48,6 +46,7 @@ class pacPollerApplicationTests {
     @Mock private WebServiceTemplate soapTemplate = new WebServiceTemplate();
 
     @Mock private RestTemplate restTemplate = new RestTemplate();
+    @Mock private OrdsProperties mockOrdsProperties;
 
     @Test
     void testPollOrdsForNewRecords() throws JsonProcessingException {
@@ -67,6 +66,6 @@ class pacPollerApplicationTests {
 
         PACPollerService pacPollerService =
                 new PACPollerService(
-                        pacQueue, restTemplate, rabbitTemplate, amqpAdmin, queueConfig);
+                        mockOrdsProperties, pacQueue, restTemplate, rabbitTemplate, amqpAdmin, queueConfig);
     }
 }

@@ -1,16 +1,15 @@
 pac:
-  ords:
-    host: "https://dev.jag.gov.bc.ca/ords/devj/cmsintords/pac/v1/"
-#    host: ${ORDS_HOST:127.0.0.1}
-    endpoints:
-      poll: "pac/poll"
-      success: "pac/success"
-      events:
-        type: "event/type"
   pac-queue: ${PAC_QUEUE_NAME:pac-queue}
   pac-routing-key: ${PAC_ROUTING_KEY:PAC}
   exchange-name: ${RABBIT_EXCHANGE_NAME:EXCHANGE}
 
+ords:
+  username: ${ORDS_USERNAME:admin}
+  password: ${ORDS_PASSWORD:admin}
+  baseUrl: ${ORDS_HOST:127.0.0.1}
+  eventsEndpoint: "events"
+  eventsTypeEndpoint: "events/type"
+  successEndpoint: "success"
 
 spring:
   rabbitmq:
