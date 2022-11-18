@@ -7,10 +7,13 @@ import ca.bc.gov.open.pac.models.OrdsErrorLog;
 import ca.bc.gov.open.pac.models.RequestSuccessLog;
 import ca.bc.gov.open.pac.models.exceptions.ORDSException;
 import ca.bc.gov.open.pac.models.ords.EventEntity;
+import ca.bc.gov.open.pac.models.ords.EventsEntity;
 import ca.bc.gov.open.pac.models.ords.ProcessEntity;
+
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -76,8 +79,9 @@ public class PACPollerService {
                 List<ProcessEntity> newEventsEnity = Arrays.asList(processesEntity.getBody());
                 log.info("Pulled " + newEventsEnity.size() + " new records");
 
-                //                newEventsEnity.stream()
-                //                        .map(this::getEventForProcess)
+                                newEventsEnity.stream()
+                                        .map(this::getEventForProcess)
+                                        .collect(Collectors.toUnmodifiableList());
                 //                        .map(this::updateEventStatusToPending)
                 //                        .map(this::getClientNewerSequence)
                 //                        .forEach(this::sendToRabbitMq);
@@ -119,7 +123,7 @@ public class PACPollerService {
         URI uri =
                 UriComponentsBuilder.fromHttpUrl(
                                 ordProperties.getCmsIntBaseUrl()
-                                        + ordProperties.getEventsTypeEndpoint())
+                                        + ordProperties.getEventsEndpoint())
                         .queryParam("clientId", processEntity.getClientNumber())
                         .queryParam("eventSeqNum", processEntity.getEventSeqNum())
                         .build()

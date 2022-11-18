@@ -54,7 +54,7 @@ class ClientTest {
 
     @Test
     void constructorWithNewEventAndEventTypeCodeProperlyMapsTheValuesToTheFields() {
-        EventEntity eventEntity = new EventEntity("code");
+        EventEntity eventEntity = new EventEntity("client id","event sequence number","event type code");
         ProcessEntity processEntity = new ProcessEntity("1", "1", "1");
         Client expectedClient = new Client(processEntity, eventEntity);
 

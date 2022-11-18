@@ -55,7 +55,9 @@ public class PACPollerServiceTest {
         when(mockOrdsProperties.getUsername()).thenReturn(testString);
         when(mockOrdsProperties.getPassword()).thenReturn(testString);
         when(mockOrdsProperties.getBaseUrl()).thenReturn(testUrl);
+        when(mockOrdsProperties.getCmsIntBaseUrl()).thenReturn(testUrl);
         when(mockOrdsProperties.getEventsEndpoint()).thenReturn(testEndpoint);
+        when(mockOrdsProperties.getProcessesEndpoint()).thenReturn(testEndpoint);
         when(mockOrdsProperties.getEventsTypeEndpoint()).thenReturn(testEndpoint);
         when(mockOrdsProperties.getSuccessEndpoint()).thenReturn(testEndpoint);
 
@@ -115,7 +117,7 @@ public class PACPollerServiceTest {
 
     @Test
     void gettingEventTypeReturnsClientObject() {
-        EventEntity eventEntity = new EventEntity("code");
+        EventEntity eventEntity = new EventEntity("client id","event sequence number","event type code");
         ResponseEntity<EventEntity> responseEntity =
                 new ResponseEntity<>(eventEntity, HttpStatus.OK);
 
