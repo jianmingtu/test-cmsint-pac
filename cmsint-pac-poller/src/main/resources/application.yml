@@ -7,6 +7,10 @@ ords:
   username: ${ORDS_USERNAME:admin}
   password: ${ORDS_PASSWORD:admin}
   baseUrl: ${ORDS_HOST:127.0.0.1}
+  cmsIntPath: "cmsintords/"
+  cmsPath: "cmsords/"
+  modulePath: "pac/v1/"
+  processesEndpoint: "processes"
   eventsEndpoint: "events"
   eventsTypeEndpoint: "events/type"
   successEndpoint: "success"

@@ -76,10 +76,10 @@ public class PACPollerService {
                 List<ProcessEntity> newEventsEnity = Arrays.asList(processesEntity.getBody());
                 log.info("Pulled " + newEventsEnity.size() + " new records");
 
-                newEventsEnity.stream()
-                        .map(this::getEventForProcess)
-                        .map(this::updateEventStatusToPending)
-                        .map(this::getClientNewerSequence);
+                //                newEventsEnity.stream()
+                //                        .map(this::getEventForProcess)
+                //                        .map(this::updateEventStatusToPending)
+                //                        .map(this::getClientNewerSequence)
                 //                        .forEach(this::sendToRabbitMq);
             }
         } catch (Exception ex) {
@@ -98,7 +98,8 @@ public class PACPollerService {
     public HttpEntity<ProcessEntity[]> getNewProcesses() {
         URI url =
                 UriComponentsBuilder.fromHttpUrl(
-                                ordProperties.getBaseUrl() + ordProperties.getEventsEndpoint())
+                                ordProperties.getCmsIntBaseUrl()
+                                        + ordProperties.getProcessesEndpoint())
                         .queryParam("state", "NEW")
                         .build()
                         .toUri();
@@ -117,7 +118,8 @@ public class PACPollerService {
     public Client getEventForProcess(ProcessEntity processEntity) throws ORDSException {
         URI uri =
                 UriComponentsBuilder.fromHttpUrl(
-                                ordProperties.getBaseUrl() + ordProperties.getEventsTypeEndpoint())
+                                ordProperties.getCmsIntBaseUrl()
+                                        + ordProperties.getEventsTypeEndpoint())
                         .queryParam("clientId", processEntity.getClientNumber())
                         .queryParam("eventSeqNum", processEntity.getEventSeqNum())
                         .build()
@@ -149,7 +151,7 @@ public class PACPollerService {
     private Client pacUpdateClient(Client client) {
         UriComponentsBuilder builder =
                 UriComponentsBuilder.fromHttpUrl(
-                        ordProperties.getBaseUrl() + ordProperties.getSuccessEndpoint());
+                        ordProperties.getCmsIntBaseUrl() + ordProperties.getSuccessEndpoint());
         try {
             HttpEntity<Client> respClient =
                     restTemplate.exchange(

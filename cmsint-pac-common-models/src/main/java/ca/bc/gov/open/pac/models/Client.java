@@ -85,7 +85,7 @@ public class Client implements Serializable {
         }
     }
 
-    public Client updateStatus(String status){
+    public Client updateStatus(String status) {
         return this;
     }
 }

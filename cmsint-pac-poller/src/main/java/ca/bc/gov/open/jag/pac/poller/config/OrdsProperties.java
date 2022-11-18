@@ -14,6 +14,18 @@ public class OrdsProperties {
     private String password;
     private String baseUrl;
     private String eventsEndpoint;
+    private String processesEndpoint;
     private String eventsTypeEndpoint;
     private String successEndpoint;
+    private String cmsIntPath;
+    private String cmsPath;
+    private String modulePath;
+
+    public String getCmsIntBaseUrl() {
+        return baseUrl + cmsIntPath + modulePath;
+    }
+
+    public String getCmsBaseUrl() {
+        return baseUrl + cmsPath + modulePath;
+    }
 }
