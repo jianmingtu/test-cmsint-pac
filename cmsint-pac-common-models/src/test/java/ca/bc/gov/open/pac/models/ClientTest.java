@@ -1,8 +1,8 @@
 package ca.bc.gov.open.pac.models;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
 
+import ca.bc.gov.open.pac.models.eventStatus.NewEvenStatus;
 import ca.bc.gov.open.pac.models.ords.EventEntity;
 import ca.bc.gov.open.pac.models.ords.ProcessEntity;
 import org.junit.jupiter.api.Test;
@@ -35,28 +35,12 @@ class ClientTest {
                     "custodyCenter",
                     "livingUnit",
                     "status",
-                    new NewEvenStatus()
-            );
-
-//    @Test
-//    void makeSureNewInstanceIsNotTheSameObjectAsTheCurrent() {
-//        Client expectedClient = actualClient.getCopy();
-//        assertEquals(expectedClient, expectedClient);
-//        assertNotSame(expectedClient, actualClient);
-//    }
-//
-//    @Test
-//    void makeSureNewInstanceIsNotTheSameObjectAsTheCurrentButItHasNewEventTypeCode() {
-//        String newEventTypeCode = "newEventType";
-//        Client expectedClient = actualClient.getCopyWithNewEventTypeCode(newEventTypeCode);
-//
-//        assertNotSame(expectedClient, actualClient);
-//        assertEquals(expectedClient.getEventTypeCode(), newEventTypeCode);
-//    }
+                    new NewEvenStatus());
 
     @Test
     void constructorWithNewEventAndEventTypeCodeProperlyMapsTheValuesToTheFields() {
-        EventEntity eventEntity = new EventEntity("client id","event sequence number","event type code");
+        EventEntity eventEntity =
+                new EventEntity("client id", "event sequence number", "event type code");
         ProcessEntity processEntity = new ProcessEntity("1", "1", "1");
         Client expectedClient = new Client(processEntity, eventEntity);
 
