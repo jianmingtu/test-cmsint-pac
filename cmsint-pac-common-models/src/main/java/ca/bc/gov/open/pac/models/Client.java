@@ -1,12 +1,12 @@
 package ca.bc.gov.open.pac.models;
 
+import ca.bc.gov.open.pac.models.eventStatus.EventStatus;
+import ca.bc.gov.open.pac.models.eventStatus.NewEvenStatus;
 import ca.bc.gov.open.pac.models.ords.EventEntity;
 import ca.bc.gov.open.pac.models.ords.ProcessEntity;
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.util.SerializationUtils;
 
 @Data
 @AllArgsConstructor
@@ -68,23 +68,4 @@ public class Client implements Serializable {
         status = null;
         eventStatus = new NewEvenStatus();
     }
-
-//    public Client getCopy() {
-//        byte[] serializedClient = SerializationUtils.serialize(this);
-//        return (Client) SerializationUtils.deserialize(serializedClient);
-//    }
-//
-//    public Client getCopyWithNewEventTypeCode(String eventTypeCode) {
-//        Client deserializedClient = getCopy();
-//
-//        try {
-//            Field modifiersField = Client.class.getDeclaredField("eventTypeCode");
-//            modifiersField.setAccessible(true);
-//            modifiersField.set(deserializedClient, eventTypeCode);
-//            modifiersField.setAccessible(false);
-//            return deserializedClient;
-//        } catch (NoSuchFieldException | IllegalAccessException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
 }
