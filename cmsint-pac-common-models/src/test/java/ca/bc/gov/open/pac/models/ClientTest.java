@@ -34,23 +34,25 @@ class ClientTest {
                     "isIn",
                     "custodyCenter",
                     "livingUnit",
-                    "status");
+                    "status",
+                    new NewEvenStatus()
+            );
 
-    @Test
-    void makeSureNewInstanceIsNotTheSameObjectAsTheCurrent() {
-        Client expectedClient = actualClient.getCopy();
-        assertEquals(expectedClient, expectedClient);
-        assertNotSame(expectedClient, actualClient);
-    }
-
-    @Test
-    void makeSureNewInstanceIsNotTheSameObjectAsTheCurrentButItHasNewEventTypeCode() {
-        String newEventTypeCode = "newEventType";
-        Client expectedClient = actualClient.getCopyWithNewEventTypeCode(newEventTypeCode);
-
-        assertNotSame(expectedClient, actualClient);
-        assertEquals(expectedClient.getEventTypeCode(), newEventTypeCode);
-    }
+//    @Test
+//    void makeSureNewInstanceIsNotTheSameObjectAsTheCurrent() {
+//        Client expectedClient = actualClient.getCopy();
+//        assertEquals(expectedClient, expectedClient);
+//        assertNotSame(expectedClient, actualClient);
+//    }
+//
+//    @Test
+//    void makeSureNewInstanceIsNotTheSameObjectAsTheCurrentButItHasNewEventTypeCode() {
+//        String newEventTypeCode = "newEventType";
+//        Client expectedClient = actualClient.getCopyWithNewEventTypeCode(newEventTypeCode);
+//
+//        assertNotSame(expectedClient, actualClient);
+//        assertEquals(expectedClient.getEventTypeCode(), newEventTypeCode);
+//    }
 
     @Test
     void constructorWithNewEventAndEventTypeCodeProperlyMapsTheValuesToTheFields() {

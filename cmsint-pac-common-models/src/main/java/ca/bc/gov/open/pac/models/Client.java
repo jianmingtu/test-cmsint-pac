@@ -38,6 +38,8 @@ public class Client implements Serializable {
     // to accept the status if update process cancels
     private final String status;
 
+    private EventStatus eventStatus;
+
     public Client(ProcessEntity processEntity, EventEntity eventEntity) {
         clientNumber = processEntity.getClientNumber();
         eventSeqNum = processEntity.getEventSeqNum();
@@ -64,28 +66,25 @@ public class Client implements Serializable {
         custodyCenter = null;
         livingUnit = null;
         status = null;
+        eventStatus = new NewEvenStatus();
     }
 
-    public Client getCopy() {
-        byte[] serializedClient = SerializationUtils.serialize(this);
-        return (Client) SerializationUtils.deserialize(serializedClient);
-    }
-
-    public Client getCopyWithNewEventTypeCode(String eventTypeCode) {
-        Client deserializedClient = getCopy();
-
-        try {
-            Field modifiersField = Client.class.getDeclaredField("eventTypeCode");
-            modifiersField.setAccessible(true);
-            modifiersField.set(deserializedClient, eventTypeCode);
-            modifiersField.setAccessible(false);
-            return deserializedClient;
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public Client updateStatus(String status) {
-        return this;
-    }
+//    public Client getCopy() {
+//        byte[] serializedClient = SerializationUtils.serialize(this);
+//        return (Client) SerializationUtils.deserialize(serializedClient);
+//    }
+//
+//    public Client getCopyWithNewEventTypeCode(String eventTypeCode) {
+//        Client deserializedClient = getCopy();
+//
+//        try {
+//            Field modifiersField = Client.class.getDeclaredField("eventTypeCode");
+//            modifiersField.setAccessible(true);
+//            modifiersField.set(deserializedClient, eventTypeCode);
+//            modifiersField.setAccessible(false);
+//            return deserializedClient;
+//        } catch (NoSuchFieldException | IllegalAccessException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 }
