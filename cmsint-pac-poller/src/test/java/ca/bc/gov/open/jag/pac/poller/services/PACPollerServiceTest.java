@@ -8,16 +8,23 @@ import static org.mockito.Mockito.*;
 
 import ca.bc.gov.open.jag.pac.poller.config.OrdsProperties;
 import ca.bc.gov.open.pac.models.Client;
+import ca.bc.gov.open.pac.models.eventStatus.NewEvenStatus;
+import ca.bc.gov.open.pac.models.eventStatus.PendingEventStatus;
 import ca.bc.gov.open.pac.models.exceptions.ORDSException;
 import ca.bc.gov.open.pac.models.ords.EventEntity;
 import ca.bc.gov.open.pac.models.ords.EventsEntity;
+import ca.bc.gov.open.pac.models.ords.NewerEventEntity;
 import ca.bc.gov.open.pac.models.ords.ProcessEntity;
 import java.net.URI;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
@@ -38,12 +45,41 @@ public class PACPollerServiceTest {
     private static final String testEndpoint = "/endpoint";
     @Mock private RestTemplate mockRestTemplate;
     @Mock private RabbitTemplate mockRabbitTemplate;
-    ;
+    @Mock private AmqpAdmin mockedAmqpAdmin;
 
     @Mock private OrdsProperties mockOrdsProperties;
 
     private static PACPollerService pacPollerService;
     private ProcessEntity genericProcessEntity;
+
+    private final Client mockedClient =
+            new Client(
+                    "clientNumber",
+                    "csNum",
+                    "eventSeqNum",
+                    "eventTypeCode",
+                    "surname",
+                    "givenName1",
+                    "givenName2",
+                    "birthDate",
+                    "gender",
+                    "photoGUID",
+                    "probableDischargeDate",
+                    "pacLocationCd",
+                    "outReason",
+                    "newerSequence",
+                    "computerSystemCd",
+                    "isActive",
+                    "sysDate",
+                    "fromCsNum",
+                    "userId",
+                    "mergeUserId",
+                    "icsLocationCd",
+                    "isIn",
+                    "custodyCenter",
+                    "livingUnit",
+                    "status",
+                    new NewEvenStatus(mockRestTemplate));
 
     @BeforeEach
     void beforeEachSetup() {
@@ -51,7 +87,12 @@ public class PACPollerServiceTest {
 
         pacPollerService =
                 new PACPollerService(
-                        mockOrdsProperties, null, mockRestTemplate, mockRabbitTemplate, null, null);
+                        mockOrdsProperties,
+                        null,
+                        mockRestTemplate,
+                        mockRabbitTemplate,
+                        mockedAmqpAdmin,
+                        null);
         when(mockOrdsProperties.getUsername()).thenReturn(testString);
         when(mockOrdsProperties.getPassword()).thenReturn(testString);
         when(mockOrdsProperties.getBaseUrl()).thenReturn(testUrl);
@@ -62,6 +103,8 @@ public class PACPollerServiceTest {
         when(mockOrdsProperties.getSuccessEndpoint()).thenReturn(testEndpoint);
 
         genericProcessEntity = new ProcessEntity("1", "1", "1");
+
+        when(mockedAmqpAdmin.declareQueue(any())).thenReturn(null);
     }
 
     @Test
@@ -117,7 +160,8 @@ public class PACPollerServiceTest {
 
     @Test
     void gettingEventTypeReturnsClientObject() {
-        EventEntity eventEntity = new EventEntity("client id","event sequence number","event type code");
+        EventEntity eventEntity =
+                new EventEntity("client id", "event sequence number", "event type code");
         ResponseEntity<EventEntity> responseEntity =
                 new ResponseEntity<>(eventEntity, HttpStatus.OK);
 
@@ -146,5 +190,31 @@ public class PACPollerServiceTest {
         assertThrows(
                 ORDSException.class,
                 () -> pacPollerService.getEventForProcess(genericProcessEntity));
+    }
+
+    @SneakyThrows
+    @ParameterizedTest
+    @CsvSource(
+            value = {
+                "false,ca.bc.gov.open.pac.models.eventStatus.CompletedDuplicateEventStatus",
+                "true,ca.bc.gov.open.pac.models.eventStatus.PendingEventStatus"
+            })
+    void clientOnCorrectStateDependingOnIfItHasOrNotANewerEvent(
+            boolean hasNewerEvent, String eventStatusClassString) {
+
+        Class eventStatusClass = Class.forName(eventStatusClassString);
+        mockedClient.setEventStatus(new PendingEventStatus(mockRestTemplate));
+
+        NewerEventEntity newerEventEntity = new NewerEventEntity();
+        newerEventEntity.setHasNewerEvent(hasNewerEvent);
+
+        ResponseEntity<NewerEventEntity> responseEntity =
+                new ResponseEntity<>(newerEventEntity, HttpStatus.OK);
+
+        when(mockRestTemplate.getForObject(any(URI.class), eq(NewerEventEntity.class)))
+                .thenReturn(newerEventEntity);
+
+        Client actualClient = pacPollerService.getClientNewerSequence(mockedClient);
+        assertEquals(eventStatusClass, actualClient.getEventStatus().getClass());
     }
 }

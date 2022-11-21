@@ -53,10 +53,10 @@ public class RabbitMqConfig {
 
     @Bean
     public ConnectionFactory connectionFactory() {
-        CachingConnectionFactory connectionFactory =
-                new CachingConnectionFactory(rabbitHost);
+        CachingConnectionFactory connectionFactory = new CachingConnectionFactory(rabbitHost);
         return connectionFactory;
     }
+
     @Bean
     public RabbitTemplate rabbitTemplate() {
         return new RabbitTemplate(connectionFactory());

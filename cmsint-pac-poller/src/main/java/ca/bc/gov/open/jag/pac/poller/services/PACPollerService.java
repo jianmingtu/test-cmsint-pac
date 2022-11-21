@@ -7,13 +7,11 @@ import ca.bc.gov.open.pac.models.OrdsErrorLog;
 import ca.bc.gov.open.pac.models.RequestSuccessLog;
 import ca.bc.gov.open.pac.models.exceptions.ORDSException;
 import ca.bc.gov.open.pac.models.ords.EventEntity;
-import ca.bc.gov.open.pac.models.ords.EventsEntity;
+import ca.bc.gov.open.pac.models.ords.NewerEventEntity;
 import ca.bc.gov.open.pac.models.ords.ProcessEntity;
-
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -79,24 +77,37 @@ public class PACPollerService {
                 List<ProcessEntity> newEventsEnity = Arrays.asList(processesEntity.getBody());
                 log.info("Pulled " + newEventsEnity.size() + " new records");
 
-                                newEventsEnity.stream()
-                                        .map(this::getEventForProcess)
-                                        .collect(Collectors.toUnmodifiableList());
-                //                        .map(this::updateEventStatusToPending)
-                //                        .map(this::getClientNewerSequence)
-                //                        .forEach(this::sendToRabbitMq);
+                newEventsEnity.stream()
+                        .map(this::getEventForProcess)
+                        .map(client -> client.getEventStatus().updateToPending(client))
+                        .map(this::getClientNewerSequence)
+                        .map(this::getDemographicsInfo)
+                        .forEach(this::sendToRabbitMq);
             }
         } catch (Exception ex) {
             log.error("Failed to pull new records from the db: " + ex.getMessage());
         }
     }
 
-    private Client getClientNewerSequence(Client client) {
-        return null;
+    private Client getDemographicsInfo(Client client) {
+        return client;
     }
 
-    private Client updateEventStatusToPending(Client client) {
-        return null;
+    public Client getClientNewerSequence(Client client) {
+        URI url =
+                UriComponentsBuilder.fromHttpUrl(
+                                ordProperties.getCmsIntBaseUrl()
+                                        + ordProperties.getProcessesEndpoint())
+                        .queryParam("state", "NEW")
+                        .build()
+                        .toUri();
+
+        NewerEventEntity newerEventEntity = restTemplate.getForObject(url, NewerEventEntity.class);
+
+        if (!newerEventEntity.hasNewerEvent())
+            client.getEventStatus().updateToCompletedDuplicate(client);
+
+        return client;
     }
 
     public HttpEntity<ProcessEntity[]> getNewProcesses() {
