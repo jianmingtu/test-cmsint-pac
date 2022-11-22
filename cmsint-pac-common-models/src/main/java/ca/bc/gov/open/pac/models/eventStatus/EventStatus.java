@@ -2,6 +2,7 @@ package ca.bc.gov.open.pac.models.eventStatus;
 
 import ca.bc.gov.open.pac.models.Client;
 import ca.bc.gov.open.pac.models.OrdsErrorLog;
+import ca.bc.gov.open.pac.models.RequestSuccessLog;
 import ca.bc.gov.open.pac.models.exceptions.ORDSException;
 import ca.bc.gov.open.pac.models.ords.OrdsProperties;
 import ca.bc.gov.open.pac.models.ords.UpdateEntryEntity;
@@ -49,6 +50,7 @@ public abstract class EventStatus {
 
         try {
             restTemplate.put(url, new UpdateEntryEntity(client, eventStatusCode));
+            log.info(new RequestSuccessLog("Request Success", url.getPath()).toString());
         } catch (Exception ex) {
             log.error(
                     new OrdsErrorLog(

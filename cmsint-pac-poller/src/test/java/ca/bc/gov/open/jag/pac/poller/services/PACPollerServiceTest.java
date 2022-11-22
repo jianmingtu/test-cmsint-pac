@@ -11,12 +11,12 @@ import ca.bc.gov.open.pac.models.eventStatus.PendingEventStatus;
 import ca.bc.gov.open.pac.models.exceptions.ORDSException;
 import ca.bc.gov.open.pac.models.ords.DemographicsEntity;
 import ca.bc.gov.open.pac.models.ords.EventEntity;
-import ca.bc.gov.open.pac.models.ords.EventsEntity;
 import ca.bc.gov.open.pac.models.ords.NewerEventEntity;
 import ca.bc.gov.open.pac.models.ords.OrdsProperties;
 import ca.bc.gov.open.pac.models.ords.ProcessEntity;
 import ca.bc.gov.open.pac.models.ords.UpdateEntryEntity;
 import java.net.URI;
+import java.util.List;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -140,16 +140,43 @@ public class PACPollerServiceTest {
     }
 
     @Test
+    void getNewProcessesHasNoNewProcess() {
+        when(mockRestTemplate.getForObject(any(URI.class), eq(ProcessEntity[].class)))
+                .thenReturn(new ProcessEntity[0]);
+
+        List<ProcessEntity> newProcesses = pacPollerService.getNewProcesses();
+        assertEquals(0, newProcesses.size());
+    }
+
+    @Test
+    void getNewProcessesHasNewProcess() {
+        ProcessEntity processEntity =
+                new ProcessEntity(clientNumber, eventSeqNumber, computerSystemCd);
+        ProcessEntity[] processEntitiesArray = {processEntity};
+
+        when(mockRestTemplate.getForObject(any(URI.class), eq(ProcessEntity[].class)))
+                .thenReturn(processEntitiesArray);
+
+        List<ProcessEntity> newProcesses = pacPollerService.getNewProcesses();
+        assertEquals(1, newProcesses.size());
+        assertEquals(processEntity, newProcesses.get(0));
+    }
+
+    @Test
+    void getNewProcessesThrowsExceptionWhenExecuting() {
+        when(mockRestTemplate.getForObject(any(URI.class), eq(ProcessEntity[].class)))
+                .thenThrow(new RuntimeException("test exception"));
+
+        assertThrows(ORDSException.class, pacPollerService::getNewProcesses);
+    }
+
+    @Test
     void pollOrdsForNewRecordsBringsZeroNewRecords(CapturedOutput output) {
         ResponseEntity<ProcessEntity[]> responseEntity =
                 new ResponseEntity<>(new ProcessEntity[0], HttpStatus.OK);
 
-        when(mockRestTemplate.exchange(
-                        any(URI.class),
-                        any(HttpMethod.class),
-                        any(HttpEntity.class),
-                        eq(ProcessEntity[].class)))
-                .thenReturn(responseEntity);
+        when(mockRestTemplate.getForObject(any(URI.class), eq(ProcessEntity[].class)))
+                .thenReturn(new ProcessEntity[0]);
 
         pacPollerService.pollOrdsForNewRecords();
         assertThat(output).contains("Pulled 0 new records");
@@ -157,11 +184,7 @@ public class PACPollerServiceTest {
 
     @Test
     void pollOrdsForNewRecordsFailsDuringRequest(CapturedOutput output) {
-        when(mockRestTemplate.exchange(
-                        any(URI.class),
-                        any(HttpMethod.class),
-                        any(HttpEntity.class),
-                        eq(EventsEntity.class)))
+        when(mockRestTemplate.getForObject(any(URI.class), eq(ProcessEntity[].class)))
                 .thenThrow(new RuntimeException("testing exception"));
 
         pacPollerService.pollOrdsForNewRecords();
@@ -194,17 +217,11 @@ public class PACPollerServiceTest {
     void gettingEventTypeReturnsClientObject() {
         EventEntity eventEntity =
                 new EventEntity("client id", "event sequence number", "event type code");
-        ResponseEntity<EventEntity> responseEntity =
-                new ResponseEntity<>(eventEntity, HttpStatus.OK);
 
         Client expectedClient = new Client(genericProcessEntity, eventEntity);
 
-        when(mockRestTemplate.exchange(
-                        any(URI.class),
-                        any(HttpMethod.class),
-                        any(HttpEntity.class),
-                        eq(EventEntity.class)))
-                .thenReturn(responseEntity);
+        when(mockRestTemplate.getForObject(any(URI.class), eq(EventEntity.class)))
+                .thenReturn(eventEntity);
 
         Client actualClient = pacPollerService.getEventForProcess(genericProcessEntity);
         assertEquals(expectedClient, actualClient);
@@ -212,11 +229,7 @@ public class PACPollerServiceTest {
 
     @Test
     void problematicGettingEventTypeRaisesOrdsException() {
-        when(mockRestTemplate.exchange(
-                        any(URI.class),
-                        any(HttpMethod.class),
-                        any(HttpEntity.class),
-                        eq(EventEntity.class)))
+        when(mockRestTemplate.getForObject(any(URI.class), eq(EventEntity.class)))
                 .thenThrow(ORDSException.class);
 
         assertThrows(

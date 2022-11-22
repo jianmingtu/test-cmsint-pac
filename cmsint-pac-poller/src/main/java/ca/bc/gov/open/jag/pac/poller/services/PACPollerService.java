@@ -12,6 +12,7 @@ import ca.bc.gov.open.pac.models.ords.OrdsProperties;
 import ca.bc.gov.open.pac.models.ords.ProcessEntity;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import org.apache.logging.log4j.LogManager;
@@ -24,7 +25,6 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -72,26 +72,24 @@ public class PACPollerService {
         log.info("Polling db for new records");
 
         try {
-            HttpEntity<ProcessEntity[]> processesEntity = getNewProcesses();
+            List<ProcessEntity> processesEntity = getNewProcesses();
 
-            if (processesEntity.hasBody()) {
-                List<ProcessEntity> newEventsEnity = Arrays.asList(processesEntity.getBody());
-                log.info("Pulled " + newEventsEnity.size() + " new records");
+            log.info("Pulled " + processesEntity.size() + " new records");
 
-                newEventsEnity.stream()
-                        .map(this::getEventForProcess)
-                        .map(client -> client.getStatus().updateToPending(client))
-                        .map(this::getClientNewerSequence)
-                        .map(this::getDemographicsInfo)
-                        .forEach(this::sendToRabbitMq);
-            }
+            processesEntity.stream()
+                    .map(this::getEventForProcess)
+                    .map(client -> client.getStatus().updateToPending(client))
+                    .map(this::getClientNewerSequence)
+                    .map(this::getDemographicsInfo)
+                    .forEach(this::sendToRabbitMq);
+
         } catch (Exception ex) {
             log.error("Failed to pull new records from the db: " + ex.getMessage());
         }
     }
 
     public Client getDemographicsInfo(Client client) {
-        URI uri =
+        URI url =
                 UriComponentsBuilder.fromHttpUrl(
                                 ordProperties.getCmsBaseUrl()
                                         + ordProperties.getDemographicsEndpoint())
@@ -101,20 +99,14 @@ public class PACPollerService {
                         .toUri();
         try {
             DemographicsEntity demographicsEntity =
-                    restTemplate.getForObject(uri, DemographicsEntity.class);
+                    restTemplate.getForObject(url, DemographicsEntity.class);
 
             if (demographicsEntity == null)
-                throw new RuntimeException("Response from ORDS is null");
+                throw new NullPointerException("Response object from " + url.getPath() + "is null");
 
             return new Client(client, demographicsEntity);
         } catch (Exception ex) {
-            log.error(
-                    new OrdsErrorLog(
-                                    "Error received from ORDS",
-                                    "getDemographicsInfo",
-                                    ex.getMessage(),
-                                    client)
-                            .toString());
+            logError(url.getPath(), ex, null);
             throw new ORDSException();
         }
     }
@@ -128,15 +120,26 @@ public class PACPollerService {
                         .build()
                         .toUri();
 
-        NewerEventEntity newerEventEntity = restTemplate.getForObject(url, NewerEventEntity.class);
+        try {
+            NewerEventEntity newerEventEntity =
+                    restTemplate.getForObject(url, NewerEventEntity.class);
 
-        if (!newerEventEntity.hasNewerEvent())
-            client.getStatus().updateToCompletedDuplicate(client);
+            log.info(new RequestSuccessLog("Request Success", url.getPath()).toString());
 
-        return client;
+            if (newerEventEntity == null)
+                throw new NullPointerException("Response object from " + url.getPath() + "is null");
+
+            if (!newerEventEntity.hasNewerEvent())
+                client.getStatus().updateToCompletedDuplicate(client);
+
+            return client;
+        } catch (Exception ex) {
+            logError(url.getPath(), ex, null);
+            throw new ORDSException();
+        }
     }
 
-    public HttpEntity<ProcessEntity[]> getNewProcesses() {
+    public List<ProcessEntity> getNewProcesses() {
         URI url =
                 UriComponentsBuilder.fromHttpUrl(
                                 ordProperties.getCmsIntBaseUrl()
@@ -144,9 +147,33 @@ public class PACPollerService {
                         .queryParam("state", "NEW")
                         .build()
                         .toUri();
+        try {
 
-        return restTemplate.exchange(
-                url, HttpMethod.GET, new HttpEntity<>(new HttpHeaders()), ProcessEntity[].class);
+            ProcessEntity[] processEntityArray =
+                    restTemplate.getForObject(url, ProcessEntity[].class);
+
+            log.info(new RequestSuccessLog("Request Success", url.getPath()).toString());
+
+            if (processEntityArray == null) return Collections.emptyList();
+
+            return Arrays.asList(processEntityArray);
+
+        } catch (Exception ex) {
+            logError(url.getPath(), ex, null);
+            throw new ORDSException();
+        }
+    }
+
+    private void logError(String method, Exception ex, Object request) throws ORDSException {
+        String ordsErrormessage =
+                new OrdsErrorLog(
+                                "Error received from ORDS",
+                                "getEventType",
+                                ex.getMessage(),
+                                request)
+                        .toString();
+
+        log.error(ordsErrormessage);
     }
 
     public void sendToRabbitMq(Client client) {
@@ -157,7 +184,7 @@ public class PACPollerService {
     //  Scheduled every minute in MS
 
     public Client getEventForProcess(ProcessEntity processEntity) throws ORDSException {
-        URI uri =
+        URI url =
                 UriComponentsBuilder.fromHttpUrl(
                                 ordProperties.getCmsIntBaseUrl()
                                         + ordProperties.getEventsEndpoint())
@@ -166,37 +193,32 @@ public class PACPollerService {
                         .build()
                         .toUri();
         try {
-            ResponseEntity<EventEntity> resp =
-                    restTemplate.exchange(
-                            uri,
-                            HttpMethod.GET,
-                            new HttpEntity<>(new HttpHeaders()),
-                            EventEntity.class);
+            EventEntity eventEntity = restTemplate.getForObject(url, EventEntity.class);
 
-            log.info(new RequestSuccessLog("Request Success", "getEventType").toString());
+            log.info(new RequestSuccessLog("Request Success", url.getPath()).toString());
 
-            return new Client(processEntity, resp.getBody());
+            if (eventEntity == null)
+                throw new NullPointerException("Response object from " + url.getPath() + "is null");
+
+            return new Client(processEntity, eventEntity);
 
         } catch (Exception ex) {
-            log.error(
-                    new OrdsErrorLog(
-                                    "Error received from ORDS",
-                                    "getEventType",
-                                    ex.getMessage(),
-                                    processEntity)
-                            .toString());
+            logError(url.getPath(), ex, null);
             throw new ORDSException();
         }
     }
 
     private Client pacUpdateClient(Client client) {
-        UriComponentsBuilder builder =
+        URI url =
                 UriComponentsBuilder.fromHttpUrl(
-                        ordProperties.getCmsIntBaseUrl() + ordProperties.getSuccessEndpoint());
+                                ordProperties.getCmsIntBaseUrl()
+                                        + ordProperties.getSuccessEndpoint())
+                        .build()
+                        .toUri();
         try {
             HttpEntity<Client> respClient =
                     restTemplate.exchange(
-                            builder.toUriString(),
+                            url,
                             HttpMethod.POST,
                             new HttpEntity<>(client, new HttpHeaders()),
                             new ParameterizedTypeReference<>() {});
@@ -207,15 +229,7 @@ public class PACPollerService {
             return respClient.getBody();
 
         } catch (Exception ex) {
-
-            log.error(
-                    new OrdsErrorLog(
-                                    "Error received from ORDS",
-                                    ordProperties.getSuccessEndpoint(),
-                                    ex.getMessage(),
-                                    client)
-                            .toString());
-
+            logError(url.getPath(), ex, null);
             throw new ORDSException();
         }
     }
