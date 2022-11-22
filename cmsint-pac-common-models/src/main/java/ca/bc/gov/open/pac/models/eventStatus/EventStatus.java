@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-@EqualsAndHashCode
 @Component
+@EqualsAndHashCode
 @NoArgsConstructor
 @Slf4j
 public abstract class EventStatus {

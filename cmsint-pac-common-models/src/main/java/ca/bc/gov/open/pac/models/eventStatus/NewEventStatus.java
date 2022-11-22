@@ -8,9 +8,9 @@ import org.springframework.web.client.RestTemplate;
 
 @NoArgsConstructor
 @Slf4j
-public class NewEvenStatus extends EventStatus {
+public class NewEventStatus extends EventStatus {
 
-    public NewEvenStatus(OrdsProperties ordProperties, RestTemplate restTemplate) {
+    public NewEventStatus(OrdsProperties ordProperties, RestTemplate restTemplate) {
         super(ordProperties, restTemplate);
     }
 

@@ -7,6 +7,7 @@ import static org.mockito.Mockito.*;
 
 import ca.bc.gov.open.pac.models.Client;
 import ca.bc.gov.open.pac.models.DemographicInfo;
+import ca.bc.gov.open.pac.models.eventStatus.EventStatusCode;
 import ca.bc.gov.open.pac.models.eventStatus.PendingEventStatus;
 import ca.bc.gov.open.pac.models.exceptions.ORDSException;
 import ca.bc.gov.open.pac.models.ords.DemographicsEntity;
@@ -16,6 +17,7 @@ import ca.bc.gov.open.pac.models.ords.OrdsProperties;
 import ca.bc.gov.open.pac.models.ords.ProcessEntity;
 import ca.bc.gov.open.pac.models.ords.UpdateEntryEntity;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,6 +51,7 @@ public class PACPollerServiceTest {
     @Mock private AmqpAdmin mockedAmqpAdmin;
 
     @Mock private OrdsProperties mockOrdsProperties;
+    @Mock private PACPollerService mockPacPollerService;
 
     private static PACPollerService pacPollerService;
     private ProcessEntity genericProcessEntity;
@@ -131,6 +134,7 @@ public class PACPollerServiceTest {
         when(mockOrdsProperties.getSuccessEndpoint()).thenReturn(testEndpoint);
         when(mockOrdsProperties.getSuccessEndpoint()).thenReturn(testEndpoint);
         when(mockOrdsProperties.getDemographicsEndpoint()).thenReturn(testEndpoint);
+        when(mockOrdsProperties.getEntriesEndpoint()).thenReturn(testEndpoint);
 
         genericProcessEntity = new ProcessEntity("1", "1", "1");
 
@@ -189,28 +193,6 @@ public class PACPollerServiceTest {
 
         pacPollerService.pollOrdsForNewRecords();
         assertThat(output).contains("Failed to pull new records from the db");
-    }
-
-    @Test
-    void pollOrdsForNewRecordsBringsNewRecords(CapturedOutput output) {
-        ProcessEntity[] newEventsEntity = {genericProcessEntity, new ProcessEntity("2", "2", "2")};
-        ResponseEntity<ProcessEntity[]> responseEntity =
-                new ResponseEntity<>(newEventsEntity, HttpStatus.OK);
-
-        when(mockRestTemplate.exchange(
-                        any(URI.class),
-                        any(HttpMethod.class),
-                        any(HttpEntity.class),
-                        eq(ProcessEntity[].class)))
-                .thenReturn(responseEntity);
-
-        when(mockRabbitTemplate.convertSendAndReceive(anyString(), anyString(), any(Client.class)))
-                .thenReturn(null);
-
-        pacPollerService.pollOrdsForNewRecords();
-        assertThat(output).contains("Pulled " + newEventsEntity.length + " new records");
-        verify(mockRabbitTemplate, times(1))
-                .convertSendAndReceive(anyString(), anyString(), any(Client.class));
     }
 
     @Test

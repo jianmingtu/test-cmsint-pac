@@ -1,7 +1,7 @@
 package ca.bc.gov.open.pac.models;
 
 import ca.bc.gov.open.pac.models.eventStatus.EventStatus;
-import ca.bc.gov.open.pac.models.eventStatus.NewEvenStatus;
+import ca.bc.gov.open.pac.models.eventStatus.NewEventStatus;
 import ca.bc.gov.open.pac.models.ords.DemographicsEntity;
 import ca.bc.gov.open.pac.models.ords.EventEntity;
 import ca.bc.gov.open.pac.models.ords.OrdsProperties;
@@ -26,7 +26,7 @@ public class Client implements Serializable {
         eventSeqNum = processEntity.getEventSeqNum();
         computerSystemCd = processEntity.getComputerSystemCd();
         eventTypeCode = eventEntity.getEventTypeCode();
-        status = new NewEvenStatus();
+        status = new NewEventStatus();
         demographicInfo = new DemographicInfo();
     }
 
@@ -36,7 +36,7 @@ public class Client implements Serializable {
             RestTemplate restTemplate,
             OrdsProperties ordProperties) {
         this(processEntity, eventEntity);
-        this.status = new NewEvenStatus(ordProperties, restTemplate);
+        this.status = new NewEventStatus(ordProperties, restTemplate);
     }
 
     public Client(Client client, DemographicsEntity demographicsEntity) {

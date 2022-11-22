@@ -10,11 +10,6 @@ import ca.bc.gov.open.pac.models.ords.EventEntity;
 import ca.bc.gov.open.pac.models.ords.NewerEventEntity;
 import ca.bc.gov.open.pac.models.ords.OrdsProperties;
 import ca.bc.gov.open.pac.models.ords.ProcessEntity;
-import java.net.URI;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import javax.annotation.PostConstruct;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.amqp.core.AmqpAdmin;
@@ -29,6 +24,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import javax.annotation.PostConstruct;
+import java.net.URI;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 // @Slf4j
@@ -82,6 +83,9 @@ public class PACPollerService {
                     .map(this::getClientNewerSequence)
                     .map(this::getDemographicsInfo)
                     .forEach(this::sendToRabbitMq);
+
+            if (!processesEntity.isEmpty())
+                log.info(processesEntity.size() + "new records sent to Queue");
 
         } catch (Exception ex) {
             log.error("Failed to pull new records from the db: " + ex.getMessage());
@@ -167,10 +171,10 @@ public class PACPollerService {
     private void logError(String method, Exception ex, Object request) throws ORDSException {
         String ordsErrormessage =
                 new OrdsErrorLog(
-                                "Error received from ORDS",
-                                "getEventType",
-                                ex.getMessage(),
-                                request)
+                        "Error received from ORDS",
+                        "getEventType",
+                        ex.getMessage(),
+                        request)
                         .toString();
 
         log.error(ordsErrormessage);
@@ -221,7 +225,8 @@ public class PACPollerService {
                             url,
                             HttpMethod.POST,
                             new HttpEntity<>(client, new HttpHeaders()),
-                            new ParameterizedTypeReference<>() {});
+                            new ParameterizedTypeReference<>() {
+                            });
 
             log.info(
                     new RequestSuccessLog("Request Success", ordProperties.getSuccessEndpoint())
