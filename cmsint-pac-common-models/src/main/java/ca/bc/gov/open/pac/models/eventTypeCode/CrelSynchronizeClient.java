@@ -1,10 +1,10 @@
-package ca.bc.gov.pac.open.jag.pac.consumer.model;
+package ca.bc.gov.open.pac.models.eventTypeCode;
 
 import ca.bc.gov.open.pac.models.Client;
 
 public class CrelSynchronizeClient extends SynchronizeClient {
 
     public CrelSynchronizeClient(Client client) {
-        csNumber = client.getCsNum();
+        csNumber = client.getDemographicInfo().getCsNum();
     }
 }

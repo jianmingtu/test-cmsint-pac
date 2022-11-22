@@ -14,6 +14,8 @@ ords:
   eventsEndpoint: "events"
   eventsTypeEndpoint: "events/type"
   successEndpoint: "success"
+  entriesEndpoint: "entries"
+  demographicsEndpoint: "demographics"
 
 spring:
   rabbitmq:

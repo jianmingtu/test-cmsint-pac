@@ -1,7 +1,7 @@
 package ca.bc.gov.open.jag.pac.poller;
 
-import ca.bc.gov.open.jag.pac.poller.config.OrdsProperties;
 import ca.bc.gov.open.jag.pac.poller.config.QueueConfig;
+import ca.bc.gov.open.pac.models.ords.OrdsProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.mockito.Mock;
 import org.springframework.amqp.core.AmqpAdmin;

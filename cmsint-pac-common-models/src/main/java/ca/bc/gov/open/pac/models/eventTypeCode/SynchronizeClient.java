@@ -1,4 +1,4 @@
-package ca.bc.gov.pac.open.jag.pac.consumer.model;
+package ca.bc.gov.open.pac.models.eventTypeCode;
 
 import lombok.Data;
 

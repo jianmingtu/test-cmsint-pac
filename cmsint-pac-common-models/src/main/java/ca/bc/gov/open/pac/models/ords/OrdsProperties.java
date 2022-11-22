@@ -1,4 +1,4 @@
-package ca.bc.gov.open.jag.pac.poller.config;
+package ca.bc.gov.open.pac.models.ords;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -17,6 +17,8 @@ public class OrdsProperties {
     private String processesEndpoint;
     private String eventsTypeEndpoint;
     private String successEndpoint;
+    private String entriesEndpoint;
+    private String demographicsEndpoint;
     private String cmsIntPath;
     private String cmsPath;
     private String modulePath;

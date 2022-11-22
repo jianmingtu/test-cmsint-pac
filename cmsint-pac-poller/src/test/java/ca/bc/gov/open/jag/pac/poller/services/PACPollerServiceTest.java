@@ -1,20 +1,21 @@
 package ca.bc.gov.open.jag.pac.poller.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import ca.bc.gov.open.jag.pac.poller.config.OrdsProperties;
 import ca.bc.gov.open.pac.models.Client;
-import ca.bc.gov.open.pac.models.eventStatus.NewEvenStatus;
+import ca.bc.gov.open.pac.models.DemographicInfo;
 import ca.bc.gov.open.pac.models.eventStatus.PendingEventStatus;
 import ca.bc.gov.open.pac.models.exceptions.ORDSException;
+import ca.bc.gov.open.pac.models.ords.DemographicsEntity;
 import ca.bc.gov.open.pac.models.ords.EventEntity;
 import ca.bc.gov.open.pac.models.ords.EventsEntity;
 import ca.bc.gov.open.pac.models.ords.NewerEventEntity;
+import ca.bc.gov.open.pac.models.ords.OrdsProperties;
 import ca.bc.gov.open.pac.models.ords.ProcessEntity;
+import ca.bc.gov.open.pac.models.ords.UpdateEntryEntity;
 import java.net.URI;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,34 +53,60 @@ public class PACPollerServiceTest {
     private static PACPollerService pacPollerService;
     private ProcessEntity genericProcessEntity;
 
+    private final String clientNumber = "clientNumber";
+    private final String eventSeqNumber = "eventSeqNumber";
+    private final String computerSystemCd = "computerSystemCd";
+    private final String eventTypeCode = "eventTypeCode";
+    private final String csNum = "csNum";
+    private final String surname = "surname";
+    private final String givenName1 = "givenName1";
+    private final String givenName2 = "givenName2";
+    private final String birthDate = "birthDate";
+    private final String gender = "gender";
+    private final String photoGUID = "photoGUID";
+    private final String probableDischargeDate = "probableDischargeDate";
+    private final String pacLocationCd = "pacLocationCd";
+    private final String outReason = "outReason";
+    private final String computerSystemCd1 = "computerSystemCd";
+    private final String isActive = "isActive";
+    private final String sysDate = "sysDate";
+    private final String fromCsNum = "fromCsNum";
+    private final String userId = "userId";
+    private final String mergeUserId = "mergeUserId";
+    private final String icsLocationCd = "icsLocationCd";
+    private final String isIn = "isIn";
+    private final String custodyCenter = "custodyCenter";
+    private final String livingUnit = "livingUnit";
     private final Client mockedClient =
             new Client(
-                    "clientNumber",
-                    "csNum",
-                    "eventSeqNum",
-                    "eventTypeCode",
-                    "surname",
-                    "givenName1",
-                    "givenName2",
-                    "birthDate",
-                    "gender",
-                    "photoGUID",
-                    "probableDischargeDate",
-                    "pacLocationCd",
-                    "outReason",
-                    "newerSequence",
-                    "computerSystemCd",
-                    "isActive",
-                    "sysDate",
-                    "fromCsNum",
-                    "userId",
-                    "mergeUserId",
-                    "icsLocationCd",
-                    "isIn",
-                    "custodyCenter",
-                    "livingUnit",
-                    "status",
-                    new NewEvenStatus(mockRestTemplate));
+                    new ProcessEntity(clientNumber, eventSeqNumber, computerSystemCd),
+                    new EventEntity(clientNumber, eventSeqNumber, eventTypeCode),
+                    mockRestTemplate,
+                    mockOrdsProperties);
+
+    private final DemographicsEntity actualDemographics =
+            new DemographicsEntity(
+                    clientNumber,
+                    eventTypeCode,
+                    csNum,
+                    surname,
+                    givenName1,
+                    givenName2,
+                    birthDate,
+                    gender,
+                    photoGUID,
+                    probableDischargeDate,
+                    outReason,
+                    isActive,
+                    fromCsNum,
+                    mergeUserId,
+                    livingUnit,
+                    icsLocationCd,
+                    isIn,
+                    sysDate,
+                    "avLocaCd",
+                    "avClientLocaUserId",
+                    "vLocaCdAlternate");
 
     @BeforeEach
     void beforeEachSetup() {
@@ -97,14 +124,19 @@ public class PACPollerServiceTest {
         when(mockOrdsProperties.getPassword()).thenReturn(testString);
         when(mockOrdsProperties.getBaseUrl()).thenReturn(testUrl);
         when(mockOrdsProperties.getCmsIntBaseUrl()).thenReturn(testUrl);
+        when(mockOrdsProperties.getCmsBaseUrl()).thenReturn(testUrl);
         when(mockOrdsProperties.getEventsEndpoint()).thenReturn(testEndpoint);
         when(mockOrdsProperties.getProcessesEndpoint()).thenReturn(testEndpoint);
         when(mockOrdsProperties.getEventsTypeEndpoint()).thenReturn(testEndpoint);
         when(mockOrdsProperties.getSuccessEndpoint()).thenReturn(testEndpoint);
+        when(mockOrdsProperties.getSuccessEndpoint()).thenReturn(testEndpoint);
+        when(mockOrdsProperties.getDemographicsEndpoint()).thenReturn(testEndpoint);
 
         genericProcessEntity = new ProcessEntity("1", "1", "1");
 
         when(mockedAmqpAdmin.declareQueue(any())).thenReturn(null);
+
+        doNothing().when(mockRestTemplate).put(any(URI.class), any(UpdateEntryEntity.class));
     }
 
     @Test
@@ -202,8 +234,8 @@ public class PACPollerServiceTest {
     void clientOnCorrectStateDependingOnIfItHasOrNotANewerEvent(
             boolean hasNewerEvent, String eventStatusClassString) {
 
-        Class eventStatusClass = Class.forName(eventStatusClassString);
-        mockedClient.setEventStatus(new PendingEventStatus(mockRestTemplate));
+        Class<?> eventStatusClass = Class.forName(eventStatusClassString);
+        mockedClient.setStatus(new PendingEventStatus(mockOrdsProperties, mockRestTemplate));
 
         NewerEventEntity newerEventEntity = new NewerEventEntity();
         newerEventEntity.setHasNewerEvent(hasNewerEvent);
@@ -215,6 +247,24 @@ public class PACPollerServiceTest {
                 .thenReturn(newerEventEntity);
 
         Client actualClient = pacPollerService.getClientNewerSequence(mockedClient);
-        assertEquals(eventStatusClass, actualClient.getEventStatus().getClass());
+        assertEquals(eventStatusClass, actualClient.getStatus().getClass());
+    }
+
+    @Test
+    void gettingDemographicsInfoFurtherPopulatesTheClientObject() {
+        when(mockRestTemplate.getForObject(any(URI.class), eq(DemographicsEntity.class)))
+                .thenReturn(actualDemographics);
+
+        Client actualClient = pacPollerService.getDemographicsInfo(mockedClient);
+        assertNotEquals(mockedClient, actualClient);
+        assertEquals(new DemographicInfo(actualDemographics), actualClient.getDemographicInfo());
+    }
+
+    @Test
+    void gettingNullResponseFromOrdsWhenDemographicsInfoThrowsOrdsException() {
+        when(mockRestTemplate.getForObject(any(URI.class), eq(DemographicsEntity.class)))
+                .thenReturn(null);
+
+        assertThrows(ORDSException.class, () -> pacPollerService.getDemographicsInfo(mockedClient));
     }
 }

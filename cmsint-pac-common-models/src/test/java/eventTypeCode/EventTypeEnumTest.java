@@ -1,38 +1,23 @@
-package ca.bc.gov.pac.open.jag.pac.consumer.model;
+package eventTypeCode;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import ca.bc.gov.open.pac.models.Client;
+import ca.bc.gov.open.pac.models.eventTypeCode.CadmSynchronizeClient;
+import ca.bc.gov.open.pac.models.eventTypeCode.CdemSynchronizeClient;
+import ca.bc.gov.open.pac.models.eventTypeCode.CimgSynchronizeClient;
+import ca.bc.gov.open.pac.models.eventTypeCode.CkeySynchronizeClient;
+import ca.bc.gov.open.pac.models.eventTypeCode.ClocSynchronizeClient;
+import ca.bc.gov.open.pac.models.eventTypeCode.ClunSynchronizeClient;
+import ca.bc.gov.open.pac.models.eventTypeCode.CrelSynchronizeClient;
+import ca.bc.gov.open.pac.models.eventTypeCode.EventTypeEnum;
+import ca.bc.gov.open.pac.models.eventTypeCode.SynchronizeClient;
+import ca.bc.gov.open.pac.models.ords.EventEntity;
+import ca.bc.gov.open.pac.models.ords.ProcessEntity;
 import org.junit.jupiter.api.Test;
 
 class EventTypeEnumTest {
-    final Client client =
-            new Client(
-                    "clientNumber",
-                    "csNum",
-                    "eventSeqNum",
-                    "eventTypeCode",
-                    "surname",
-                    "givenName1",
-                    "givenName2",
-                    "birthDate",
-                    "gender",
-                    "photoGUID",
-                    "probableDischargeDate",
-                    "pacLocationCd",
-                    "outReason",
-                    "newerSequence",
-                    "computerSystemCd",
-                    "isActive",
-                    "sysDate",
-                    "fromCsNum",
-                    "userId",
-                    "mergeUserId",
-                    "icsLocationCd",
-                    "isIn",
-                    "custodyCenter",
-                    "livingUnit",
-                    "status");
+    final Client client = new Client(new ProcessEntity(), new EventEntity());
 
     @Test
     void cadmEventCodeProducesCadmSynchronizeClient() {

@@ -1,31 +1,29 @@
 package ca.bc.gov.open.pac.models.eventStatus;
 
 import ca.bc.gov.open.pac.models.Client;
+import ca.bc.gov.open.pac.models.ords.OrdsProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.RestTemplate;
 
 @Slf4j
 public class PendingEventStatus extends EventStatus {
 
-    public PendingEventStatus(RestTemplate restTemplate) {
-        super(restTemplate);
+    public PendingEventStatus(OrdsProperties ordProperties, RestTemplate restTemplate) {
+        super(ordProperties, restTemplate);
     }
 
     @Override
     public Client updateToCompletedDuplicate(Client client) {
-        client.setEventStatus(new CompletedDuplicateEventStatus(restTemplate));
+        log.info("Updating Client status to 'Completed Duplicate'");
+        client.setStatus(new CompletedDuplicateEventStatus(ordProperties, restTemplate));
 
-        updateStatusOnServer();
+        updateStatusOnServer(client, EventStatusCode.COMPLETED_DUPLICATE);
 
         return client;
     }
 
     @Override
-    protected void updateStatusOnServer() {
-        log.info("Updating Client status to 'Completed Duplicate'");
-
-        //        restTemplate;
-
-        throw new RuntimeException("aqui");
+    protected String getMethodName() {
+        return "updateToCompletedDuplicate";
     }
 }

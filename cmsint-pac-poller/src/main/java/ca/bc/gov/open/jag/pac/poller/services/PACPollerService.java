@@ -1,13 +1,14 @@
 package ca.bc.gov.open.jag.pac.poller.services;
 
-import ca.bc.gov.open.jag.pac.poller.config.OrdsProperties;
 import ca.bc.gov.open.jag.pac.poller.config.QueueConfig;
 import ca.bc.gov.open.pac.models.Client;
 import ca.bc.gov.open.pac.models.OrdsErrorLog;
 import ca.bc.gov.open.pac.models.RequestSuccessLog;
 import ca.bc.gov.open.pac.models.exceptions.ORDSException;
+import ca.bc.gov.open.pac.models.ords.DemographicsEntity;
 import ca.bc.gov.open.pac.models.ords.EventEntity;
 import ca.bc.gov.open.pac.models.ords.NewerEventEntity;
+import ca.bc.gov.open.pac.models.ords.OrdsProperties;
 import ca.bc.gov.open.pac.models.ords.ProcessEntity;
 import java.net.URI;
 import java.util.Arrays;
@@ -79,7 +80,7 @@ public class PACPollerService {
 
                 newEventsEnity.stream()
                         .map(this::getEventForProcess)
-                        .map(client -> client.getEventStatus().updateToPending(client))
+                        .map(client -> client.getStatus().updateToPending(client))
                         .map(this::getClientNewerSequence)
                         .map(this::getDemographicsInfo)
                         .forEach(this::sendToRabbitMq);
@@ -89,8 +90,33 @@ public class PACPollerService {
         }
     }
 
-    private Client getDemographicsInfo(Client client) {
-        return client;
+    public Client getDemographicsInfo(Client client) {
+        URI uri =
+                UriComponentsBuilder.fromHttpUrl(
+                                ordProperties.getCmsBaseUrl()
+                                        + ordProperties.getDemographicsEndpoint())
+                        .queryParam("clientId", client.getClientNumber())
+                        .queryParam("eventTypeCode", client.getEventTypeCode())
+                        .build()
+                        .toUri();
+        try {
+            DemographicsEntity demographicsEntity =
+                    restTemplate.getForObject(uri, DemographicsEntity.class);
+
+            if (demographicsEntity == null)
+                throw new RuntimeException("Response from ORDS is null");
+
+            return new Client(client, demographicsEntity);
+        } catch (Exception ex) {
+            log.error(
+                    new OrdsErrorLog(
+                                    "Error received from ORDS",
+                                    "getDemographicsInfo",
+                                    ex.getMessage(),
+                                    client)
+                            .toString());
+            throw new ORDSException();
+        }
     }
 
     public Client getClientNewerSequence(Client client) {
@@ -105,7 +131,7 @@ public class PACPollerService {
         NewerEventEntity newerEventEntity = restTemplate.getForObject(url, NewerEventEntity.class);
 
         if (!newerEventEntity.hasNewerEvent())
-            client.getEventStatus().updateToCompletedDuplicate(client);
+            client.getStatus().updateToCompletedDuplicate(client);
 
         return client;
     }
