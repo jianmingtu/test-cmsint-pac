@@ -1,7 +1,6 @@
 package ca.bc.gov.open.pac.models;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import ca.bc.gov.open.pac.models.ords.DemographicsEntity;
 import ca.bc.gov.open.pac.models.ords.EventEntity;
@@ -23,7 +22,6 @@ class ClientTest {
     private final String probableDischargeDate = "probableDischargeDate";
     private final String pacLocationCd = "pacLocationCd";
     private final String outReason = "outReason";
-    private final String computerSystemCd1 = "computerSystemCd";
     private final String isActive = "isActive";
     private final String sysDate = "sysDate";
     private final String fromCsNum = "fromCsNum";
@@ -58,9 +56,9 @@ class ClientTest {
                     icsLocationCd,
                     isIn,
                     sysDate,
-                    "avLocaCd",
-                    "avClientLocaUserId",
-                    "vLocaCdAlternate");
+                    pacLocationCd,
+                    userId,
+                    custodyCenter);
 
     @Test
     void constructorWithNewEventAndEventTypeCodeProperlyMapsTheValuesToTheFields() {
@@ -78,9 +76,6 @@ class ClientTest {
     @Test
     void constructorWithClientAndDemographicsEntityGetTheRightValuesFromBoth() {
         Client expectedClient = new Client(actualClient, actualDemographics);
-
-
-
 
         assertEquals(expectedClient.getClientNumber(), actualClient.getClientNumber());
         assertEquals(expectedClient.getEventSeqNum(), actualClient.getEventSeqNum());
@@ -129,10 +124,13 @@ class ClientTest {
         assertEquals(expectedClient.getDemographicInfo().getIsIn(), actualDemographics.getIsIn());
         assertEquals(
                 expectedClient.getDemographicInfo().getSysDate(), actualDemographics.getSysDate());
-
-        //        Todo - assertions bellow should fail because I could not map the values properly
-        assertNotNull(expectedClient.getDemographicInfo().getUserId());
-        assertNotNull(expectedClient.getDemographicInfo().getCustodyCenter());
-        assertNotNull(expectedClient.getDemographicInfo().getPacLocationCd());
+        assertEquals(
+                expectedClient.getDemographicInfo().getUserId(), actualDemographics.getUserId());
+        assertEquals(
+                expectedClient.getDemographicInfo().getCustodyCenter(),
+                actualDemographics.getCustodyCenter());
+        assertEquals(
+                expectedClient.getDemographicInfo().getPacLocationCd(),
+                actualDemographics.getPacLocationCd());
     }
 }
