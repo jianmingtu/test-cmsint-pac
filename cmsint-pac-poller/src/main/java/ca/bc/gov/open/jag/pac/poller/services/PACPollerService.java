@@ -191,8 +191,8 @@ public class PACPollerService {
                 UriComponentsBuilder.fromHttpUrl(
                                 ordProperties.getCmsIntBaseUrl()
                                         + ordProperties.getEventsEndpoint())
-                        .queryParam("clientNumber", processEntity.getClientNumber())
                         .queryParam("eventSeqNum", processEntity.getEventSeqNum())
+                        .queryParam("clientNumber", processEntity.getClientNumber())
                         .build()
                         .toUri();
         try {
