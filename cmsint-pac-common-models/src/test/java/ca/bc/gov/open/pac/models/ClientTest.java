@@ -1,10 +1,9 @@
 package ca.bc.gov.open.pac.models;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import ca.bc.gov.open.pac.models.ords.DemographicsEntity;
 import ca.bc.gov.open.pac.models.ords.EventEntity;
 import ca.bc.gov.open.pac.models.ords.ProcessEntity;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 class ClientTest {
@@ -31,34 +30,11 @@ class ClientTest {
     private final String isIn = "isIn";
     private final String custodyCenter = "custodyCenter";
     private final String livingUnit = "livingUnit";
-    private final ProcessEntity processEntity =
-            new ProcessEntity(clientNumber, eventSeqNumber, computerSystemCd);
-    private final EventEntity eventEntity =
-            new EventEntity(clientNumber, eventSeqNumber, eventTypeCode);
+    private final ProcessEntity processEntity = TestClientInitializer.getProcessInstance();
+    private final EventEntity eventEntity = TestClientInitializer.getEventEntity();
     private final Client actualClient = new Client(processEntity, eventEntity);
     private final DemographicsEntity actualDemographics =
-            new DemographicsEntity(
-                    clientNumber,
-                    eventTypeCode,
-                    csNum,
-                    surname,
-                    givenName1,
-                    givenName2,
-                    birthDate,
-                    gender,
-                    photoGUID,
-                    probableDischargeDate,
-                    outReason,
-                    isActive,
-                    fromCsNum,
-                    mergeUserId,
-                    livingUnit,
-                    icsLocationCd,
-                    isIn,
-                    sysDate,
-                    pacLocationCd,
-                    userId,
-                    custodyCenter);
+            TestClientInitializer.getDemographicsEntity();
 
     @Test
     void constructorWithNewEventAndEventTypeCodeProperlyMapsTheValuesToTheFields() {
