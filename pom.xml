@@ -9,16 +9,19 @@
         <version>2.7.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
     <groupId>ca.bc.gov.open</groupId>
     <artifactId>jag-cmsint-pac</artifactId>
     <version>1.0.0</version>
     <name>jag-cmsint-pac</name>
     <description>jag-cmsint-pac Application</description>
+
     <properties>
         <java.version>11</java.version>
         <log4j2.version>2.17.1</log4j2.version>
         <snakeyaml.version>1.33</snakeyaml.version>
     </properties>
+
     <repositories>
         <repository>
             <id>splunk-artifactory</id>
@@ -26,13 +29,7 @@
             <url>https://splunk.jfrog.io/splunk/ext-releases-local</url>
         </repository>
     </repositories>
-    <modules>
-        <module>cmsint-pac-poller</module>
-        <module>cmsint-pac-common-models</module>
-        <module>cmsint-pac-code-coverage</module>
-        <module>cmsint-pac-consumer</module>
 
-    </modules>
     <build>
         <plugins>
             <plugin>
@@ -81,4 +78,36 @@
 
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>all</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>cmsint-pac-code-coverage</module>
+                <module>cmsint-pac-common-models</module>
+                <module>cmsint-pac-poller</module>
+                <module>cmsint-pac-consumer</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>cmsint-pac-poller</id>
+            <modules>
+                <module>cmsint-pac-common-models</module>
+                <module>cmsint-pac-poller</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>cmsint-pac-consumer</id>
+            <modules>
+                <module>cmsint-pac-common-models</module>
+                <module>cmsint-pac-consumer</module>
+            </modules>
+        </profile>
+    </profiles>
+
 </project>
