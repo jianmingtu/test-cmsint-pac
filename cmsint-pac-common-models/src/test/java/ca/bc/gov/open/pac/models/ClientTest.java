@@ -1,11 +1,11 @@
 package ca.bc.gov.open.pac.models;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import ca.bc.gov.open.pac.models.ords.DemographicsEntity;
 import ca.bc.gov.open.pac.models.ords.EventEntity;
 import ca.bc.gov.open.pac.models.ords.ProcessEntity;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ClientTest {
     private final String clientNumber = "clientNumber";
