@@ -8,6 +8,8 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class PendingEventStatus extends EventStatus {
 
+    public static final String METHOD_NAME = "updateToCompletedDuplicate";
+
     public PendingEventStatus(OrdsProperties ordProperties, RestTemplate restTemplate) {
         super(ordProperties, restTemplate);
     }
@@ -24,6 +26,6 @@ public class PendingEventStatus extends EventStatus {
 
     @Override
     protected String getMethodName() {
-        return "updateToCompletedDuplicate";
+        return METHOD_NAME;
     }
 }

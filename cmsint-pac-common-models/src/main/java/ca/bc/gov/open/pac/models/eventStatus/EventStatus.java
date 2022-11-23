@@ -29,11 +29,11 @@ public abstract class EventStatus {
     }
 
     public Client updateToPending(Client client) {
-        throw new RuntimeException("The status of the event cannot be updated to Pending");
+        throw new UnsupportedOperationException("The status of the event cannot be updated to Pending");
     }
 
     public Client updateToCompletedDuplicate(Client client) {
-        throw new RuntimeException(
+        throw new UnsupportedOperationException(
                 "The status of the event cannot be updated to Completed Duplicate");
     }
 
@@ -41,10 +41,6 @@ public abstract class EventStatus {
         URI url =
                 UriComponentsBuilder.fromHttpUrl(
                                 ordProperties.getCmsBaseUrl() + ordProperties.getEntriesEndpoint())
-                        .queryParam("clientNumber", client.getClientNumber())
-                        .queryParam("eventSeqNum", client.getEventSeqNum())
-                        .queryParam("computerSystemCd", client.getComputerSystemCd())
-                        .queryParam("eventTypeCode", eventStatusCode.getCode())
                         .build()
                         .toUri();
 

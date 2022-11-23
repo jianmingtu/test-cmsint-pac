@@ -10,6 +10,8 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class NewEventStatus extends EventStatus {
 
+    public static final String METHOD_NAME = "updateToPending";
+
     public NewEventStatus(OrdsProperties ordProperties, RestTemplate restTemplate) {
         super(ordProperties, restTemplate);
     }
@@ -27,6 +29,6 @@ public class NewEventStatus extends EventStatus {
 
     @Override
     protected String getMethodName() {
-        return "updateToPending";
+        return METHOD_NAME;
     }
 }
