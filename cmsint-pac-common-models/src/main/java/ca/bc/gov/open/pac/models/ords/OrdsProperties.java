@@ -19,9 +19,9 @@ public class OrdsProperties {
     private String successEndpoint;
     private String entriesEndpoint;
     private String demographicsEndpoint;
-    private String cmsIntPath="cmsint/";
-    private String cmsPath="cms/";
-    private String modulePath="module/";
+    private String cmsIntPath = "cmsint/";
+    private String cmsPath = "cms/";
+    private String modulePath = "module/";
 
     public String getCmsIntBaseUrl() {
         return baseUrl + cmsIntPath + modulePath;

@@ -29,7 +29,8 @@ public abstract class EventStatus {
     }
 
     public Client updateToPending(Client client) {
-        throw new UnsupportedOperationException("The status of the event cannot be updated to Pending");
+        throw new UnsupportedOperationException(
+                "The status of the event cannot be updated to Pending");
     }
 
     public Client updateToCompletedDuplicate(Client client) {

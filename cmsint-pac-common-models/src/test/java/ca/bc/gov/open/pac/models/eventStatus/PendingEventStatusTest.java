@@ -1,12 +1,13 @@
 package ca.bc.gov.open.pac.models.eventStatus;
 
-import ca.bc.gov.open.pac.models.Client;
-import ca.bc.gov.open.pac.models.TestClientInitializer;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+
+import ca.bc.gov.open.pac.models.Client;
+import ca.bc.gov.open.pac.models.TestClientInitializer;
+import org.junit.jupiter.api.Test;
 
 class PendingEventStatusTest extends EventStatusTest {
 
@@ -25,9 +26,7 @@ class PendingEventStatusTest extends EventStatusTest {
     @Override
     void updateToCompletedDuplicate() {
         var expectedClient = TestClientInitializer.getClientInstance();
-        doNothing()
-                .when(mockedRestTemplate)
-                .put(any(), any());
+        doNothing().when(mockedRestTemplate).put(any(), any());
 
         Client actualClient = eventStatus.updateToCompletedDuplicate(expectedClient);
         assertSame(expectedClient, actualClient);

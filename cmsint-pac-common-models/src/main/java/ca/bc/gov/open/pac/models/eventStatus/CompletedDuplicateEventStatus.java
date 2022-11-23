@@ -5,7 +5,7 @@ import org.springframework.web.client.RestTemplate;
 
 public class CompletedDuplicateEventStatus extends EventStatus {
 
-    public final static String METHOD_NAME = "updateToCompletedDuplicate";
+    public static final String METHOD_NAME = "updateToCompletedDuplicate";
 
     public CompletedDuplicateEventStatus(OrdsProperties ordProperties, RestTemplate restTemplate) {
         super(ordProperties, restTemplate);

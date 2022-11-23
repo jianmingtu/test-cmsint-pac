@@ -29,42 +29,44 @@ public class TestClientInitializer {
     private static final String custodyCenter = "custodyCenter";
     private static final String livingUnit = "livingUnit";
 
-    public static Client getClientInstance(){
-            return new Client(getProcessInstance(), getEventEntity());
+    public static Client getClientInstance() {
+        return new Client(getProcessInstance(), getEventEntity());
     }
 
-    public static Client getClientInstance(ProcessEntity processEntity, EventEntity eventEntity){
-            return new Client(processEntity, eventEntity);
+    public static Client getClientInstance(ProcessEntity processEntity, EventEntity eventEntity) {
+        return new Client(processEntity, eventEntity);
     }
 
-    public static ProcessEntity getProcessInstance(){
-            return new ProcessEntity(clientNumber, eventSeqNumber, computerSystemCd);
+    public static ProcessEntity getProcessInstance() {
+        return new ProcessEntity(clientNumber, eventSeqNumber, computerSystemCd);
     }
-    public static EventEntity getEventEntity(){
-            return new EventEntity(clientNumber, eventSeqNumber, eventTypeCode);
+
+    public static EventEntity getEventEntity() {
+        return new EventEntity(clientNumber, eventSeqNumber, eventTypeCode);
     }
-    public static DemographicsEntity getDemographicsEntity(){
-            return new DemographicsEntity(
-                    clientNumber,
-                    eventTypeCode,
-                    csNum,
-                    surname,
-                    givenName1,
-                    givenName2,
-                    birthDate,
-                    gender,
-                    photoGUID,
-                    probableDischargeDate,
-                    outReason,
-                    isActive,
-                    fromCsNum,
-                    mergeUserId,
-                    livingUnit,
-                    icsLocationCd,
-                    isIn,
-                    sysDate,
-                    pacLocationCd,
-                    userId,
-                    custodyCenter);
+
+    public static DemographicsEntity getDemographicsEntity() {
+        return new DemographicsEntity(
+                clientNumber,
+                eventTypeCode,
+                csNum,
+                surname,
+                givenName1,
+                givenName2,
+                birthDate,
+                gender,
+                photoGUID,
+                probableDischargeDate,
+                outReason,
+                isActive,
+                fromCsNum,
+                mergeUserId,
+                livingUnit,
+                icsLocationCd,
+                isIn,
+                sysDate,
+                pacLocationCd,
+                userId,
+                custodyCenter);
     }
 }

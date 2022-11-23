@@ -1,17 +1,18 @@
 package ca.bc.gov.open.pac.models.eventStatus;
 
+import static ca.bc.gov.open.pac.models.TestClientInitializer.getClientInstance;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
 import ca.bc.gov.open.pac.models.exceptions.ORDSException;
 import ca.bc.gov.open.pac.models.ords.OrdsProperties;
 import ca.bc.gov.open.pac.models.ords.UpdateEntryEntity;
 import java.net.URI;
-import static ca.bc.gov.open.pac.models.TestClientInitializer.getClientInstance;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.mockito.ArgumentMatchers.any;
 import org.mockito.Mock;
-import static org.mockito.Mockito.*;
 import org.mockito.MockitoAnnotations;
 import org.springframework.web.client.RestTemplate;
 
@@ -24,6 +25,7 @@ abstract class EventStatusTest {
     protected static final String testEndpoint = "/endpoint";
 
     abstract void gettingMethodNameReturnsExpectedValue();
+
     abstract EventStatus gettingTestInstance();
 
     @BeforeEach
