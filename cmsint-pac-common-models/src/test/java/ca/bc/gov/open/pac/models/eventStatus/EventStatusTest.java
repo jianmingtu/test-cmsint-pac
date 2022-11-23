@@ -31,12 +31,6 @@ abstract class EventStatusTest {
         MockitoAnnotations.openMocks(this);
 
         eventStatus = gettingTestInstance();
-//                new EventStatus(mockOrdsProperties, mockedRestTemplate) {
-//                    @Override
-//                    protected String getMethodName() {
-//                        return "event status";
-//                    }
-//                };
 
         when(mockOrdsProperties.getCmsBaseUrl()).thenReturn(testUrl);
         when(mockOrdsProperties.getEntriesEndpoint()).thenReturn(testEndpoint);
