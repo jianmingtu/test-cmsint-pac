@@ -7,13 +7,13 @@ import lombok.Getter;
 
 @Getter
 public class UpdateEntryEntity implements Serializable {
-    private final String clientId;
+    private final String clientNumber;
     private final String eventSeqNum;
     private final String computerSystemCd;
     private final String eventTypeCode;
 
     public UpdateEntryEntity(Client client, EventStatusCode eventStatusCode) {
-        clientId = client.getClientNumber();
+        clientNumber = client.getClientNumber();
         eventSeqNum = client.getEventSeqNum();
         computerSystemCd = client.getEventSeqNum();
         eventTypeCode = eventStatusCode.getCode();

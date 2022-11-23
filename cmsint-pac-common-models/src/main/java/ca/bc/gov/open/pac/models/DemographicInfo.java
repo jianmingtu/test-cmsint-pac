@@ -11,24 +11,21 @@ public class DemographicInfo {
     private final String surname;
     private final String givenName1;
     private final String givenName2;
-    private final String birthDate;
     private final String gender;
     private final String photoGUID;
-    private final String probableDischargeDate;
+    private final String pacLocationCd;
     private final String outReason;
     private final String isActive;
     private final String fromCsNum;
+    private final String userId;
     private final String mergeUserId;
-    private final String livingUnit;
     private final String icsLocationCd;
     private final String isIn;
+    private final String custodyCenter;
+    private final String livingUnit;
+    private final String birthDate;
+    private final String probableDischargeDate;
     private final String sysDate;
-    private final String avLocaCd; //    Todo not properly mapped
-    private final String avClientLocaUserId; //    Todo not properly mapped
-    private final String vLocaCdAlternate; //    Todo not properly mapped
-    private final String userId; //    Todo not properly mapped
-    private final String custodyCenter; //    Todo not properly mapped
-    private final String pacLocationCd; //    Todo not properly mapped
 
     public DemographicInfo(DemographicsEntity demographicsEntity) {
         csNum = demographicsEntity.getCsNum();
@@ -47,14 +44,9 @@ public class DemographicInfo {
         icsLocationCd = demographicsEntity.getIcsLocationCd();
         isIn = demographicsEntity.getIsIn();
         sysDate = demographicsEntity.getSysDate();
-
-        avLocaCd = demographicsEntity.getAvLocaCd();
-        avClientLocaUserId = demographicsEntity.getAvClientLocaUserId();
-        vLocaCdAlternate = demographicsEntity.getVLocaCdAlternate();
-
-        userId = null;
-        custodyCenter = null;
-        pacLocationCd = null;
+        userId = demographicsEntity.getUserId();
+        pacLocationCd = demographicsEntity.getPacLocationCd();
+        custodyCenter = demographicsEntity.getCustodyCenter();
     }
 
     public DemographicInfo() {
@@ -74,13 +66,8 @@ public class DemographicInfo {
         icsLocationCd = null;
         isIn = null;
         sysDate = null;
-
-        avLocaCd = null;
-        avClientLocaUserId = null;
-        vLocaCdAlternate = null;
-
+        pacLocationCd = null;
         userId = null;
         custodyCenter = null;
-        pacLocationCd = null;
     }
 }

@@ -12,8 +12,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class DemographicsEntity extends BaseEntity {
 
-    @JsonProperty("clientId")
-    private String clientId;
+    @JsonProperty("clientNumber")
+    private String clientNumber;
 
     @JsonProperty("eventTypeCode")
     private String eventTypeCode;
@@ -66,12 +66,12 @@ public class DemographicsEntity extends BaseEntity {
     @JsonProperty("sysDate")
     private String sysDate;
 
-    @JsonProperty("avLocaCd")
-    private String avLocaCd;
+    @JsonProperty("pacLocationCd")
+    private String pacLocationCd;
 
-    @JsonProperty("avClientLocaUserId")
-    private String avClientLocaUserId;
+    @JsonProperty("userId")
+    private String userId;
 
-    @JsonProperty("vLocaCdAlternate")
-    private String vLocaCdAlternate;
+    @JsonProperty("custodyCenter")
+    private String custodyCenter;
 }

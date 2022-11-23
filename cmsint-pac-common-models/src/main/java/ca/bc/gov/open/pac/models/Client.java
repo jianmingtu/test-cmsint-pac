@@ -44,8 +44,8 @@ public class Client implements Serializable {
         eventSeqNum = client.getEventSeqNum();
         computerSystemCd = client.getComputerSystemCd();
         status = client.getStatus();
+        eventTypeCode = client.getEventTypeCode();
 
-        eventTypeCode = demographicsEntity.getEventTypeCode();
         demographicInfo = new DemographicInfo(demographicsEntity);
     }
 }

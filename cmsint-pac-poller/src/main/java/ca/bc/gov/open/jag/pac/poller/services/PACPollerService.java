@@ -97,7 +97,7 @@ public class PACPollerService {
                 UriComponentsBuilder.fromHttpUrl(
                                 ordProperties.getCmsBaseUrl()
                                         + ordProperties.getDemographicsEndpoint())
-                        .queryParam("clientId", client.getClientNumber())
+                        .queryParam("clientNumber", client.getClientNumber())
                         .queryParam("eventTypeCode", client.getEventTypeCode())
                         .build()
                         .toUri();
@@ -192,7 +192,7 @@ public class PACPollerService {
                 UriComponentsBuilder.fromHttpUrl(
                                 ordProperties.getCmsIntBaseUrl()
                                         + ordProperties.getEventsEndpoint())
-                        .queryParam("clientId", processEntity.getClientNumber())
+                        .queryParam("clientNumber", processEntity.getClientNumber())
                         .queryParam("eventSeqNum", processEntity.getEventSeqNum())
                         .build()
                         .toUri();

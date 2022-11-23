@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EventEntity extends BaseEntity implements Serializable {
-    @JsonProperty("clientId")
-    private String clientId;
+    @JsonProperty("clientNumber")
+    private String clientNumber;
 
     @JsonProperty("eventSeqNum")
     private String eventSeqNum;

@@ -79,13 +79,14 @@ class ClientTest {
     void constructorWithClientAndDemographicsEntityGetTheRightValuesFromBoth() {
         Client expectedClient = new Client(actualClient, actualDemographics);
 
+
+
+
         assertEquals(expectedClient.getClientNumber(), actualClient.getClientNumber());
         assertEquals(expectedClient.getEventSeqNum(), actualClient.getEventSeqNum());
         assertEquals(expectedClient.getComputerSystemCd(), actualClient.getComputerSystemCd());
         assertEquals(expectedClient.getStatus(), actualClient.getStatus());
-
-        assertEquals(expectedClient.getClientNumber(), actualDemographics.getClientId());
-        assertEquals(expectedClient.getEventTypeCode(), actualDemographics.getEventTypeCode());
+        assertEquals(expectedClient.getEventTypeCode(), actualClient.getEventTypeCode());
 
         assertEquals(expectedClient.getDemographicInfo().getCsNum(), actualDemographics.getCsNum());
         assertEquals(

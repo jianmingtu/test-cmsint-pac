@@ -41,7 +41,7 @@ public abstract class EventStatus {
         URI url =
                 UriComponentsBuilder.fromHttpUrl(
                                 ordProperties.getCmsBaseUrl() + ordProperties.getEntriesEndpoint())
-                        .queryParam("clientId", client.getClientNumber())
+                        .queryParam("clientNumber", client.getClientNumber())
                         .queryParam("eventSeqNum", client.getEventSeqNum())
                         .queryParam("computerSystemCd", client.getComputerSystemCd())
                         .queryParam("eventTypeCode", eventStatusCode.getCode())
