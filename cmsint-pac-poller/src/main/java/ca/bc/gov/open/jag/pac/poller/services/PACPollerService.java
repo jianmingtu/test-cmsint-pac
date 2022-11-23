@@ -62,6 +62,16 @@ public class PACPollerService {
         this.queueConfig = queueConfig;
     }
 
+    private static class QueryParam {
+        private final String name;
+        private final List<String> values;
+
+        public QueryParam(String name, String... values) {
+            this.name = name;
+            this.values = Arrays.asList(values);
+        }
+    }
+
     @PostConstruct
     public void createQueues() {
         amqpAdmin.declareQueue(pacQueue);
@@ -93,13 +103,11 @@ public class PACPollerService {
 
     public Client getDemographicsInfo(Client client) {
         URI url =
-                UriComponentsBuilder.fromHttpUrl(
-                                ordProperties.getCmsBaseUrl()
-                                        + ordProperties.getDemographicsEndpoint())
-                        .queryParam("clientNumber", client.getClientNumber())
-                        .queryParam("eventTypeCode", client.getEventTypeCode())
-                        .build()
-                        .toUri();
+                getUri(
+                        ordProperties.getCmsBaseUrl() + ordProperties.getDemographicsEndpoint(),
+                        Arrays.asList(
+                                new QueryParam("clientNumber", client.getClientNumber()),
+                                new QueryParam("eventTypeCode", client.getEventTypeCode())));
         try {
             DemographicsEntity demographicsEntity =
                     restTemplate.getForObject(url, DemographicsEntity.class);
@@ -114,14 +122,25 @@ public class PACPollerService {
         }
     }
 
+    private URI getUri(String httpUrl, List<QueryParam> queryParams) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(httpUrl);
+        queryParams.forEach(queryParam -> builder.queryParam(queryParam.name, queryParam.values));
+        return builder.build().toUri();
+    }
+
+    private URI getUri(String httpUrl, QueryParam queryParam) {
+        return getUri(httpUrl, Collections.singletonList(queryParam));
+    }
+
+    private URI getUri(String httpUrl) {
+        return getUri(httpUrl, Collections.emptyList());
+    }
+
     public Client getClientNewerSequence(Client client) {
         URI url =
-                UriComponentsBuilder.fromHttpUrl(
-                                ordProperties.getCmsIntBaseUrl()
-                                        + ordProperties.getProcessesEndpoint())
-                        .queryParam("state", "NEW")
-                        .build()
-                        .toUri();
+                getUri(
+                        ordProperties.getCmsIntBaseUrl() + ordProperties.getProcessesEndpoint(),
+                        new QueryParam("state", "NEW"));
 
         try {
             NewerEventEntity newerEventEntity =
@@ -144,12 +163,9 @@ public class PACPollerService {
 
     public List<ProcessEntity> getNewProcesses() {
         URI url =
-                UriComponentsBuilder.fromHttpUrl(
-                                ordProperties.getCmsIntBaseUrl()
-                                        + ordProperties.getProcessesEndpoint())
-                        .queryParam("state", "NEW")
-                        .build()
-                        .toUri();
+                getUri(
+                        ordProperties.getCmsIntBaseUrl() + ordProperties.getProcessesEndpoint(),
+                        new QueryParam("state", "NEW"));
         try {
 
             ProcessEntity[] processEntityArray =
@@ -188,13 +204,11 @@ public class PACPollerService {
 
     public Client getEventForProcess(ProcessEntity processEntity) throws ORDSException {
         URI url =
-                UriComponentsBuilder.fromHttpUrl(
-                                ordProperties.getCmsIntBaseUrl()
-                                        + ordProperties.getEventsEndpoint())
-                        .queryParam("eventSeqNum", processEntity.getEventSeqNum())
-                        .queryParam("clientNumber", processEntity.getClientNumber())
-                        .build()
-                        .toUri();
+                getUri(
+                        ordProperties.getCmsIntBaseUrl() + ordProperties.getEventsEndpoint(),
+                        Arrays.asList(
+                                new QueryParam("eventSeqNum", processEntity.getEventSeqNum()),
+                                new QueryParam("clientNumber", processEntity.getClientNumber())));
         try {
             EventEntity eventEntity = restTemplate.getForObject(url, EventEntity.class);
 
@@ -212,12 +226,7 @@ public class PACPollerService {
     }
 
     private Client pacUpdateClient(Client client) {
-        URI url =
-                UriComponentsBuilder.fromHttpUrl(
-                                ordProperties.getCmsIntBaseUrl()
-                                        + ordProperties.getSuccessEndpoint())
-                        .build()
-                        .toUri();
+        URI url = getUri(ordProperties.getCmsIntBaseUrl() + ordProperties.getSuccessEndpoint());
         try {
             HttpEntity<Client> respClient =
                     restTemplate.exchange(
