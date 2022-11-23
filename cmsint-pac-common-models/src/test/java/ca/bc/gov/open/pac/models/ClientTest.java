@@ -77,30 +77,68 @@ class ClientTest {
     void constructorWithClientAndDemographicsEntityGetTheRightValuesFromBoth() {
         Client expectedClient = new Client(actualClient, actualDemographics);
 
+        clientRelatedAssertions(expectedClient);
+
+        demographicInfoRelatedAssertions(expectedClient);
+    }
+
+    private void demographicInfoRelatedAssertions(Client expectedClient) {
+        assertEquals(expectedClient.getDemographicInfo().getCsNum(), actualDemographics.getCsNum());
+        assertEquals(
+                expectedClient.getDemographicInfo().getSurname(), actualDemographics.getSurname());
+        assertEquals(
+                expectedClient.getDemographicInfo().getGivenName1(),
+                actualDemographics.getGivenName1());
+        assertEquals(
+                expectedClient.getDemographicInfo().getGivenName2(),
+                actualDemographics.getGivenName2());
+        assertEquals(
+                expectedClient.getDemographicInfo().getBirthDate(),
+                actualDemographics.getBirthDate());
+        assertEquals(
+                expectedClient.getDemographicInfo().getGender(), actualDemographics.getGender());
+        assertEquals(
+                expectedClient.getDemographicInfo().getPhotoGUID(),
+                actualDemographics.getPhotoGUID());
+        assertEquals(
+                expectedClient.getDemographicInfo().getProbableDischargeDate(),
+                actualDemographics.getProbableDischargeDate());
+        assertEquals(
+                expectedClient.getDemographicInfo().getOutReason(),
+                actualDemographics.getOutReason());
+        assertEquals(
+                expectedClient.getDemographicInfo().getIsActive(),
+                actualDemographics.getIsActive());
+        assertEquals(
+                expectedClient.getDemographicInfo().getFromCsNum(),
+                actualDemographics.getFromCsNum());
+        assertEquals(
+                expectedClient.getDemographicInfo().getMergeUserId(),
+                actualDemographics.getMergeUserId());
+        assertEquals(
+                expectedClient.getDemographicInfo().getLivingUnit(),
+                actualDemographics.getLivingUnit());
+        assertEquals(
+                expectedClient.getDemographicInfo().getIcsLocationCd(),
+                actualDemographics.getIcsLocationCd());
+        assertEquals(expectedClient.getDemographicInfo().getIsIn(), actualDemographics.getIsIn());
+        assertEquals(
+                expectedClient.getDemographicInfo().getSysDate(), actualDemographics.getSysDate());
+        assertEquals(
+                expectedClient.getDemographicInfo().getUserId(), actualDemographics.getUserId());
+        assertEquals(
+                expectedClient.getDemographicInfo().getCustodyCenter(),
+                actualDemographics.getCustodyCenter());
+        assertEquals(
+                expectedClient.getDemographicInfo().getPacLocationCd(),
+                actualDemographics.getPacLocationCd());
+    }
+
+    private void clientRelatedAssertions(Client expectedClient) {
         assertEquals(expectedClient.getClientNumber(), actualClient.getClientNumber());
         assertEquals(expectedClient.getEventSeqNum(), actualClient.getEventSeqNum());
         assertEquals(expectedClient.getComputerSystemCd(), actualClient.getComputerSystemCd());
         assertEquals(expectedClient.getStatus(), actualClient.getStatus());
         assertEquals(expectedClient.getEventTypeCode(), actualClient.getEventTypeCode());
-
-        assertEquals(expectedClient.getDemographicInfo().getCsNum(), actualDemographics.getCsNum());
-        assertEquals(expectedClient.getDemographicInfo().getSurname(), actualDemographics.getSurname());
-        assertEquals(expectedClient.getDemographicInfo().getGivenName1(), actualDemographics.getGivenName1());
-        assertEquals(expectedClient.getDemographicInfo().getGivenName2(), actualDemographics.getGivenName2());
-        assertEquals(expectedClient.getDemographicInfo().getBirthDate(), actualDemographics.getBirthDate());
-        assertEquals(expectedClient.getDemographicInfo().getGender(), actualDemographics.getGender());
-        assertEquals(expectedClient.getDemographicInfo().getPhotoGUID(), actualDemographics.getPhotoGUID());
-        assertEquals(expectedClient.getDemographicInfo().getProbableDischargeDate(), actualDemographics.getProbableDischargeDate());
-        assertEquals(expectedClient.getDemographicInfo().getOutReason(), actualDemographics.getOutReason());
-        assertEquals(expectedClient.getDemographicInfo().getIsActive(), actualDemographics.getIsActive());
-        assertEquals(expectedClient.getDemographicInfo().getFromCsNum(), actualDemographics.getFromCsNum());
-        assertEquals(expectedClient.getDemographicInfo().getMergeUserId(), actualDemographics.getMergeUserId());
-        assertEquals(expectedClient.getDemographicInfo().getLivingUnit(), actualDemographics.getLivingUnit());
-        assertEquals(expectedClient.getDemographicInfo().getIcsLocationCd(), actualDemographics.getIcsLocationCd());
-        assertEquals(expectedClient.getDemographicInfo().getIsIn(), actualDemographics.getIsIn());
-        assertEquals(expectedClient.getDemographicInfo().getSysDate(), actualDemographics.getSysDate());
-        assertEquals(expectedClient.getDemographicInfo().getUserId(), actualDemographics.getUserId());
-        assertEquals(expectedClient.getDemographicInfo().getCustodyCenter(), actualDemographics.getCustodyCenter());
-        assertEquals(expectedClient.getDemographicInfo().getPacLocationCd(), actualDemographics.getPacLocationCd());
     }
 }
