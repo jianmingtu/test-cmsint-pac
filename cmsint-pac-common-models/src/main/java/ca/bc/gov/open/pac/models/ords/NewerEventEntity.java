@@ -1,12 +1,12 @@
 package ca.bc.gov.open.pac.models.ords;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.io.Serializable;
-import lombok.*;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @RequiredArgsConstructor
 @Setter
-public class NewerEventEntity extends BaseEntity implements Serializable {
+public class NewerEventEntity extends BaseEntity {
     @JsonProperty("hasNewerEvent")
     private boolean hasNewerEvent;
 
