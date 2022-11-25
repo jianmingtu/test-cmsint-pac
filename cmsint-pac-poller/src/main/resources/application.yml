@@ -1,15 +1,32 @@
 pac:
-  ords-host: ${ORDS_HOST}
-  pac-queue: ${PAC_QUEUE_NAME}
-  pac-routing-key: ${PAC_ROUTING_KEY}
-  ping-queue: ${PING_QUEUE_NAME}
-  ping-routing-key: ${PING_ROUTING_KEY}
-  exchange-name: ${RABBIT_EXCHANGE_NAME}
+  pac-queue: ${PAC_QUEUE_NAME:pac-queue}
+  pac-routing-key: ${PAC_ROUTING_KEY:PAC}
+  exchange-name: ${RABBIT_EXCHANGE_NAME:EXCHANGE}
 
+ords:
+  username: ${ORDS_USERNAME:admin}
+  password: ${ORDS_PASSWORD:admin}
+  baseUrl: ${ORDS_HOST:127.0.0.1}
+  cmsIntPath: "cmsintords/"
+  cmsPath: "cmsords/"
+  modulePath: "pac/v1/"
+  processesEndpoint: "processes"
+  eventsEndpoint: "events"
+  eventsTypeEndpoint: "events/type"
+  successEndpoint: "success"
+  entriesEndpoint: "entries"
+  demographicsEndpoint: "demographics"
 
 spring:
   rabbitmq:
-    host: ${RABBIT_MQ_HOST}
+    host: ${RABBIT_MQ_HOST:127.0.0.1}
     port: 5672
+    username: ${RABBIT_MQ_HOST:guest}
+    password: ${RABBIT_MQ_HOST:guest}
+
 server:
-  port: 8084
+  port: ${POLLER_SERVER_PORT:8080}
+
+management:
+  server:
+    port: ${MANAGEMENT_SERVER_PORT:8081}
