@@ -38,9 +38,7 @@ RUN mvn clean package \
     -P${MVN_PROFILE} \
     -DskipTests \
     --no-transfer-progress \
-    --batch-mode &&\
-    mvn clean verify &&\
-    mvn spotless:check
+    --batch-mode
 
 ##############################################################################################
 #### Stage where Docker is running a java process to run a service built in previous stage ###
