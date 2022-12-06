@@ -8,13 +8,13 @@ on:
   workflow_dispatch:
     inputs:
         app1:
-            description: 'App Name (jag-cmsint-pac-poller)'
+            description: 'App Name (cmsint-pac-poller)'
             required: true
-            default: 'jag-cmsint-pac-poller'
+            default: 'cmsint-pac-poller'
         app2:
-          description: 'App Name (jag-cmsint-pac-consumer)'
+          description: 'App Name (cmsint-pac-consumer)'
           required: true
-          default: 'jag-cmsint-pac-consumer'
+          default: 'cmsint-pac-consumer'
         env:
             description: 'Image Target Env'  
             required: true
