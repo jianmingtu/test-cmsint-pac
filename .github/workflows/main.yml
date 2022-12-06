@@ -89,7 +89,7 @@ jobs:
         env:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
-          APP: ${{github.event.inputs.app1}}
+          APP: ${{github.event.inputs.app2}}
           CONTEXT: .
         run: |
           docker build -t ${APP}:${{env.gitsha}} --build-arg MVN_PROFILE=${APP} ${CONTEXT}
