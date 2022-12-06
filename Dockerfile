@@ -34,11 +34,13 @@ COPY ./cmsint-pac-common-models/src cmsint-pac-common-models/src
 COPY ./cmsint-pac-poller/src cmsint-pac-poller/src
 
 
-RUN  mvn clean package \
-     -P${MVN_PROFILE} \
-     -DskipTests \
-     --no-transfer-progress \
-     --batch-mode
+RUN mvn clean package \
+    -P${MVN_PROFILE} \
+    -DskipTests \
+    --no-transfer-progress \
+    --batch-mode &&\
+    mvn clean verify &&\
+    mvn spotless:check
 
 ##############################################################################################
 #### Stage where Docker is running a java process to run a service built in previous stage ###

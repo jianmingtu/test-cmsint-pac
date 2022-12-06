@@ -57,40 +57,42 @@ jobs:
           echo "Release Version: ${{ env.releaseVersion }}"
           echo "Release Git Sha: ${{env.gitsha}}"
 
-      # Set up JDK build environment
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: 11
+      # # Set up JDK build environment
+      # - name: Set up JDK 11
+      #   uses: actions/setup-java@v3
+      #   with:
+      #     distribution: 'temurin'
+      #     java-version: 11
         
-      # Runs build steps
-      - name: Maven Package
-        run: mvn -ntp clean package
+      # # Runs build steps
+      # - name: Maven Package
+      #   run: mvn -ntp clean package
         
-      - name: Maven Verify
-        run: mvn -ntp clean verify
+      # - name: Maven Verify
+      #   run: mvn -ntp clean verify
       
-      - name: Maven Spotless Check
-        run: mvn -ntp spotless:check
+      # - name: Maven Spotless Check
+      #   run: mvn -ntp spotless:check
 
       #Build image jag-cmsint-pac-poller
       - name: Build image jag-cmsint-pac-poller
         env:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
-          CONTEXT: ./cmsint-pac-poller
+          APP: ${{github.event.inputs.app1}}
+          CONTEXT: .
         run: |
-          docker build -t ${{github.event.inputs.app1}}:${{env.gitsha}} ${CONTEXT}
+          docker build -t ${APP}:${{env.gitsha}} --build-arg MVN_PROFILE=${APP} ${CONTEXT}
 
       #Build image jag-cmsint-pac-consumer
       - name: Build image jag-cmsint-pac-consumer
         env:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
-          CONTEXT: ./cmsint-pac-consumer
+          APP: ${{github.event.inputs.app1}}
+          CONTEXT: .
         run: |
-          docker build -t ${{github.event.inputs.app2}}:${{env.gitsha}} ${CONTEXT}
+          docker build -t ${APP}:${{env.gitsha}} --build-arg MVN_PROFILE=${APP} ${CONTEXT}
 
       #Login to OpenShift Container Repository - Kamloops (OC PROD)
       - name: Login to OpenShift Container Repository - Kamloops (OC PROD)
