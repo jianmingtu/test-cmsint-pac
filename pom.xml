@@ -96,6 +96,7 @@
         <profile>
             <id>cmsint-pac-poller</id>
             <modules>
+                <module>cmsint-pac-code-coverage</module>
                 <module>cmsint-pac-common-models</module>
                 <module>cmsint-pac-poller</module>
             </modules>
@@ -104,6 +105,7 @@
         <profile>
             <id>cmsint-pac-consumer</id>
             <modules>
+                <module>cmsint-pac-code-coverage</module>
                 <module>cmsint-pac-common-models</module>
                 <module>cmsint-pac-consumer</module>
             </modules>
