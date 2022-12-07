@@ -14,14 +14,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-@Component
 @EqualsAndHashCode
 @NoArgsConstructor
 @Slf4j
 public abstract class EventStatus {
 
-    protected RestTemplate restTemplate;
-    protected OrdsProperties ordProperties;
+    transient protected RestTemplate restTemplate;
+    transient protected OrdsProperties ordProperties;
 
     public EventStatus(OrdsProperties ordProperties, RestTemplate restTemplate) {
         this.ordProperties = ordProperties;

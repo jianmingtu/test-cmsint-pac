@@ -24,13 +24,14 @@ public class ConsumerService {
     }
 
     // Disable PAC Queue until PAC is ready to go
-    @RabbitListener(queues = "${icon.pac-queue}")
+    @RabbitListener(queues = "${pac.pac-queue}")
     public void receivePACMessage(@Payload Message<Client> message) throws IOException {
+        Client client = message.getPayload();
         try {
-            pacService.processPAC(message.getPayload());
+            pacService.processPAC(client);
         } catch (Exception ignored) {
             log.error("PAC BPM ERROR: " + message + " not processed successfully");
         }
-        System.out.println(new ObjectMapper().writeValueAsString(message.getPayload()));
+        log.info(new ObjectMapper().writeValueAsString(client));
     }
 }

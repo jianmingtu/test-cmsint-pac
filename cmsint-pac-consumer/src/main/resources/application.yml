@@ -1,12 +1,23 @@
 pac:
-  host: ${ORDS_HOST}
-  pac-queue: ${PAC_QUEUE_NAME}
-  ping-queue: ${PING_QUEUE_NAME}
+  pac-queue: ${PAC_QUEUE_NAME:pac-queue}
+  pac-routing-key: ${PAC_ROUTING_KEY:PAC}
+  exchange-name: ${RABBIT_EXCHANGE_NAME:EXCHANGE}
+  service-url: ${PAC_SERIVE_URL:https://127.0.0.1/}
+
+ords:
+  host: ${ORDS_HOST:https://127.0.0.1/}
+  successEndpoint: "success"
 
 spring:
   rabbitmq:
-    host: ${RABBIT_MQ_HOST}
+    host: ${RABBIT_MQ_HOST:127.0.0.1}
     port: 5672
+    username: ${RABBIT_MQ_HOST:guest}
+    password: ${RABBIT_MQ_HOST:guest}
 
 server:
-  port: 8081
+  port: ${CONSUMER_SERVER_PORT:8082}
+
+management:
+  server:
+    port: ${CONSUMER_MANAGEMENT_SERVER_PORT:8083}

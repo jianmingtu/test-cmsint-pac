@@ -3,6 +3,7 @@ package ca.bc.gov.pac.open.jag.pac.consumer.services;
 import ca.bc.gov.open.pac.models.Client;
 import ca.bc.gov.open.pac.models.OrdsErrorLog;
 import ca.bc.gov.open.pac.models.RequestSuccessLog;
+import ca.bc.gov.open.pac.models.eventStatus.PendingEventStatus;
 import ca.bc.gov.open.pac.models.eventTypeCode.EventTypeEnum;
 import ca.bc.gov.open.pac.models.eventTypeCode.SynchronizeClient;
 import ca.bc.gov.open.pac.models.exceptions.ORDSException;
@@ -23,13 +24,13 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 @Service
 @Slf4j
 public class PACService {
-    @Value("${pac.ords.host}")
-    private String cmsHost = "https://127.0.0.1/";
+    @Value("${ords.host}")
+    private String cmsHost;
 
-    @Value("${icon.pac-service-url}")
-    private String pacServiceUrl = "https://127.0.0.1/";
+    @Value("${pac.service-url}")
+    private String pacServiceUrl;
 
-    @Value("${pac.ords.endpoints.success}")
+    @Value("${ords.successEndpoint}")
     private String ordsSuccessEndpoint;
 
     private final WebServiceTemplate webServiceTemplate;
@@ -46,6 +47,9 @@ public class PACService {
 
     // PACUpdate BPM
     public void processPAC(Client client) throws JsonProcessingException {
+
+        if (!(client.getStatus() instanceof PendingEventStatus))
+            return;
 
         SynchronizeClient synchronizeClient = composeSoapServiceRequestBody(client);
 
