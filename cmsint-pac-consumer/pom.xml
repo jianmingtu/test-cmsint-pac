@@ -16,7 +16,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>ca.bc.gov.open</groupId>
-			<artifactId>cmsint-pac-consumer-models</artifactId>
+			<artifactId>cmsint-pac-common-models</artifactId>
 			<version>1.0.0</version>
 			<scope>compile</scope>
 		</dependency>
