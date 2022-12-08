@@ -94,7 +94,7 @@ public class PACPollerService {
                     .forEach(this::sendToRabbitMq);
 
             if (!processesEntity.isEmpty())
-                log.info(processesEntity.size() + "new records sent to Queue");
+                log.info(processesEntity.size() + " new records sent to Queue");
 
         } catch (Exception ex) {
             log.error("Failed to pull new records from the db: " + ex.getMessage());
@@ -113,7 +113,7 @@ public class PACPollerService {
                     restTemplate.getForObject(url, DemographicsEntity.class);
 
             if (demographicsEntity == null)
-                throw new NullPointerException("Response object from " + url.getPath() + "is null");
+                throw new NullPointerException("Response object from " + url.getPath() + " is null");
 
             return new Client(client, demographicsEntity);
         } catch (Exception ex) {
@@ -139,8 +139,11 @@ public class PACPollerService {
     public Client getClientNewerSequence(Client client) {
         URI url =
                 getUri(
-                        ordProperties.getCmsIntBaseUrl() + ordProperties.getProcessesEndpoint(),
-                        new QueryParam("state", "NEW"));
+                        ordProperties.getCmsBaseUrl() + ordProperties.getEventsEndpoint(),
+                        Arrays.asList(
+                                new QueryParam("clientNumber", client.getClientNumber()),
+                                new QueryParam("eventSeqNum", client.getEventSeqNum()),
+                                new QueryParam("eventTypeCode", client.getEventTypeCode())));
 
         try {
             NewerEventEntity newerEventEntity =
@@ -149,7 +152,7 @@ public class PACPollerService {
             log.info(new RequestSuccessLog("Request Success", url.getPath()).toString());
 
             if (newerEventEntity == null)
-                throw new NullPointerException("Response object from " + url.getPath() + "is null");
+                throw new NullPointerException("Response object from " + url.getPath() + " is null");
 
             if (!newerEventEntity.hasNewerEvent())
                 client.getStatus().updateToCompletedDuplicate(client);
@@ -217,7 +220,7 @@ public class PACPollerService {
             if (eventEntity == null)
                 throw new NullPointerException("Response object from " + url.getPath() + "is null");
 
-            return new Client(processEntity, eventEntity);
+            return new Client(processEntity, eventEntity, restTemplate, ordProperties);
 
         } catch (Exception ex) {
             logError(url.getPath(), ex, null);

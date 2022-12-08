@@ -1,12 +1,13 @@
 package ca.bc.gov.open.pac.models;
 
 import ca.bc.gov.open.pac.models.ords.DemographicsEntity;
+import java.io.Serializable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
 @EqualsAndHashCode
-public class DemographicInfo {
+public class DemographicInfo implements Serializable {
     private final String csNum;
     private final String surname;
     private final String givenName1;

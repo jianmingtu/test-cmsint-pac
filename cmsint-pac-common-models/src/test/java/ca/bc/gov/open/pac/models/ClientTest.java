@@ -99,7 +99,7 @@ class ClientTest {
     }
 
     @Test
-    void clientObjectCanBeSerialized(){
+    void clientObjectCanBeSerialized() {
         assertDoesNotThrow(() -> SerializationUtils.serialize(actualClient));
     }
 }

@@ -2,27 +2,27 @@ package ca.bc.gov.open.pac.models.eventStatus;
 
 import ca.bc.gov.open.pac.models.Client;
 import ca.bc.gov.open.pac.models.OrdsErrorLog;
+import ca.bc.gov.open.pac.models.OrdsPropertiesInterface;
 import ca.bc.gov.open.pac.models.RequestSuccessLog;
 import ca.bc.gov.open.pac.models.exceptions.ORDSException;
-import ca.bc.gov.open.pac.models.ords.OrdsProperties;
 import ca.bc.gov.open.pac.models.ords.UpdateEntryEntity;
+import java.io.Serializable;
 import java.net.URI;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @EqualsAndHashCode
 @NoArgsConstructor
 @Slf4j
-public abstract class EventStatus {
+public abstract class EventStatus implements Serializable {
 
-    transient protected RestTemplate restTemplate;
-    transient protected OrdsProperties ordProperties;
+    protected transient RestTemplate restTemplate;
+    protected transient OrdsPropertiesInterface ordProperties;
 
-    public EventStatus(OrdsProperties ordProperties, RestTemplate restTemplate) {
+    public EventStatus(OrdsPropertiesInterface ordProperties, RestTemplate restTemplate) {
         this.ordProperties = ordProperties;
         this.restTemplate = restTemplate;
     }

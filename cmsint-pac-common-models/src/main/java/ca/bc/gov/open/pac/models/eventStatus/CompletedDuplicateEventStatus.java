@@ -1,13 +1,14 @@
 package ca.bc.gov.open.pac.models.eventStatus;
 
-import ca.bc.gov.open.pac.models.ords.OrdsProperties;
+import ca.bc.gov.open.pac.models.OrdsPropertiesInterface;
 import org.springframework.web.client.RestTemplate;
 
 public class CompletedDuplicateEventStatus extends EventStatus {
 
     public static final String METHOD_NAME = "updateToCompletedDuplicate";
 
-    public CompletedDuplicateEventStatus(OrdsProperties ordProperties, RestTemplate restTemplate) {
+    public CompletedDuplicateEventStatus(
+            OrdsPropertiesInterface ordProperties, RestTemplate restTemplate) {
         super(ordProperties, restTemplate);
     }
 

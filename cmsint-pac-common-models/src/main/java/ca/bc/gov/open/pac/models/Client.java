@@ -4,7 +4,6 @@ import ca.bc.gov.open.pac.models.eventStatus.EventStatus;
 import ca.bc.gov.open.pac.models.eventStatus.NewEventStatus;
 import ca.bc.gov.open.pac.models.ords.DemographicsEntity;
 import ca.bc.gov.open.pac.models.ords.EventEntity;
-import ca.bc.gov.open.pac.models.ords.OrdsProperties;
 import ca.bc.gov.open.pac.models.ords.ProcessEntity;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
@@ -34,7 +33,7 @@ public class Client implements Serializable {
             ProcessEntity processEntity,
             EventEntity eventEntity,
             RestTemplate restTemplate,
-            OrdsProperties ordProperties) {
+            OrdsPropertiesInterface ordProperties) {
         this(processEntity, eventEntity);
         this.status = new NewEventStatus(ordProperties, restTemplate);
     }

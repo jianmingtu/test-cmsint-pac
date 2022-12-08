@@ -1,10 +1,10 @@
-package ca.bc.gov.open.pac.models.ords;
+package ca.bc.gov.open.jag.pac.poller.config;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-class OrdsPropertiesTest {
+class OrdsPropertiesInterfaceTest {
 
     private final OrdsProperties ordsProperties = new OrdsProperties();
 
