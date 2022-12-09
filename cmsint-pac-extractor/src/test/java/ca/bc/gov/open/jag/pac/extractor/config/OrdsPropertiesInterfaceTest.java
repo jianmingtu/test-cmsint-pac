@@ -1,4 +1,4 @@
-package ca.bc.gov.open.jag.pac.poller.config;
+package ca.bc.gov.open.jag.pac.extractor.config;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

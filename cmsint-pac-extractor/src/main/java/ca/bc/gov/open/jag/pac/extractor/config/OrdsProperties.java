@@ -1,4 +1,4 @@
-package ca.bc.gov.open.jag.pac.poller.config;
+package ca.bc.gov.open.jag.pac.extractor.config;
 
 import ca.bc.gov.open.pac.models.OrdsPropertiesInterface;
 import lombok.Data;

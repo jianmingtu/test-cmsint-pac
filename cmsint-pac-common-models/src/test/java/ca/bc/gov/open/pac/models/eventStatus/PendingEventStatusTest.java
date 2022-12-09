@@ -31,4 +31,13 @@ class PendingEventStatusTest extends EventStatusTest {
         Client actualClient = eventStatus.updateToCompletedDuplicate(expectedClient);
         assertSame(expectedClient, actualClient);
     }
+    @Test
+    @Override
+    void updateToInProgress() {
+        var expectedClient = TestClientInitializer.getClientInstance();
+        doNothing().when(mockedRestTemplate).put(any(), any());
+
+        Client actualClient = eventStatus.updateToInProgress(expectedClient);
+        assertSame(expectedClient, actualClient);
+    }
 }

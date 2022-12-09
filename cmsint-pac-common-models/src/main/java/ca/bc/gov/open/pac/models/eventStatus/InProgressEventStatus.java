@@ -11,7 +11,7 @@ public class InProgressEventStatus extends EventStatus {
     public static final String METHOD_NAME = "updateToCompletedDuplicate";
 
     public InProgressEventStatus(
-            OrdsPropertiesInterface ordProperties, RestTemplate restTemplate) {}
+            OrdsPropertiesInterface ordProperties, RestTemplate restTemplate) {super(ordProperties,restTemplate);}
 
     @Override
     protected String getMethodName() {

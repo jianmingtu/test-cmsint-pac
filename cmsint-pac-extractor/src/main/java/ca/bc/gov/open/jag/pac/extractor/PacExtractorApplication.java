@@ -1,4 +1,4 @@
-package ca.bc.gov.open.jag.pac.poller;
+package ca.bc.gov.open.jag.pac.extractor;
 
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
@@ -8,9 +8,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableRabbit
 @EnableScheduling
-public class PacPollerApplication {
+public class PacExtractorApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(PacPollerApplication.class, args);
+        SpringApplication.run(PacExtractorApplication.class, args);
     }
 }

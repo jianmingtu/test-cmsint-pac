@@ -1,4 +1,4 @@
-package ca.bc.gov.open.jag.pac.poller.services;
+package ca.bc.gov.open.jag.pac.extractor.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -7,7 +7,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-import ca.bc.gov.open.jag.pac.poller.config.OrdsProperties;
+import ca.bc.gov.open.jag.pac.extractor.config.OrdsProperties;
 import ca.bc.gov.open.pac.models.Client;
 import ca.bc.gov.open.pac.models.DemographicInfo;
 import ca.bc.gov.open.pac.models.eventStatus.PendingEventStatus;
@@ -39,7 +39,7 @@ import org.springframework.web.client.RestTemplate;
 // @ExtendWith(MockitoExtension.class)
 @ExtendWith(OutputCaptureExtension.class)
 @ActiveProfiles(value = "test")
-public class PACPollerServiceTest {
+public class PACExtractorServiceTest {
 
     private static final String testString = "test";
     private static final String testUrl = "http://example.com";
@@ -49,9 +49,9 @@ public class PACPollerServiceTest {
     @Mock private AmqpAdmin mockedAmqpAdmin;
 
     @Mock private OrdsProperties mockOrdsProperties;
-    @Mock private PACPollerService mockPacPollerService;
+    @Mock private PACExtractorService mockPacExtractorService;
 
-    private static PACPollerService pacPollerService;
+    private static PACExtractorService pacExtractorService;
     private ProcessEntity genericProcessEntity;
 
     private final String clientNumber = "clientNumber";
@@ -113,8 +113,8 @@ public class PACPollerServiceTest {
     void beforeEachSetup() {
         MockitoAnnotations.openMocks(this);
 
-        pacPollerService =
-                new PACPollerService(
+        pacExtractorService =
+                new PACExtractorService(
                         mockOrdsProperties,
                         null,
                         mockRestTemplate,
@@ -146,7 +146,7 @@ public class PACPollerServiceTest {
         when(mockRestTemplate.getForObject(any(URI.class), eq(ProcessEntity[].class)))
                 .thenReturn(new ProcessEntity[0]);
 
-        List<ProcessEntity> newProcesses = pacPollerService.getNewProcesses();
+        List<ProcessEntity> newProcesses = pacExtractorService.getNewProcesses();
         assertEquals(0, newProcesses.size());
     }
 
@@ -159,7 +159,7 @@ public class PACPollerServiceTest {
         when(mockRestTemplate.getForObject(any(URI.class), eq(ProcessEntity[].class)))
                 .thenReturn(processEntitiesArray);
 
-        List<ProcessEntity> newProcesses = pacPollerService.getNewProcesses();
+        List<ProcessEntity> newProcesses = pacExtractorService.getNewProcesses();
         assertEquals(1, newProcesses.size());
         assertEquals(processEntity, newProcesses.get(0));
     }
@@ -169,7 +169,7 @@ public class PACPollerServiceTest {
         when(mockRestTemplate.getForObject(any(URI.class), eq(ProcessEntity[].class)))
                 .thenThrow(new RuntimeException("test exception"));
 
-        assertThrows(ORDSException.class, pacPollerService::getNewProcesses);
+        assertThrows(ORDSException.class, pacExtractorService::getNewProcesses);
     }
 
     @Test
@@ -180,7 +180,7 @@ public class PACPollerServiceTest {
         when(mockRestTemplate.getForObject(any(URI.class), eq(ProcessEntity[].class)))
                 .thenReturn(new ProcessEntity[0]);
 
-        pacPollerService.pollOrdsForNewRecords();
+        pacExtractorService.pollOrdsForNewRecords();
         assertThat(output).contains("Pulled 0 new records");
     }
 
@@ -189,7 +189,7 @@ public class PACPollerServiceTest {
         when(mockRestTemplate.getForObject(any(URI.class), eq(ProcessEntity[].class)))
                 .thenThrow(new RuntimeException("testing exception"));
 
-        pacPollerService.pollOrdsForNewRecords();
+        pacExtractorService.pollOrdsForNewRecords();
         assertThat(output).contains("Failed to pull new records from the db");
     }
 
@@ -203,7 +203,7 @@ public class PACPollerServiceTest {
         when(mockRestTemplate.getForObject(any(URI.class), eq(EventEntity.class)))
                 .thenReturn(eventEntity);
 
-        Client actualClient = pacPollerService.getEventForProcess(genericProcessEntity);
+        Client actualClient = pacExtractorService.getEventForProcess(genericProcessEntity);
         assertEquals(expectedClient, actualClient);
     }
 
@@ -214,7 +214,7 @@ public class PACPollerServiceTest {
 
         assertThrows(
                 ORDSException.class,
-                () -> pacPollerService.getEventForProcess(genericProcessEntity));
+                () -> pacExtractorService.getEventForProcess(genericProcessEntity));
     }
 
     @SneakyThrows
@@ -239,7 +239,7 @@ public class PACPollerServiceTest {
         when(mockRestTemplate.getForObject(any(URI.class), eq(NewerEventEntity.class)))
                 .thenReturn(newerEventEntity);
 
-        Client actualClient = pacPollerService.getClientNewerSequence(mockedClient);
+        Client actualClient = pacExtractorService.getClientNewerSequence(mockedClient);
         assertEquals(eventStatusClass, actualClient.getStatus().getClass());
     }
 
@@ -248,7 +248,7 @@ public class PACPollerServiceTest {
         when(mockRestTemplate.getForObject(any(URI.class), eq(DemographicsEntity.class)))
                 .thenReturn(actualDemographics);
 
-        Client actualClient = pacPollerService.getDemographicsInfo(mockedClient);
+        Client actualClient = pacExtractorService.getDemographicsInfo(mockedClient);
         assertNotEquals(mockedClient, actualClient);
         assertEquals(new DemographicInfo(actualDemographics), actualClient.getDemographicInfo());
     }
@@ -258,6 +258,7 @@ public class PACPollerServiceTest {
         when(mockRestTemplate.getForObject(any(URI.class), eq(DemographicsEntity.class)))
                 .thenReturn(null);
 
-        assertThrows(ORDSException.class, () -> pacPollerService.getDemographicsInfo(mockedClient));
+        assertThrows(
+                ORDSException.class, () -> pacExtractorService.getDemographicsInfo(mockedClient));
     }
 }

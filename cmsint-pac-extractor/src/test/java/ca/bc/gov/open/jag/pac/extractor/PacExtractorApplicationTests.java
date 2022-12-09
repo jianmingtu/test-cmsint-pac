@@ -1,7 +1,7 @@
-package ca.bc.gov.open.jag.pac.poller;
+package ca.bc.gov.open.jag.pac.extractor;
 
-import ca.bc.gov.open.jag.pac.poller.config.QueueConfig;
-import ca.bc.gov.open.pac.models.ords.OrdsProperties;
+import ca.bc.gov.open.jag.pac.extractor.config.OrdsProperties;
+import ca.bc.gov.open.jag.pac.extractor.config.QueueConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.mockito.Mock;
 import org.springframework.amqp.core.AmqpAdmin;
@@ -16,7 +16,7 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-class pacPollerApplicationTests {
+class PacExtractorApplicationTests {
 
     @Qualifier("pac-queue")
     private org.springframework.amqp.core.Queue pacQueue;

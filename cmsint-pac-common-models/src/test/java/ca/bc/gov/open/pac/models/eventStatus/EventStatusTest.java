@@ -53,6 +53,19 @@ abstract class EventStatusTest {
     }
 
     @Test
+    void updateToInProgress() {
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> eventStatus.updateToInProgress(getClientInstance()));
+    }
+    @Test
+    void updateToCompletedOk() {
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> eventStatus.updateToCompletedOk(getClientInstance()));
+    }
+
+    @Test
     void updateStatusOnServerGetSuccessStatusBack() {
         doNothing().when(mockedRestTemplate).put(any(URI.class), any(UpdateEntryEntity.class));
 

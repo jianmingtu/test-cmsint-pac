@@ -1,7 +1,7 @@
-package ca.bc.gov.open.jag.pac.poller.services;
+package ca.bc.gov.open.jag.pac.extractor.services;
 
-import ca.bc.gov.open.jag.pac.poller.config.OrdsProperties;
-import ca.bc.gov.open.jag.pac.poller.config.QueueConfig;
+import ca.bc.gov.open.jag.pac.extractor.config.OrdsProperties;
+import ca.bc.gov.open.jag.pac.extractor.config.QueueConfig;
 import ca.bc.gov.open.pac.models.Client;
 import ca.bc.gov.open.pac.models.OrdsErrorLog;
 import ca.bc.gov.open.pac.models.RequestSuccessLog;
@@ -31,7 +31,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 @Slf4j
-public class PACPollerService {
+public class PACExtractorService {
 
     private final OrdsProperties ordProperties;
 
@@ -45,7 +45,7 @@ public class PACPollerService {
 
     private final QueueConfig queueConfig;
 
-    public PACPollerService(
+    public PACExtractorService(
             OrdsProperties ordsProperties,
             @Qualifier("pac-queue") Queue pacQueue,
             RestTemplate restTemplate,
