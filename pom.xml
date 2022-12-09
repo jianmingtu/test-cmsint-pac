@@ -89,7 +89,7 @@
                 <module>cmsint-pac-code-coverage</module>
                 <module>cmsint-pac-common-models</module>
                 <module>cmsint-pac-poller</module>
-                <module>cmsint-pac-consumer</module>
+                <module>cmsint-pac-transformer</module>
             </modules>
         </profile>
 
@@ -102,10 +102,10 @@
         </profile>
 
         <profile>
-            <id>cmsint-pac-consumer</id>
+            <id>cmsint-pac-transformer</id>
             <modules>
                 <module>cmsint-pac-common-models</module>
-                <module>cmsint-pac-consumer</module>
+                <module>cmsint-pac-transformer</module>
             </modules>
         </profile>
     </profiles>

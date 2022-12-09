@@ -9,10 +9,10 @@
 		<version>1.0.0</version>
 	</parent>
 
-	<artifactId>cmsint-pac-consumer</artifactId>
+	<artifactId>cmsint-pac-transformer</artifactId>
 	<version>1.0.0</version>
-	<name>cmsint-pac-consumer</name>
-	<description>cmsint-pac-consumer</description>
+	<name>cmsint-pac-transformer</name>
+	<description>cmsint-pac-transformer</description>
 	<dependencies>
 		<dependency>
 			<groupId>ca.bc.gov.open</groupId>
@@ -76,7 +76,7 @@
     </dependencies>
 
 	<build>
-		<finalName>cmsint-pac-consumer</finalName>
+		<finalName>cmsint-pac-transformer</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

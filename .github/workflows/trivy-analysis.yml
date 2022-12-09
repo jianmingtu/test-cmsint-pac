@@ -56,21 +56,21 @@ jobs:
           ignore-unfixed: true
           severity: HIGH,CRITICAL
 
-      #Build cmsint-pac-consumer image for scanning
-      - name: Build cmsint-pac-consumer image from Dockerfile
+      #Build cmsint-pac-transformer image for scanning
+      - name: Build cmsint-pac-transformer image from Dockerfile
         env:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
-          CONTEXT: ./cmsint-pac-consumer
+          CONTEXT: ./cmsint-pac-transformer
         run: |
-          docker build -t cmsint-pac-consumer:${{ github.sha }} ${CONTEXT}
+          docker build -t cmsint-pac-transformer:${{ github.sha }} ${CONTEXT}
 
       #Run Vulnerability Scan usinig Trivy scanner
-      - name: Run Trivy vulnerability scanner for cmsint-pac-consumer
+      - name: Run Trivy vulnerability scanner for cmsint-pac-transformer
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: image
-          image-ref: cmsint-pac-consumer:${{ github.sha }}
+          image-ref: cmsint-pac-transformer:${{ github.sha }}
           #format: template
           #template: '@/contrib/sarif.tpl'
           #output: trivy-results.sarif

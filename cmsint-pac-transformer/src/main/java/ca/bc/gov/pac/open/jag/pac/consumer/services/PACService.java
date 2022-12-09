@@ -170,3 +170,14 @@ public class PACService {
         }
     }
 }
+
+//        send client back to the queue so the sender can pick it up.
+// extractor -> transformer -> loader
+
+//        The next lines should go to the sender
+//        SynchronizeClient synchronizeClient = composeSoapServiceRequestBody(client);
+//
+//        invokeSoapService(synchronizeClient);
+//
+//        pacSuccess(client);
+// End of BPM
