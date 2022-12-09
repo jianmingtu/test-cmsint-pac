@@ -3,15 +3,22 @@ package ca.bc.gov.pac.open.jag.pac.consumer.services;
 import ca.bc.gov.open.pac.models.Client;
 import ca.bc.gov.open.pac.models.OrdsErrorLog;
 import ca.bc.gov.open.pac.models.RequestSuccessLog;
+import ca.bc.gov.open.pac.models.dateFormatters.DateFormatEnum;
+import ca.bc.gov.open.pac.models.dateFormatters.DateFormatterInterface;
 import ca.bc.gov.open.pac.models.eventStatus.PendingEventStatus;
 import ca.bc.gov.open.pac.models.eventTypeCode.EventTypeEnum;
 import ca.bc.gov.open.pac.models.eventTypeCode.SynchronizeClient;
 import ca.bc.gov.open.pac.models.exceptions.ORDSException;
+import ca.bc.gov.pac.open.jag.pac.consumer.configurations.OrdsProperties;
+import ca.bc.gov.pac.open.jag.pac.consumer.configurations.PacProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.utils.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -24,44 +31,55 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 @Service
 @Slf4j
 public class PACService {
-    @Value("${ords.host}")
-    private String cmsHost;
-
-    @Value("${pac.service-url}")
-    private String pacServiceUrl;
-
-    @Value("${ords.successEndpoint}")
-    private String ordsSuccessEndpoint;
-
     private final WebServiceTemplate webServiceTemplate;
     private final RestTemplate restTemplate;
+    private final OrdsProperties ordsProperties;
+    private final PacProperties pacProperties;
+    private final RabbitTemplate rabbitTemplate;
 
     @Autowired
     public PACService(
             RestTemplate restTemplate,
+            OrdsProperties ordsProperties,
+            PacProperties pacProperties,
             ObjectMapper objectMapper,
-            WebServiceTemplate webServiceTemplate) {
+            WebServiceTemplate webServiceTemplate,
+            RabbitTemplate rabbitTemplate) {
         this.restTemplate = restTemplate;
+        this.ordsProperties = ordsProperties;
+        this.pacProperties = pacProperties;
         this.webServiceTemplate = webServiceTemplate;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     // PACUpdate BPM
-    public void processPAC(Client client) throws JsonProcessingException {
+    public void processPAC(Client client) throws IOException {
 
-        if (!(client.getStatus() instanceof PendingEventStatus))
-            return;
+        if (!(client.getStatus() instanceof PendingEventStatus)) return;
+        new FileOutputStream("client.object").write(SerializationUtils.serialize(client));
 
-        SynchronizeClient synchronizeClient = composeSoapServiceRequestBody(client);
+        DateFormatterInterface dateFormatter =
+                DateFormatEnum.valueOf(client.getComputerSystemCd().toUpperCase())
+                        .getDateFormatter(pacProperties);
 
-        invokeSoapService(synchronizeClient);
+        var clientWithUpdatedDates =
+                client.updateBirthDateFormat(dateFormatter)
+                        .updateProbableDischargeDateDateFormat(dateFormatter)
+                        .updateSysDateFormat(dateFormatter);
 
-        pacSuccess(client);
-        // End of BPM
+        client.getStatus().updateToInProgress(clientWithUpdatedDates);
+        sendToQueue(clientWithUpdatedDates);
+    }
+
+    public void sendToQueue(Client client) {
+        this.rabbitTemplate.convertAndSend(
+                pacProperties.getExchangeName(), pacProperties.getPacRoutingKey(), client);
     }
 
     private void pacSuccess(Client client, Client eventClient) throws JsonProcessingException {
         UriComponentsBuilder builder =
-                UriComponentsBuilder.fromHttpUrl(cmsHost + ordsSuccessEndpoint)
+                UriComponentsBuilder.fromHttpUrl(
+                                ordsProperties.getCmsPath() + ordsProperties.getSuccessEndpoint())
                         .queryParam("clientNumber", client.getClientNumber())
                         .queryParam("eventSeqNum", client.getEventSeqNum())
                         .queryParam("computerSystemCd", client.getComputerSystemCd());
@@ -89,7 +107,8 @@ public class PACService {
             throws JsonProcessingException {
         // Invoke Soap Service
         try {
-            webServiceTemplate.marshalSendAndReceive(pacServiceUrl, synchronizeClient);
+            webServiceTemplate.marshalSendAndReceive(
+                    pacProperties.getServiceUrl(), synchronizeClient);
             log.info(new RequestSuccessLog("Request Success", "synchronizeClient").toString());
         } catch (Exception ex) {
             log.error(
@@ -116,7 +135,9 @@ public class PACService {
 
     private HttpEntity<Client> sendUpdateRequest(Client client) {
         UriComponentsBuilder builder;
-        builder = UriComponentsBuilder.fromHttpUrl(cmsHost + ordsSuccessEndpoint);
+        builder =
+                UriComponentsBuilder.fromHttpUrl(
+                        ordsProperties.getCmsPath() + ordsProperties.getSuccessEndpoint());
         HttpEntity<Client> respClient =
                 restTemplate.exchange(
                         builder.toUriString(),

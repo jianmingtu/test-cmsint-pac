@@ -15,8 +15,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -31,9 +30,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
-// @Slf4j
+@Slf4j
 public class PACPollerService {
-    private static final Logger log = LogManager.getLogger(PACPollerService.class);
 
     private final OrdsProperties ordProperties;
 

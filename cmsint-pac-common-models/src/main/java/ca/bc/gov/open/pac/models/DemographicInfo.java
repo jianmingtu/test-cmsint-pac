@@ -1,12 +1,15 @@
 package ca.bc.gov.open.pac.models;
 
+import ca.bc.gov.open.pac.models.dateFormatters.DateFormatterInterface;
 import ca.bc.gov.open.pac.models.ords.DemographicsEntity;
 import java.io.Serializable;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
 @EqualsAndHashCode
+@AllArgsConstructor
 public class DemographicInfo implements Serializable {
     private final String csNum;
     private final String surname;
@@ -70,5 +73,78 @@ public class DemographicInfo implements Serializable {
         pacLocationCd = null;
         userId = null;
         custodyCenter = null;
+    }
+
+    public DemographicInfo updateBirthDateFormat(DateFormatterInterface dateFormatter) {
+        var updateBirthDate = dateFormatter.format(birthDate);
+        return new DemographicInfo(
+                csNum,
+                surname,
+                givenName1,
+                givenName2,
+                updateBirthDate,
+                gender,
+                photoGUID,
+                probableDischargeDate,
+                outReason,
+                isActive,
+                fromCsNum,
+                mergeUserId,
+                livingUnit,
+                icsLocationCd,
+                isIn,
+                sysDate,
+                pacLocationCd,
+                userId,
+                custodyCenter);
+    }
+
+    public DemographicInfo updateProbableDischargeDateDateFormat(
+            DateFormatterInterface dateFormatter) {
+        var updateProbableDischargeDate = dateFormatter.format(birthDate);
+        return new DemographicInfo(
+                csNum,
+                surname,
+                givenName1,
+                givenName2,
+                birthDate,
+                gender,
+                photoGUID,
+                updateProbableDischargeDate,
+                outReason,
+                isActive,
+                fromCsNum,
+                mergeUserId,
+                livingUnit,
+                icsLocationCd,
+                isIn,
+                sysDate,
+                pacLocationCd,
+                userId,
+                custodyCenter);
+    }
+
+    public DemographicInfo updateSysDateFormat(DateFormatterInterface dateFormatter) {
+        var updateSysDate = dateFormatter.format(birthDate);
+        return new DemographicInfo(
+                csNum,
+                surname,
+                givenName1,
+                givenName2,
+                birthDate,
+                gender,
+                photoGUID,
+                probableDischargeDate,
+                outReason,
+                isActive,
+                fromCsNum,
+                mergeUserId,
+                livingUnit,
+                icsLocationCd,
+                isIn,
+                updateSysDate,
+                pacLocationCd,
+                userId,
+                custodyCenter);
     }
 }
