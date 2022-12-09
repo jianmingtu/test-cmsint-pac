@@ -10,10 +10,7 @@ class DateFormatEnumTest extends DateFormatterTest {
     private final String packagePath = "ca.bc.gov.open.pac.models.dateFormatters.";
 
     @ParameterizedTest
-    @CsvSource({
-            "ICS,IcsDateFormatter",
-            "PAC,PacDateFormatter"
-    })
+    @CsvSource({"ICS,IcsDateFormatter", "PAC,PacDateFormatter"})
     void getDateFormatter(String name, String clazzName) throws ClassNotFoundException {
         DateFormatterInterface dateFormatter =
                 DateFormatEnum.valueOf(name).getDateFormatter(pacProperties);

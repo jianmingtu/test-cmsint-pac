@@ -20,10 +20,6 @@ import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -221,28 +217,6 @@ public class PACExtractorService {
                 throw new NullPointerException("Response object from " + url.getPath() + "is null");
 
             return new Client(processEntity, eventEntity, restTemplate, ordProperties);
-
-        } catch (Exception ex) {
-            logError(url.getPath(), ex, null);
-            throw new ORDSException();
-        }
-    }
-
-    //    TODO this method should be removed after checking if we are going to use it or not
-    private Client pacUpdateClient(Client client) {
-        URI url = getUri(ordProperties.getCmsIntBaseUrl() + ordProperties.getSuccessEndpoint());
-        try {
-            HttpEntity<Client> respClient =
-                    restTemplate.exchange(
-                            url,
-                            HttpMethod.POST,
-                            new HttpEntity<>(client, new HttpHeaders()),
-                            new ParameterizedTypeReference<>() {});
-
-            log.info(
-                    new RequestSuccessLog("Request Success", ordProperties.getSuccessEndpoint())
-                            .toString());
-            return respClient.getBody();
 
         } catch (Exception ex) {
             logError(url.getPath(), ex, null);

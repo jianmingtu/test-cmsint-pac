@@ -58,6 +58,7 @@ abstract class EventStatusTest {
                 UnsupportedOperationException.class,
                 () -> eventStatus.updateToInProgress(getClientInstance()));
     }
+
     @Test
     void updateToCompletedOk() {
         assertThrows(
