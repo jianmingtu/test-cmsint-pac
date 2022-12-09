@@ -4,5 +4,7 @@ public interface OrdsPropertiesInterface {
 
     String getCmsBaseUrl();
 
+    String getCmsIntBaseUrl();
+
     String getEntriesEndpoint();
 }

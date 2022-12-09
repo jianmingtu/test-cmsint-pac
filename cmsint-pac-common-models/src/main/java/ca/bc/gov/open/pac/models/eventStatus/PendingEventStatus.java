@@ -25,6 +25,16 @@ public class PendingEventStatus extends EventStatus {
     }
 
     @Override
+    public Client updateToInProgress(Client client) {
+        log.info("Updating Client status to 'In Progress'");
+        client.setStatus(new InProgressEventStatus(ordProperties, restTemplate));
+
+        updateStatusOnServer(client, EventStatusCode.IN_PROGRESS);
+
+        return client;
+    }
+
+    @Override
     protected String getMethodName() {
         return METHOD_NAME;
     }

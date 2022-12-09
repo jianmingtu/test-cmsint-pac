@@ -37,6 +37,16 @@ public abstract class EventStatus implements Serializable {
                 "The status of the event cannot be updated to Completed Duplicate");
     }
 
+    public Client updateToInProgress(Client client) {
+        throw new UnsupportedOperationException(
+                "The status of the event cannot be updated to In Progress");
+    }
+
+    public Client updateToCompletedOk(Client client) {
+        throw new UnsupportedOperationException(
+                "The status of the event cannot be updated to Completed OK");
+    }
+
     protected void updateStatusOnServer(Client client, EventStatusCode eventStatusCode) {
         URI url =
                 UriComponentsBuilder.fromHttpUrl(

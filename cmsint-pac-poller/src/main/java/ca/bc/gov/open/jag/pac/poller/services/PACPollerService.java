@@ -113,7 +113,8 @@ public class PACPollerService {
                     restTemplate.getForObject(url, DemographicsEntity.class);
 
             if (demographicsEntity == null)
-                throw new NullPointerException("Response object from " + url.getPath() + " is null");
+                throw new NullPointerException(
+                        "Response object from " + url.getPath() + " is null");
 
             return new Client(client, demographicsEntity);
         } catch (Exception ex) {
@@ -152,7 +153,8 @@ public class PACPollerService {
             log.info(new RequestSuccessLog("Request Success", url.getPath()).toString());
 
             if (newerEventEntity == null)
-                throw new NullPointerException("Response object from " + url.getPath() + " is null");
+                throw new NullPointerException(
+                        "Response object from " + url.getPath() + " is null");
 
             if (!newerEventEntity.hasNewerEvent())
                 client.getStatus().updateToCompletedDuplicate(client);
