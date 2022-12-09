@@ -8,9 +8,9 @@ on:
   workflow_dispatch:
     inputs:
         app1:
-            description: 'App Name (jag-cmsint-pac-poller)'
+            description: 'App Name (jag-cmsint-pac-extractor)'
             required: true
-            default: 'jag-cmsint-pac-poller'
+            default: 'jag-cmsint-pac-extractor'
         app2:
           description: 'App Name (jag-cmsint-pac-transformer)'
           required: true
@@ -74,12 +74,12 @@ jobs:
       - name: Maven Spotless Check
         run: mvn -ntp spotless:check
 
-      #Build image jag-cmsint-pac-poller
-      - name: Build image jag-cmsint-pac-poller
+      #Build image jag-cmsint-pac-extractor
+      - name: Build image jag-cmsint-pac-extractor
         env:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
-          CONTEXT: ./cmsint-pac-poller
+          CONTEXT: ./cmsint-pac-extractor
         run: |
           docker build -t ${{github.event.inputs.app1}}:${{env.gitsha}} ${CONTEXT}
 
@@ -98,8 +98,8 @@ jobs:
         with:
           registry: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}
 
-      #Push image jag-cmsint-pac-poller to OpenShift Image stream - Kamloops (OC Prod)
-      - name: Push Image jag-cmsint-pac-poller to Openshift Image Stream - Kamloops (OC Prod)
+      #Push image jag-cmsint-pac-extractor to OpenShift Image stream - Kamloops (OC Prod)
+      - name: Push Image jag-cmsint-pac-extractor to Openshift Image Stream - Kamloops (OC Prod)
         env:
           IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/${{github.event.inputs.app1}}:${{secrets.OPENSHIFT_ENV_TAG}}
         run: |
@@ -122,8 +122,8 @@ jobs:
           username: ${{secrets.OPENSHIFT_SA_USERNAME}}
           password: ${{secrets.OPENSHIFT_SA_PASSWORD_DR}}
 
-      #Push image jag-cmsint-pac-poller to OpenShift Image stream - Calgary (OC DR)
-      - name: Push Image jag-cmsint-pac-poller to Openshift Image Stream - Calgary (OC DR)
+      #Push image jag-cmsint-pac-extractor to OpenShift Image stream - Calgary (OC DR)
+      - name: Push Image jag-cmsint-pac-extractor to Openshift Image Stream - Calgary (OC DR)
         env:
           IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY_DR}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/${{github.event.inputs.app1}}:${{secrets.OPENSHIFT_ENV_TAG}}
         run: |
@@ -149,8 +149,8 @@ jobs:
           openshift_token: ${{secrets.OPENSHIFT_SA_ENV_DEPLOYER_TOKEN}}
           namespace: ${OPENSHIFT_NAMESPACE}
 
-      # Labels the deployment config of the application jag-cmsint-pac-poller with release version number to spin up the pods labelled in same version - Kamloops (OC PROD)
-      - name: Labelling DC of jag-cmsint-pac-poller to release version - Kamloops (OC PROD)
+      # Labels the deployment config of the application jag-cmsint-pac-extractor with release version number to spin up the pods labelled in same version - Kamloops (OC PROD)
+      - name: Labelling DC of jag-cmsint-pac-extractor to release version - Kamloops (OC PROD)
         env:
           releaseVersion: ${{ env.releaseVersion }}
           appName: ${{github.event.inputs.app1}}
@@ -158,8 +158,8 @@ jobs:
         run: |
           oc patch dc ${appName} -n ${openshiftEnvNamespace} --patch '{"spec":{"template":{"metadata":{"labels":{"version":"${{ env.releaseVersion }}.${{ env.gitsha }}"}}}}}'
       
-      # Wait to DC rollout of jag-cmsint-pac-poller to get completed before proceeding next stage - Kamloops (OC PROD)
-      - name: Wait for DC rollout of jag-cmsint-pac-poller - Kamloops (OC PROD)
+      # Wait to DC rollout of jag-cmsint-pac-extractor to get completed before proceeding next stage - Kamloops (OC PROD)
+      - name: Wait for DC rollout of jag-cmsint-pac-extractor - Kamloops (OC PROD)
         env:
           appName: ${{github.event.inputs.app1}}
           openshiftEnvNamespace: ${{secrets.OPENSHIFT_LICENSE_PLATE}}-${{ github.event.inputs.env }}
@@ -203,8 +203,8 @@ jobs:
         run: |
           oc patch dc ${appName} -n ${openshiftEnvNamespace} --patch '{"spec":{"template":{"metadata":{"labels":{"version":"${{ env.releaseVersion }}.${{ env.gitsha }}"}}}}}'
 
-      # Wait to DC rollout of jag-cmsint-pac-poller to get completed before proceeding next stage - Calgary (OC DR)
-      - name: Wait for DC rollout of jag-cmsint-pac-poller - Calgary (OC DR)
+      # Wait to DC rollout of jag-cmsint-pac-extractor to get completed before proceeding next stage - Calgary (OC DR)
+      - name: Wait for DC rollout of jag-cmsint-pac-extractor - Calgary (OC DR)
         env:
           appName: ${{github.event.inputs.app1}}
           openshiftEnvNamespace: ${{secrets.OPENSHIFT_LICENSE_PLATE}}-${{ github.event.inputs.env }}

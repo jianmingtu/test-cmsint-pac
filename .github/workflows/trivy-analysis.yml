@@ -33,21 +33,21 @@ jobs:
       - name: Maven Verify
         run: mvn -ntp clean verify
 
-      #Build cmsint-pac-poller image for scanning
-      - name: Build cmsint-pac-poller image from Dockerfile
+      #Build cmsint-pac-extractor image for scanning
+      - name: Build cmsint-pac-extractor image from Dockerfile
         env:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
-          CONTEXT: ./cmsint-pac-poller
+          CONTEXT: ./cmsint-pac-extractor
         run: |
-          docker build -t cmsint-pac-poller:${{ github.sha }} ${CONTEXT}
+          docker build -t cmsint-pac-extractor:${{ github.sha }} ${CONTEXT}
 
       #Run Vulnerability Scan usinig Trivy scanner
-      - name: Run Trivy vulnerability scanner for cmsint-pac-poller
+      - name: Run Trivy vulnerability scanner for cmsint-pac-extractor
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: image
-          image-ref: cmsint-pac-poller:${{ github.sha }}
+          image-ref: cmsint-pac-extractor:${{ github.sha }}
           #format: template
           #template: '@/contrib/sarif.tpl'
           #output: trivy-results.sarif

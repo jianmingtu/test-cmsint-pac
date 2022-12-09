@@ -20,7 +20,7 @@
         </dependency>
         <dependency>
             <groupId>ca.bc.gov.open</groupId>
-            <artifactId>cmsint-pac-poller</artifactId>
+            <artifactId>cmsint-pac-extractor</artifactId>
             <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
