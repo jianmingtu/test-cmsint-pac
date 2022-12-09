@@ -90,6 +90,7 @@
                 <module>cmsint-pac-common-models</module>
                 <module>cmsint-pac-extractor</module>
                 <module>cmsint-pac-transformer</module>
+                <module>cmsint-pac-loader</module>
             </modules>
         </profile>
 
@@ -106,6 +107,14 @@
             <modules>
                 <module>cmsint-pac-common-models</module>
                 <module>cmsint-pac-transformer</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>cmsint-pac-loader</id>
+            <modules>
+                <module>cmsint-pac-common-models</module>
+                <module>cmsint-pac-loader</module>
             </modules>
         </profile>
     </profiles>
