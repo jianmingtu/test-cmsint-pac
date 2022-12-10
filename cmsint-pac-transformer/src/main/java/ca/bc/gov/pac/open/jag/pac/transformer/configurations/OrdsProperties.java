@@ -1,4 +1,4 @@
-package ca.bc.gov.pac.open.jag.pac.consumer.configurations;
+package ca.bc.gov.pac.open.jag.pac.transformer.configurations;
 
 import ca.bc.gov.open.pac.models.OrdsPropertiesInterface;
 import lombok.Data;

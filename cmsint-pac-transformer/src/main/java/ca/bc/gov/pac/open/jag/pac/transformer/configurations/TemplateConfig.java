@@ -1,4 +1,4 @@
-package ca.bc.gov.pac.open.jag.pac.consumer.configurations;
+package ca.bc.gov.pac.open.jag.pac.transformer.configurations;
 
 import ca.bc.gov.open.pac.models.serializers.InstantDeserializer;
 import ca.bc.gov.open.pac.models.serializers.InstantSerializer;
@@ -7,19 +7,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
-import javax.xml.soap.SOAPMessage;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.ws.client.core.WebServiceTemplate;
-import org.springframework.ws.soap.SoapVersion;
-import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 
 @Configuration
 @Slf4j
@@ -51,24 +45,7 @@ public class TemplateConfig {
         return objectMapper;
     }
 
-    @Bean
-    public SaajSoapMessageFactory messageFactory() {
-        Map<String, Object> props = new HashMap<>();
-        props.put(SOAPMessage.WRITE_XML_DECLARATION, "true");
-        SaajSoapMessageFactory messageFactory = new SaajSoapMessageFactory();
-        messageFactory.setMessageProperties(props);
-        messageFactory.setSoapVersion(SoapVersion.SOAP_11);
-        return messageFactory;
-    }
 
-    @Bean
-    public WebServiceTemplate webServiceTemplate() {
-        WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
-        Jaxb2Marshaller jaxb2Marshaller = new Jaxb2Marshaller();
-        webServiceTemplate.setMessageFactory(messageFactory());
-        webServiceTemplate.setMarshaller(jaxb2Marshaller);
-        webServiceTemplate.setUnmarshaller(jaxb2Marshaller);
-        webServiceTemplate.afterPropertiesSet();
-        return webServiceTemplate;
-    }
+
+
 }

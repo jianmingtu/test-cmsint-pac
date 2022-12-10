@@ -1,4 +1,4 @@
-package ca.bc.gov.pac.open.jag.pac.consumer.services;
+package ca.bc.gov.pac.open.jag.pac.transformer.services;
 
 import ca.bc.gov.open.pac.models.Client;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,23 +12,22 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class ConsumerService {
+public class QueueListenerService {
     private final ObjectMapper objectMapper;
 
-    private final PACService pacService;
+    private final ConsumerService consumerService;
 
     @Autowired
-    public ConsumerService(ObjectMapper objectMapper, PACService pacService) {
+    public QueueListenerService(ObjectMapper objectMapper, ConsumerService consumerService) {
         this.objectMapper = objectMapper;
-        this.pacService = pacService;
+        this.consumerService = consumerService;
     }
 
-    // Disable PAC Queue until PAC is ready to go
     @RabbitListener(queues = "${pac.pac-queue}")
     public void receivePACMessage(@Payload Message<Client> message) throws IOException {
         Client client = message.getPayload();
         try {
-            pacService.processPAC(client);
+            consumerService.processPAC(client);
         } catch (Exception ignored) {
             log.error("PAC BPM ERROR: " + message + " not processed successfully");
         }
