@@ -4,9 +4,9 @@ import ca.bc.gov.open.pac.models.Client;
 import lombok.Getter;
 
 @Getter
-public class CkeySynchronizeClient extends SynchronizeClient {
+public class CkeySynchronizeClientEntity extends SynchronizeClientEntity {
 
-    public CkeySynchronizeClient(Client client) {
+    public CkeySynchronizeClientEntity(Client client) {
         csNumber = client.getDemographicInfo().getCsNum();
         probableDischargeDate = client.getDemographicInfo().getProbableDischargeDate();
     }

@@ -1,9 +1,10 @@
 package ca.bc.gov.open.pac.models.eventStatus;
 
 import ca.bc.gov.open.pac.models.OrdsPropertiesInterface;
+import java.io.Serializable;
 import org.springframework.web.client.RestTemplate;
 
-public class CompletedDuplicateEventStatus extends EventStatus {
+public class CompletedDuplicateEventStatus extends EventStatus implements Serializable {
 
     public static final String METHOD_NAME = "updateToCompletedDuplicate";
 

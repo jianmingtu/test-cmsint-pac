@@ -2,11 +2,12 @@ package ca.bc.gov.open.pac.models.eventStatus;
 
 import ca.bc.gov.open.pac.models.Client;
 import ca.bc.gov.open.pac.models.OrdsPropertiesInterface;
+import java.io.Serializable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.RestTemplate;
 
 @Slf4j
-public class InProgressEventStatus extends EventStatus {
+public class InProgressEventStatus extends EventStatus implements Serializable {
 
     public static final String METHOD_NAME = "updateToCompletedDuplicate";
 

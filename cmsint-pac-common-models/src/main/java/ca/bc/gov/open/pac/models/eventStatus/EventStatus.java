@@ -70,4 +70,14 @@ public abstract class EventStatus implements Serializable {
     }
 
     protected abstract String getMethodName();
+
+    public EventStatus setRestTemplate(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+        return this;
+    }
+
+    public EventStatus setOrdProperties(OrdsPropertiesInterface ordProperties) {
+        this.ordProperties = ordProperties;
+        return this;
+    }
 }

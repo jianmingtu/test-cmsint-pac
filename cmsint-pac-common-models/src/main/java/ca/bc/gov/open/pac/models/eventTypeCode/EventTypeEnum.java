@@ -1,24 +1,30 @@
 package ca.bc.gov.open.pac.models.eventTypeCode;
 
 import ca.bc.gov.open.pac.models.Client;
+import java.util.Arrays;
 import java.util.function.Function;
 
 public enum EventTypeEnum {
-    CADM(CadmSynchronizeClient::new),
-    CDEM(CdemSynchronizeClient::new),
-    CREL(CrelSynchronizeClient::new),
-    CLUN(ClunSynchronizeClient::new),
-    CKEY(CkeySynchronizeClient::new),
-    CLOC(ClocSynchronizeClient::new),
-    CIMG(CimgSynchronizeClient::new);
+    CADM(CadmSynchronizeClientEntity::new),
+    CDEM(CdemSynchronizeClientEntity::new),
+    CREL(CrelSynchronizeClientEntity::new),
+    CLUN(ClunSynchronizeClientEntity::new),
+    CKEY(CkeySynchronizeClientEntity::new),
+    CLOC(ClocSynchronizeClientEntity::new),
+    CIMG(CimgSynchronizeClientEntity::new);
 
-    private final Function<Client, SynchronizeClient> synchronizeClientFunction;
+    private final Function<Client, SynchronizeClientEntity> synchronizeClientFunction;
 
-    private EventTypeEnum(Function<Client, SynchronizeClient> synchronizeClientFunction) {
+    private EventTypeEnum(Function<Client, SynchronizeClientEntity> synchronizeClientFunction) {
         this.synchronizeClientFunction = synchronizeClientFunction;
     }
 
-    public SynchronizeClient getSynchronizeClient(Client client) {
+    public static boolean hasValue(String code) {
+        return Arrays.stream(values())
+                .anyMatch((EventTypeEnum eventType) -> eventType.name().equalsIgnoreCase(code));
+    }
+
+    public SynchronizeClientEntity getSynchronizeClient(Client client) {
         return synchronizeClientFunction.apply(client);
     }
 }

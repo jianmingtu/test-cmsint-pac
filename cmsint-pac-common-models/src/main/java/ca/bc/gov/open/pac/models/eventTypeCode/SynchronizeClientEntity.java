@@ -3,7 +3,7 @@ package ca.bc.gov.open.pac.models.eventTypeCode;
 import lombok.Data;
 
 @Data
-public abstract class SynchronizeClient {
+public abstract class SynchronizeClientEntity {
     protected String csNumber;
     protected String surname;
     protected String givenName1;
