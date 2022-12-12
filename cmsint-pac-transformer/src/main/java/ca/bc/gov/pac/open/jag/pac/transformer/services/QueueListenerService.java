@@ -15,19 +15,19 @@ import org.springframework.stereotype.Component;
 public class QueueListenerService {
     private final ObjectMapper objectMapper;
 
-    private final ConsumerService consumerService;
+    private final TransformerService transformerService;
 
     @Autowired
-    public QueueListenerService(ObjectMapper objectMapper, ConsumerService consumerService) {
+    public QueueListenerService(ObjectMapper objectMapper, TransformerService transformerService) {
         this.objectMapper = objectMapper;
-        this.consumerService = consumerService;
+        this.transformerService = transformerService;
     }
 
     @RabbitListener(queues = "${pac.pac-queue}")
     public void receivePACMessage(@Payload Message<Client> message) throws IOException {
         Client client = message.getPayload();
         try {
-            consumerService.processPAC(client);
+            transformerService.processPAC(client);
         } catch (Exception ignored) {
             log.error("PAC BPM ERROR: " + message + " not processed successfully");
         }
