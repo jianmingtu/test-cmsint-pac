@@ -36,6 +36,28 @@ public class PendingEventStatus extends EventStatus implements Serializable {
     }
 
     @Override
+    public Client updateToConnectionError(Client client) {
+        log.info("Updating Client status to 'Pending'");
+
+        client.setStatus(new ConnectionErrorEventStatus(ordProperties, restTemplate));
+
+        updateStatusOnServer(client, EventStatusCode.CONNECTION_ERROR);
+
+        return client;
+    }
+
+    @Override
+    public Client updateToApplicationError(Client client) {
+        log.info("Updating Client status to 'Pending'");
+
+        client.setStatus(new ApplicationErrorEventStatus(ordProperties, restTemplate));
+
+        updateStatusOnServer(client, EventStatusCode.APPLICATION_ERROR);
+
+        return client;
+    }
+
+    @Override
     protected String getMethodName() {
         return METHOD_NAME;
     }

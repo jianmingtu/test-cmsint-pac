@@ -29,4 +29,26 @@ public class InProgressEventStatus extends EventStatus implements Serializable {
 
         return client;
     }
+
+    @Override
+    public Client updateToConnectionError(Client client) {
+        log.info("Updating Client status to 'Pending'");
+
+        client.setStatus(new ConnectionErrorEventStatus(ordProperties, restTemplate));
+
+        updateStatusOnServer(client, EventStatusCode.CONNECTION_ERROR);
+
+        return client;
+    }
+
+    @Override
+    public Client updateToApplicationError(Client client) {
+        log.info("Updating Client status to 'Pending'");
+
+        client.setStatus(new ApplicationErrorEventStatus(ordProperties, restTemplate));
+
+        updateStatusOnServer(client, EventStatusCode.APPLICATION_ERROR);
+
+        return client;
+    }
 }

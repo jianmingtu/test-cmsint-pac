@@ -47,6 +47,16 @@ public abstract class EventStatus implements Serializable {
                 "The status of the event cannot be updated to Completed OK");
     }
 
+    public Client updateToConnectionError(Client client) {
+        throw new UnsupportedOperationException(
+                "The status of the event cannot be updated to Connection Error");
+    }
+
+    public Client updateToApplicationError(Client client) {
+        throw new UnsupportedOperationException(
+                "The status of the event cannot be updated to Application Error");
+    }
+
     protected void updateStatusOnServer(Client client, EventStatusCode eventStatusCode) {
         URI url =
                 UriComponentsBuilder.fromHttpUrl(

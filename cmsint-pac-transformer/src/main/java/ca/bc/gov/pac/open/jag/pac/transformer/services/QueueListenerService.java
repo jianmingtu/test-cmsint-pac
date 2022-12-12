@@ -1,6 +1,7 @@
 package ca.bc.gov.pac.open.jag.pac.transformer.services;
 
 import ca.bc.gov.open.pac.models.Client;
+import ca.bc.gov.open.pac.models.exceptions.ORDSException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +29,12 @@ public class QueueListenerService {
         Client client = message.getPayload();
         try {
             transformerService.processPAC(client);
+        } catch (ORDSException ex) {
+            log.error("PAC BPM ERROR: " + message + " not processed successfully");
+            client.getStatus().updateToConnectionError(client);
         } catch (Exception ignored) {
             log.error("PAC BPM ERROR: " + message + " not processed successfully");
+            client.getStatus().updateToApplicationError(client);
         }
         log.info(new ObjectMapper().writeValueAsString(client));
     }
