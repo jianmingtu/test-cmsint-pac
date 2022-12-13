@@ -8,6 +8,8 @@ import ca.bc.gov.open.pac.models.eventStatus.InProgressEventStatus;
 import ca.bc.gov.open.pac.models.eventTypeCode.EventTypeEnum;
 import ca.bc.gov.open.pac.models.eventTypeCode.SynchronizeClientEntity;
 import java.util.Arrays;
+
+import ca.bc.gov.open.pac.models.exceptions.ORDSException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.ws.client.core.WebServiceTemplate;
@@ -48,6 +50,7 @@ public class LoaderService {
                                     ex.getMessage(),
                                     synchronizeClientEntity)
                             .toString());
+            throw new ORDSException(synchronizeClientEntity.toString());
         }
     }
 
