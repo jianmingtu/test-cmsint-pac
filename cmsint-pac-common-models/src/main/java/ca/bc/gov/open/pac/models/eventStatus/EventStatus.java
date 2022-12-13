@@ -75,7 +75,7 @@ public abstract class EventStatus implements Serializable {
                                     ex.getMessage(),
                                     client)
                             .toString());
-            throw new ORDSException();
+            throw new ORDSException("client " + client + "could failed to update the status to " + eventStatusCode.getCode());
         }
     }
 
