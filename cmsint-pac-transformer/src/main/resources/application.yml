@@ -8,8 +8,13 @@ pac:
   icsDatePattern: ${ICS_DATE_PATTERN:yyyyMMdd}
 
 ords:
-  host: ${ORDS_HOST:https://127.0.0.1/}
-  successEndpoint: "success"
+  username: ${ORDS_USERNAME}
+  password: ${ORDS_PASSWORD}
+  baseUrl: ${ORDS_HOST:127.0.0.1}
+  cmsIntPath: "cmsintords/"
+  cmsPath: "cmsords/"
+  modulePath: "pac/v1/"
+  entriesEndpoint: "entries"
 
 spring:
   rabbitmq:

@@ -2,7 +2,6 @@ package ca.bc.gov.open.jag.pac.loader.service;
 
 import ca.bc.gov.open.pac.models.Client;
 import ca.bc.gov.open.pac.models.exceptions.ORDSException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -32,6 +31,5 @@ public class QueueListenerService {
             log.error("PAC BPM ERROR: " + message + " not processed successfully");
             client.getStatus().updateToApplicationError(client);
         }
-        log.info(new ObjectMapper().writeValueAsString(client));
     }
 }

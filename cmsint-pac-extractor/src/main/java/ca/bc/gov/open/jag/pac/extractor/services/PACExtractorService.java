@@ -83,7 +83,7 @@ public class PACExtractorService {
             processesEntity.stream()
                     .map(this::getEventForProcess)
                     .map(client -> client.getStatus().updateToPending(client))
-                    .map(this::getClientNewerSequence)
+                    //                    .map(this::getClientNewerSequence)
                     .map(this::getDemographicsInfo)
                     .forEach(this::sendToRabbitMq);
 

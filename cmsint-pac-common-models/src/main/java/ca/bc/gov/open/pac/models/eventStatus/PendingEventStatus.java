@@ -1,10 +1,14 @@
 package ca.bc.gov.open.pac.models.eventStatus;
 
+import ca.bc.gov.open.pac.loader.EventLoader;
+import ca.bc.gov.open.pac.loader.PendingEventLoader;
 import ca.bc.gov.open.pac.models.Client;
+import ca.bc.gov.open.pac.models.LoaderPacPropertiesInterface;
 import ca.bc.gov.open.pac.models.OrdsPropertiesInterface;
 import java.io.Serializable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.ws.client.core.WebServiceTemplate;
 
 @Slf4j
 public class PendingEventStatus extends EventStatus implements Serializable {
@@ -60,5 +64,11 @@ public class PendingEventStatus extends EventStatus implements Serializable {
     @Override
     protected String getMethodName() {
         return METHOD_NAME;
+    }
+
+    @Override
+    public EventLoader getLoader(
+            WebServiceTemplate webServiceTemplate, LoaderPacPropertiesInterface pacProperties) {
+        return new PendingEventLoader();
     }
 }

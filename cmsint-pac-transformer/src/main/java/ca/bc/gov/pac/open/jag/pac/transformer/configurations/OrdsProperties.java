@@ -12,12 +12,7 @@ public class OrdsProperties implements OrdsPropertiesInterface {
     private String username;
     private String password;
     private String baseUrl;
-    private String eventsEndpoint;
-    private String processesEndpoint;
-    private String eventsTypeEndpoint;
-    private String successEndpoint;
     private String entriesEndpoint;
-    private String demographicsEndpoint;
     private String cmsIntPath;
     private String cmsPath;
     private String modulePath;

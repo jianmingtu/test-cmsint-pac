@@ -36,6 +36,5 @@ public class QueueListenerService {
             log.error("PAC BPM ERROR: " + message + " not processed successfully");
             client.getStatus().updateToApplicationError(client);
         }
-        log.info(new ObjectMapper().writeValueAsString(client));
     }
 }

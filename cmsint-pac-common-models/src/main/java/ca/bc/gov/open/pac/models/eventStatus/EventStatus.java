@@ -1,23 +1,21 @@
 package ca.bc.gov.open.pac.models.eventStatus;
 
-import ca.bc.gov.open.pac.models.Client;
-import ca.bc.gov.open.pac.models.OrdsErrorLog;
-import ca.bc.gov.open.pac.models.OrdsPropertiesInterface;
-import ca.bc.gov.open.pac.models.RequestSuccessLog;
+import ca.bc.gov.open.pac.loader.EventLoader;
+import ca.bc.gov.open.pac.models.*;
 import ca.bc.gov.open.pac.models.exceptions.ORDSException;
 import ca.bc.gov.open.pac.models.ords.UpdateEntryEntity;
-import java.io.Serializable;
 import java.net.URI;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.ws.client.core.WebServiceTemplate;
 
 @EqualsAndHashCode
 @NoArgsConstructor
 @Slf4j
-public abstract class EventStatus implements Serializable {
+public abstract class EventStatus {
 
     protected transient RestTemplate restTemplate;
     protected transient OrdsPropertiesInterface ordProperties;
@@ -75,7 +73,11 @@ public abstract class EventStatus implements Serializable {
                                     ex.getMessage(),
                                     client)
                             .toString());
-            throw new ORDSException("client " + client + "could failed to update the status to " + eventStatusCode.getCode());
+            throw new ORDSException(
+                    "client "
+                            + client
+                            + "could failed to update the status to "
+                            + eventStatusCode.getCode());
         }
     }
 
@@ -90,4 +92,7 @@ public abstract class EventStatus implements Serializable {
         this.ordProperties = ordProperties;
         return this;
     }
+
+    public abstract EventLoader getLoader(
+            WebServiceTemplate webServiceTemplate, LoaderPacPropertiesInterface pacProperties);
 }
