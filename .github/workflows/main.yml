@@ -8,13 +8,17 @@ on:
   workflow_dispatch:
     inputs:
         app1:
-            description: 'App Name (cmsint-pac-poller)'
+            description: 'App Name (cmsint-pac-extractor)'
             required: true
-            default: 'cmsint-pac-poller'
+            default: 'cmsint-pac-extractor'
         app2:
-          description: 'App Name (cmsint-pac-consumer)'
+          description: 'App Name (cmsint-pac-transformer)'
           required: true
-          default: 'cmsint-pac-consumer'
+          default: 'cmsint-pac-transformer'
+        app3:
+          description: 'App Name (cmsint-pac-loader)'
+          required: true
+          default: 'cmsint-pac-loader'
         env:
             description: 'Image Target Env'  
             required: true
@@ -53,6 +57,7 @@ jobs:
         run: |
           echo "Release Application 1: ${{ github.event.inputs.app1 }}"
           echo "Release Application 2: ${{ github.event.inputs.app2 }}"
+          echo "Release Application 3: ${{ github.event.inputs.app3 }}"
           echo "Release Environment: ${{ github.event.inputs.env }}"
           echo "Release Version: ${{ env.releaseVersion }}"
           echo "Release Git Sha: ${{env.gitsha}}"
@@ -70,8 +75,8 @@ jobs:
       - name: Maven Spotless Check
         run: mvn -ntp spotless:check
 
-      #Build image jag-cmsint-pac-poller
-      - name: Build image jag-cmsint-pac-poller
+      #Build image jag-cmsint-pac-extractor
+      - name: Build image jag-cmsint-pac-extractor
         env:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
@@ -80,12 +85,22 @@ jobs:
         run: |
           docker build -t ${APP}:${{env.gitsha}} --build-arg MVN_PROFILE=${APP} ${CONTEXT}
 
-      #Build image jag-cmsint-pac-consumer
-      - name: Build image jag-cmsint-pac-consumer
+      #Build image jag-cmsint-pac-transformer
+      - name: Build image jag-cmsint-pac-transformer
         env:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
           APP: ${{github.event.inputs.app2}}
+          CONTEXT: .
+        run: |
+          docker build -t ${APP}:${{env.gitsha}} --build-arg MVN_PROFILE=${APP} ${CONTEXT}
+      
+      #Build image jag-cmsint-pac-loader
+      - name: Build image jag-cmsint-pac-loader
+        env:
+          COMPOSE_DOCKER_CLI_BUILD: 1
+          DOCKER_BUILDKIT: 1
+          APP: ${{github.event.inputs.app3}}
           CONTEXT: .
         run: |
           docker build -t ${APP}:${{env.gitsha}} --build-arg MVN_PROFILE=${APP} ${CONTEXT}
@@ -98,20 +113,28 @@ jobs:
           username: ${{secrets.OPENSHIFT_SA_USERNAME}}
           password: ${{secrets.OPENSHIFT_SA_PASSWORD}}
 
-      #Push image jag-cmsint-pac-poller to OpenShift Image stream - Kamloops (OC Prod)
-      - name: Push Image jag-cmsint-pac-poller to Openshift Image Stream - Kamloops (OC Prod)
+      #Push image jag-cmsint-pac-extractor to OpenShift Image stream - Kamloops (OC Prod)
+      - name: Push Image jag-cmsint-pac-extractor to Openshift Image Stream - Kamloops (OC Prod)
         env:
           IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/${{github.event.inputs.app1}}:${{secrets.OPENSHIFT_ENV_TAG}}
         run: |
           docker tag ${{github.event.inputs.app1}}:${{env.gitsha}} ${IMAGE}
           docker push ${IMAGE}
 
-      #Push image jag-cmsint-pac-consumer to OpenShift Image stream - Kamloops (OC Prod)
-      - name: Push Image jag-cmsint-pac-consumer to Openshift Image Stream - Kamloops (OC Prod)
+      #Push image jag-cmsint-pac-transformer to OpenShift Image stream - Kamloops (OC Prod)
+      - name: Push Image jag-cmsint-pac-transformer to Openshift Image Stream - Kamloops (OC Prod)
         env:
           IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/${{github.event.inputs.app2}}:${{secrets.OPENSHIFT_ENV_TAG}}
         run: |
           docker tag ${{github.event.inputs.app2}}:${{env.gitsha}} ${IMAGE}
+          docker push ${IMAGE}
+      
+      #Push image jag-cmsint-pac-loader to OpenShift Image stream - Kamloops (OC Prod)
+      - name: Push Image jag-cmsint-pac-loader to Openshift Image Stream - Kamloops (OC Prod)
+        env:
+          IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/${{github.event.inputs.app3}}:${{secrets.OPENSHIFT_ENV_TAG}}
+        run: |
+          docker tag ${{github.event.inputs.app3}}:${{env.gitsha}} ${IMAGE}
           docker push ${IMAGE}
 
       #Login to OpenShift Container Repository - Calgary (OC DR)
@@ -122,20 +145,28 @@ jobs:
           username: ${{secrets.OPENSHIFT_SA_USERNAME}}
           password: ${{secrets.OPENSHIFT_SA_PASSWORD_DR}}
 
-      #Push image jag-cmsint-pac-poller to OpenShift Image stream - Calgary (OC DR)
-      - name: Push Image jag-cmsint-pac-poller to Openshift Image Stream - Calgary (OC DR)
+      #Push image jag-cmsint-pac-extractor to OpenShift Image stream - Calgary (OC DR)
+      - name: Push Image jag-cmsint-pac-extractor to Openshift Image Stream - Calgary (OC DR)
         env:
           IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY_DR}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/${{github.event.inputs.app1}}:${{secrets.OPENSHIFT_ENV_TAG}}
         run: |
           docker tag ${{github.event.inputs.app1}}:${{env.gitsha}} ${IMAGE}
           docker push ${IMAGE}
 
-      #Push image jag-cmsint-pac-consumer to OpenShift Image stream - Calgary (OC DR)
-      - name: Push Image jag-cmsint-pac-consumer to Openshift Image Stream - Calgary (OC DR)
+      #Push image jag-cmsint-pac-transformer to OpenShift Image stream - Calgary (OC DR)
+      - name: Push Image jag-cmsint-pac-transformer to Openshift Image Stream - Calgary (OC DR)
         env:
           IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY_DR}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/${{github.event.inputs.app2}}:${{secrets.OPENSHIFT_ENV_TAG}}
         run: |
           docker tag ${{github.event.inputs.app2}}:${{env.gitsha}} ${IMAGE}
+          docker push ${IMAGE}
+      
+      #Push image jag-cmsint-pac-loader to OpenShift Image stream - Calgary (OC DR)
+      - name: Push Image jag-cmsint-pac-loader to Openshift Image Stream - Calgary (OC DR)
+        env:
+          IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY_DR}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/${{github.event.inputs.app3}}:${{secrets.OPENSHIFT_ENV_TAG}}
+        run: |
+          docker tag ${{github.event.inputs.app3}}:${{env.gitsha}} ${IMAGE}
           docker push ${IMAGE}
 
       #Login to Openshift using OC SA and Token of respective env. for Pod labelling - Kamloops (OC PROD)
@@ -149,8 +180,8 @@ jobs:
           openshift_token: ${{secrets.OPENSHIFT_SA_ENV_DEPLOYER_TOKEN}}
           namespace: ${OPENSHIFT_NAMESPACE}
 
-      # Labels the deployment config of the application jag-cmsint-pac-poller with release version number to spin up the pods labelled in same version - Kamloops (OC PROD)
-      - name: Labelling DC of jag-cmsint-pac-poller to release version - Kamloops (OC PROD)
+      # Labels the deployment config of the application jag-cmsint-pac-extractor with release version number to spin up the pods labelled in same version - Kamloops (OC PROD)
+      - name: Labelling DC of jag-cmsint-pac-extractor to release version - Kamloops (OC PROD)
         env:
           releaseVersion: ${{ env.releaseVersion }}
           appName: ${{github.event.inputs.app1}}
@@ -158,16 +189,16 @@ jobs:
         run: |
           oc patch dc ${appName} -n ${openshiftEnvNamespace} --patch '{"spec":{"template":{"metadata":{"labels":{"version":"${{ env.releaseVersion }}.${{ env.gitsha }}"}}}}}'
       
-      # Wait to DC rollout of jag-cmsint-pac-poller to get completed before proceeding next stage - Kamloops (OC PROD)
-      - name: Wait for DC rollout of jag-cmsint-pac-poller - Kamloops (OC PROD)
+      # Wait to DC rollout of jag-cmsint-pac-extractor to get completed before proceeding next stage - Kamloops (OC PROD)
+      - name: Wait for DC rollout of jag-cmsint-pac-extractor - Kamloops (OC PROD)
         env:
           appName: ${{github.event.inputs.app1}}
           openshiftEnvNamespace: ${{secrets.OPENSHIFT_LICENSE_PLATE}}-${{ github.event.inputs.env }}
         run: |
           oc rollout status -n ${openshiftEnvNamespace} dc/${appName} --watch
 
-      # Labels the deployment config of the application jag-cmsint-consumer with release version number to spin up the pods labelled in same version - Kamloops (OC PROD)
-      - name: Labelling DC of jag-cmsint-consumer to release version - Kamloops (OC PROD)
+      # Labels the deployment config of the application jag-cmsint-transformer with release version number to spin up the pods labelled in same version - Kamloops (OC PROD)
+      - name: Labelling DC of jag-cmsint-transformer to release version - Kamloops (OC PROD)
         env:
           releaseVersion: ${{ env.releaseVersion }}
           appName: ${{github.event.inputs.app2}}
@@ -175,10 +206,27 @@ jobs:
         run: |
           oc patch dc ${appName} -n ${openshiftEnvNamespace} --patch '{"spec":{"template":{"metadata":{"labels":{"version":"${{ env.releaseVersion }}.${{ env.gitsha }}"}}}}}'
 
-      # Wait to DC rollout of jag-cmsint-consumer to get completed before proceeding next stage - Kamloops (OC PROD)
-      - name: Wait for DC rollout of jag-cmsint-consumer - Kamloops (OC PROD)
+      # Wait to DC rollout of jag-cmsint-transformer to get completed before proceeding next stage - Kamloops (OC PROD)
+      - name: Wait for DC rollout of jag-cmsint-transformer - Kamloops (OC PROD)
         env:
           appName: ${{github.event.inputs.app2}}
+          openshiftEnvNamespace: ${{secrets.OPENSHIFT_LICENSE_PLATE}}-${{ github.event.inputs.env }}
+        run: |
+          oc rollout status -n ${openshiftEnvNamespace} dc/${appName} --watch
+      
+      # Labels the deployment config of the application jag-cmsint-loader with release version number to spin up the pods labelled in same version - Kamloops (OC PROD)
+      - name: Labelling DC of jag-cmsint-loader to release version - Kamloops (OC PROD)
+        env:
+          releaseVersion: ${{ env.releaseVersion }}
+          appName: ${{github.event.inputs.app3}}
+          openshiftEnvNamespace: ${{secrets.OPENSHIFT_LICENSE_PLATE}}-${{ github.event.inputs.env }}
+        run: |
+          oc patch dc ${appName} -n ${openshiftEnvNamespace} --patch '{"spec":{"template":{"metadata":{"labels":{"version":"${{ env.releaseVersion }}.${{ env.gitsha }}"}}}}}'
+
+      # Wait to DC rollout of jag-cmsint-loader to get completed before proceeding next stage - Kamloops (OC PROD)
+      - name: Wait for DC rollout of jag-cmsint-loader - Kamloops (OC PROD)
+        env:
+          appName: ${{github.event.inputs.app3}}
           openshiftEnvNamespace: ${{secrets.OPENSHIFT_LICENSE_PLATE}}-${{ github.event.inputs.env }}
         run: |
           oc rollout status -n ${openshiftEnvNamespace} dc/${appName} --watch
@@ -203,16 +251,16 @@ jobs:
         run: |
           oc patch dc ${appName} -n ${openshiftEnvNamespace} --patch '{"spec":{"template":{"metadata":{"labels":{"version":"${{ env.releaseVersion }}.${{ env.gitsha }}"}}}}}'
 
-      # Wait to DC rollout of jag-cmsint-pac-poller to get completed before proceeding next stage - Calgary (OC DR)
-      - name: Wait for DC rollout of jag-cmsint-pac-poller - Calgary (OC DR)
+      # Wait to DC rollout of jag-cmsint-pac-extractor to get completed before proceeding next stage - Calgary (OC DR)
+      - name: Wait for DC rollout of jag-cmsint-pac-extractor - Calgary (OC DR)
         env:
           appName: ${{github.event.inputs.app1}}
           openshiftEnvNamespace: ${{secrets.OPENSHIFT_LICENSE_PLATE}}-${{ github.event.inputs.env }}
         run: |
           oc rollout status -n ${openshiftEnvNamespace} dc/${appName} --watch
 
-      # Labels the deployment config of the application jag-cmsint-pac-consumer with release version number to spin up the pods labelled in same version - Calgary (OC DR)
-      - name: Labelling DC of jag-cmsint-pac-consumer to release version - Calgary (OC DR)
+      # Labels the deployment config of the application jag-cmsint-pac-transformer with release version number to spin up the pods labelled in same version - Calgary (OC DR)
+      - name: Labelling DC of jag-cmsint-pac-transformer to release version - Calgary (OC DR)
         env:
           releaseVersion: ${{ env.releaseVersion }}
           appName: ${{github.event.inputs.app2}}
@@ -220,10 +268,27 @@ jobs:
         run: |
           oc patch dc ${appName} -n ${openshiftEnvNamespace} --patch '{"spec":{"template":{"metadata":{"labels":{"version":"${{ env.releaseVersion }}.${{ env.gitsha }}"}}}}}'
 
-      # Wait to DC rollout of jag-cmsint-pac-consumer to get completed before proceeding next stage - Calgary (OC DR)
-      - name: Wait for DC rollout of jag-cmsint-pac-consumer - Calgary (OC DR)
+      # Wait to DC rollout of jag-cmsint-pac-transformer to get completed before proceeding next stage - Calgary (OC DR)
+      - name: Wait for DC rollout of jag-cmsint-pac-transformer - Calgary (OC DR)
         env:
           appName: ${{github.event.inputs.app2}}
+          openshiftEnvNamespace: ${{secrets.OPENSHIFT_LICENSE_PLATE}}-${{ github.event.inputs.env }}
+        run: |
+          oc rollout status -n ${openshiftEnvNamespace} dc/${appName} --watch
+      
+      # Labels the deployment config of the application jag-cmsint-pac-loader with release version number to spin up the pods labelled in same version - Calgary (OC DR)
+      - name: Labelling DC of jag-cmsint-pac-loader to release version - Calgary (OC DR)
+        env:
+          releaseVersion: ${{ env.releaseVersion }}
+          appName: ${{github.event.inputs.app3}}
+          openshiftEnvNamespace: ${{secrets.OPENSHIFT_LICENSE_PLATE}}-${{ github.event.inputs.env }}
+        run: |
+          oc patch dc ${appName} -n ${openshiftEnvNamespace} --patch '{"spec":{"template":{"metadata":{"labels":{"version":"${{ env.releaseVersion }}.${{ env.gitsha }}"}}}}}'
+
+      # Wait to DC rollout of jag-cmsint-pac-loader to get completed before proceeding next stage - Calgary (OC DR)
+      - name: Wait for DC rollout of jag-cmsint-pac-loader - Calgary (OC DR)
+        env:
+          appName: ${{github.event.inputs.app3}}
           openshiftEnvNamespace: ${{secrets.OPENSHIFT_LICENSE_PLATE}}-${{ github.event.inputs.env }}
         run: |
           oc rollout status -n ${openshiftEnvNamespace} dc/${appName} --watch
