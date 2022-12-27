@@ -4,8 +4,17 @@ import ca.bc.gov.open.pac.models.*;
 import ca.bc.gov.open.pac.models.eventTypeCode.EventTypeEnum;
 import ca.bc.gov.open.pac.models.eventTypeCode.SynchronizeClientEntity;
 import ca.bc.gov.open.pac.models.exceptions.ORDSException;
+import com.health.phis.ws.SynchronizeClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ws.client.core.WebServiceTemplate;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
+import javax.xml.soap.SOAPPart;
+import java.io.Writer;
+import java.io.StringWriter;
 
 @Slf4j
 public class InProgressEventLoader implements EventLoader {
@@ -18,12 +27,21 @@ public class InProgressEventLoader implements EventLoader {
         this.pacProperties = pacProperties;
         this.webServiceTemplate = webServiceTemplate;
     }
-
-    private void invokeSoapService(SynchronizeClientEntity synchronizeClientEntity) {
+       private void invokeSoapService(SynchronizeClientEntity synchronizeClientEntity) {
         // Invoke Soap Service
         try {
+            SynchronizeClient foo = synchronizeClientEntity.convertToSynchronizeClient();
+            JAXBContext jaxbContext = JAXBContext.newInstance(foo.getClass());
+            Marshaller marshaller = jaxbContext.createMarshaller();
+            StringWriter stringWriter = new StringWriter();
+            marshaller.marshal(foo, stringWriter);
+            stringWriter.toString();
+////
+
+
+
             webServiceTemplate.marshalSendAndReceive(
-                    pacProperties.getServiceUrl(), synchronizeClientEntity);
+                    pacProperties.getServiceUrl(), synchronizeClientEntity.convertToSynchronizeClient());
             log.info(new RequestSuccessLog("Request Success", "synchronizeClient").toString());
         } catch (Exception ex) {
             log.error(

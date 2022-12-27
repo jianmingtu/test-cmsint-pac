@@ -49,4 +49,4 @@ ARG MVN_PROFILE
 
 COPY --from=build /build/${MVN_PROFILE}/target/${MVN_PROFILE}*.jar /app/application.jar
 
-ENTRYPOINT ["java", "-jar","/application.jar"]
+ENTRYPOINT ["java", "-jar","/app/application.jar"]

@@ -4,6 +4,7 @@ import ca.bc.gov.open.pac.models.Client;
 import ca.bc.gov.open.pac.models.dateFormatters.DateFormatEnum;
 import ca.bc.gov.open.pac.models.dateFormatters.DateFormatterInterface;
 import ca.bc.gov.open.pac.models.eventStatus.PendingEventStatus;
+import ca.bc.gov.open.pac.models.exceptions.ORDSException;
 import ca.bc.gov.pac.open.jag.pac.transformer.configurations.OrdsProperties;
 import ca.bc.gov.pac.open.jag.pac.transformer.configurations.PacProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -36,24 +37,43 @@ public class TransformerService {
 
     // PACUpdate BPM
     public void processPAC(final Client client) {
+        try {
+            if (!(client.getStatus() instanceof PendingEventStatus)) {
+                sendToQueue(client);
+                return;
+            }
 
-        if (!(client.getStatus() instanceof PendingEventStatus)) return;
+            DateFormatterInterface dateFormatter =
+                    DateFormatEnum.valueOf(client.getComputerSystemCd().toUpperCase())
+                            .getDateFormatter(pacProperties);
 
-        DateFormatterInterface dateFormatter =
-                DateFormatEnum.valueOf(client.getComputerSystemCd().toUpperCase())
-                        .getDateFormatter(pacProperties);
+            var clientWithUpdatedDates =
+                    client.updateBirthDateFormat(dateFormatter)
+                            .updateProbableDischargeDateDateFormat(dateFormatter)
+                            .updateSysDateFormat(dateFormatter);
 
-        var clientWithUpdatedDates =
-                client.updateBirthDateFormat(dateFormatter)
-                        .updateProbableDischargeDateDateFormat(dateFormatter)
-                        .updateSysDateFormat(dateFormatter);
+            clientWithUpdatedDates
+                    .getStatus()
+                    .setRestTemplate(restTemplate)
+                    .setOrdProperties(ordsProperties)
+                    .updateToInProgress(clientWithUpdatedDates);
+            sendToQueue(clientWithUpdatedDates);
 
-        clientWithUpdatedDates
-                .getStatus()
-                .setRestTemplate(restTemplate)
-                .setOrdProperties(ordsProperties)
-                .updateToInProgress(clientWithUpdatedDates);
-        sendToQueue(clientWithUpdatedDates);
+        } catch (ORDSException ex) {
+            client.getStatus()
+                    .setRestTemplate(restTemplate)
+                    .setOrdProperties(ordsProperties)
+                    .updateToConnectionError(client);
+            log.error("PAC BPM ERROR: " + client + " not processed successfully");
+            log.error(ex.getMessage());
+        } catch (Exception ex) {
+            client.getStatus()
+                    .setRestTemplate(restTemplate)
+                    .setOrdProperties(ordsProperties)
+                    .updateToApplicationError(client);
+            log.error("PAC BPM ERROR: " + client + " not processed successfully");
+            log.error(ex.getMessage());
+        }
     }
 
     public void sendToQueue(Client client) {
