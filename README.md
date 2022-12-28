@@ -4,17 +4,40 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/5275a4eee4b22b46c836/maintainability)](https://codeclimate.com/github/bcgov/jag-cmsint-pac/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/5275a4eee4b22b46c836/test_coverage)](https://codeclimate.com/github/bcgov/jag-cmsint-pac/test_coverage)
 
+## Build
+
+Since the application is composed by 3 modules, you can build either all at once or individually.
+
+To build all run:
+```bash
+ mvn clean install
+```
+
+To build individually, use one of the provided Maven profiles (_cmsint-pac-extractor_, _cmsint-pac-loader_, or _cmsint-pac-transformer_) 
+```bash
+mvn clean install -P<desired profile>
+```
+
+## Test
+
+To run tests, use
+```
+mvn clean verify
+```
+
 ## Environment Variables
 
 ### Extractor Application
-- PAC_QUEUE_NAME
-- PAC_ROUTING_KEY
-- RABBIT_EXCHANGE_NAME
-- ORDS_USERNAME
-- ORDS_PASSWORD
-- ORDS_HOST
-- RABBIT_MQ_HOST
-- RABBIT_MQ_USERNAME
-- RABBIT_MQ_PASSWORD
-- EXTRACTOR_SERVER_PORT
-- EXTRACTOR_MANAGEMENT_SERVER_PORT
+| Variable                  |                                           Example Value |
+| ------------------------- |--------------------------------------------------------:|
+|PAC_QUEUE_NAME|                                               pac-queue |
+|PAC_ROUTING_KEY|                                                     PAC |
+|RABBIT_EXCHANGE_NAME|                                                EXCHANGE |
+|ORDS_USERNAME|                                                    user |
+|ORDS_PASSWORD|                                   super-secret-password |
+|ORDS_HOST| http://example.com/ - make sure to include a trailing / |
+|RABBIT_MQ_HOST|               http://ecample.com - no trailing / needed |
+|RABBIT_MQ_USERNAME|                                                username |
+|RABBIT_MQ_PASSWORD|                                   super-secret-password |
+|EXTRACTOR_SERVER_PORT|                                                    8080 |
+|EXTRACTOR_MANAGEMENT_SERVER_PORT|                                                    8081 |
