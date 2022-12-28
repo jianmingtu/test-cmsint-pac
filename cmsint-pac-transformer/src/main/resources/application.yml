@@ -24,8 +24,8 @@ spring:
     password: ${RABBIT_MQ_PASSWORD}
 
 server:
-  port: ${CONSUMER_SERVER_PORT:8082}
+  port: ${TRANSFORMER_SERVER_PORT:8082}
 
 management:
   server:
-    port: ${CONSUMER_MANAGEMENT_SERVER_PORT:8083}
+    port: ${TRANSFORMER_MANAGEMENT_SERVER_PORT:8083}

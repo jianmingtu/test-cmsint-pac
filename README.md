@@ -27,6 +27,8 @@ mvn clean verify
 
 ## Environment Variables
 
+For exact values of secrets not specified here, refer to the secrets for the Dev environment in OpenShift.
+
 ### Extractor Application
 | Variable                  |                                           Example Value |
 | ------------------------- |--------------------------------------------------------:|
@@ -41,3 +43,22 @@ mvn clean verify
 |RABBIT_MQ_PASSWORD|                                   super-secret-password |
 |EXTRACTOR_SERVER_PORT|                                                    8080 |
 |EXTRACTOR_MANAGEMENT_SERVER_PORT|                                                    8081 |
+
+### Transformer Application
+| Variable                  |                                           Example Value |
+| ------------------------- |--------------------------------------------------------:|
+|PAC_QUEUE_NAME|                                               pac-queue |
+|PAC_ROUTING_KEY|                                                     PAC |
+|RABBIT_EXCHANGE_NAME|                                                EXCHANGE |
+|PAC_SERVICE_URL| http://example.com/ - make sure to include a trailing / |
+|CMS_DATE_PATTERN|    yyyy-MM-dd (any valid Java date pattern is accepted) |
+|PAC_DATE_PATTERN|yyyy-MM-dd (any valid Java date pattern is accepted)|
+|ICS_DATE_PATTERN|yyyy-MM-dd (any valid Java date pattern is accepted)|
+|ORDS_USERNAME|                                                    user |
+|ORDS_PASSWORD|                                   super-secret-password |
+|ORDS_HOST| http://example.com/ - make sure to include a trailing / |
+|RABBIT_MQ_HOST|               http://ecample.com - no trailing / needed |
+|RABBIT_MQ_USERNAME|                                                username |
+|RABBIT_MQ_PASSWORD|                                   super-secret-password |
+|TRANSFORMER_SERVER_PORT|                                                    8080 |
+|TRANSFORMER_MANAGEMENT_SERVER_PORT|                                                    8081 |
