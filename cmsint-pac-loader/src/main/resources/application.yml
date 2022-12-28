@@ -12,8 +12,8 @@ spring:
     password: ${RABBIT_MQ_PASSWORD}
 
 server:
-  port: ${EXTRACTOR_SERVER_PORT:8085}
+  port: ${LOADER_SERVER_PORT:8085}
 
 management:
   server:
-    port: ${EXTRACTOR_MANAGEMENT_SERVER_PORT:8086}
+    port: ${LOADER_MANAGEMENT_SERVER_PORT:8086}

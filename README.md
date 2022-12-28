@@ -62,3 +62,16 @@ For exact values of secrets not specified here, refer to the secrets for the Dev
 |RABBIT_MQ_PASSWORD|                                   super-secret-password |
 |TRANSFORMER_SERVER_PORT|                                                    8080 |
 |TRANSFORMER_MANAGEMENT_SERVER_PORT|                                                    8081 |
+
+### Loader Application
+| Variable                      |                                           Example Value |
+|-------------------------------|--------------------------------------------------------:|
+| PAC_QUEUE_NAME                |                                               pac-queue |
+| PAC_ROUTING_KEY               |                                                     PAC |
+| RABBIT_EXCHANGE_NAME          |                                                EXCHANGE |
+| PAC_SERVICE_URL               | http://example.com/ - make sure to include a trailing / |
+| RABBIT_MQ_HOST                |               http://ecample.com - no trailing / needed |
+| RABBIT_MQ_USERNAME            |                                                username |
+| RABBIT_MQ_PASSWORD            |                                   super-secret-password |
+| LOADER_SERVER_PORT            |                                                    8080 |
+| LOADER_MANAGEMENT_SERVER_PORT |                                                    8081
