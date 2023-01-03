@@ -11,7 +11,7 @@ Since the application is composed by 3 modules, you can build either all at once
 To build all run:
 
 ```bash
- mvn clean install
+mvn clean install
 ```
 
 To build individually, use one of the provided Maven profiles (_cmsint-pac-extractor_, _cmsint-pac-loader_, or
@@ -85,7 +85,7 @@ For exact values of secrets not specified here, refer to the secrets for the Dev
 
 ## Image Build for Containerized Environments
 
-The [Dockerfile](Dockerfile) leverages the Maven profiles and it is capable of produce any of the image modules by 
+The [Dockerfile](Dockerfile) leverages the Maven profiles and it is capable of produce any of the image modules by
 passing the correct Build Argument.
 
 ```bash

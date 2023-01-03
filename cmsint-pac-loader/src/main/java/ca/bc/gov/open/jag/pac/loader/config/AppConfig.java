@@ -27,7 +27,8 @@ public class AppConfig {
     public WebServiceTemplate webServiceTemplate() {
         WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
         Jaxb2Marshaller jaxb2Marshaller = new Jaxb2Marshaller();
-        jaxb2Marshaller.setPackagesToScan("ca.bc.gov.open.pac.models.eventTypeCode", "com.health.phis.ws");
+        jaxb2Marshaller.setPackagesToScan(
+                "ca.bc.gov.open.pac.models.eventTypeCode", "com.health.phis.ws");
         webServiceTemplate.setMessageFactory(messageFactory());
         webServiceTemplate.setMarshaller(jaxb2Marshaller);
         webServiceTemplate.setUnmarshaller(jaxb2Marshaller);
