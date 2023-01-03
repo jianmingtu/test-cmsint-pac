@@ -1,0 +1,32 @@
+pac:
+  pac-queue: ${PAC_QUEUE_NAME:pac-queue}
+  pac-routing-key: ${PAC_ROUTING_KEY:PAC}
+  exchange-name: ${RABBIT_EXCHANGE_NAME:EXCHANGE}
+
+ords:
+  username: ${ORDS_USERNAME}
+  password: ${ORDS_PASSWORD}
+  baseUrl: ${ORDS_HOST:127.0.0.1}
+  cmsIntPath: "cmsintords/"
+  cmsPath: "cmsords/"
+  modulePath: "pac/v1/"
+  processesEndpoint: "processes"
+  eventsEndpoint: "events"
+  eventsTypeEndpoint: "events/type"
+  successEndpoint: "success"
+  entriesEndpoint: "entries"
+  demographicsEndpoint: "demographics"
+
+spring:
+  rabbitmq:
+    host: ${RABBIT_MQ_HOST:127.0.0.1}
+    port: 5672
+    username: ${RABBIT_MQ_USERNAME}
+    password: ${RABBIT_MQ_PASSWORD}
+
+server:
+  port: ${EXTRACTOR_SERVER_PORT:8080}
+
+management:
+  server:
+    port: ${EXTRACTOR_MANAGEMENT_SERVER_PORT:8081}

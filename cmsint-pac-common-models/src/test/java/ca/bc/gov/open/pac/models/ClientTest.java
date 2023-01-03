@@ -1,11 +1,13 @@
 package ca.bc.gov.open.pac.models;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import ca.bc.gov.open.pac.models.ords.DemographicsEntity;
 import ca.bc.gov.open.pac.models.ords.EventEntity;
 import ca.bc.gov.open.pac.models.ords.ProcessEntity;
 import org.junit.jupiter.api.Test;
+import org.springframework.util.SerializationUtils;
 
 class ClientTest {
     private final ProcessEntity processEntity = TestClientInitializer.getProcessInstance();
@@ -94,5 +96,10 @@ class ClientTest {
         assertEquals(expectedClient.getComputerSystemCd(), actualClient.getComputerSystemCd());
         assertEquals(expectedClient.getStatus(), actualClient.getStatus());
         assertEquals(expectedClient.getEventTypeCode(), actualClient.getEventTypeCode());
+    }
+
+    @Test
+    void clientObjectCanBeSerialized() {
+        assertDoesNotThrow(() -> SerializationUtils.serialize(actualClient));
     }
 }

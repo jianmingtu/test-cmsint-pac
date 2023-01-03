@@ -1,0 +1,19 @@
+pac:
+  pacQueue: ${PAC_QUEUE_NAME:pac-queue}
+  pacRoutingKey: ${PAC_ROUTING_KEY:PAC}
+  exchangeName: ${RABBIT_EXCHANGE_NAME:EXCHANGE}
+  serviceUrl: ${PAC_SERVICE_URL:https://127.0.0.1/}
+
+spring:
+  rabbitmq:
+    host: ${RABBIT_MQ_HOST:127.0.0.1}
+    port: 5672
+    username: ${RABBIT_MQ_USERNAME}
+    password: ${RABBIT_MQ_PASSWORD}
+
+server:
+  port: ${LOADER_SERVER_PORT:8085}
+
+management:
+  server:
+    port: ${LOADER_MANAGEMENT_SERVER_PORT:8086}

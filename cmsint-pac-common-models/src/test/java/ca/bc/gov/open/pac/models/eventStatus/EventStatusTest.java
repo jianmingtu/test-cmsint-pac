@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import ca.bc.gov.open.pac.models.OrdsPropertiesInterface;
 import ca.bc.gov.open.pac.models.exceptions.ORDSException;
-import ca.bc.gov.open.pac.models.ords.OrdsProperties;
 import ca.bc.gov.open.pac.models.ords.UpdateEntryEntity;
 import java.net.URI;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +19,7 @@ import org.springframework.web.client.RestTemplate;
 abstract class EventStatusTest {
 
     @Mock protected RestTemplate mockedRestTemplate;
-    @Mock protected OrdsProperties mockOrdsProperties;
+    @Mock protected OrdsPropertiesInterface mockOrdsProperties;
     protected EventStatus eventStatus;
     protected static final String testUrl = "http://example.com";
     protected static final String testEndpoint = "/endpoint";
@@ -50,6 +50,20 @@ abstract class EventStatusTest {
         assertThrows(
                 UnsupportedOperationException.class,
                 () -> eventStatus.updateToCompletedDuplicate(getClientInstance()));
+    }
+
+    @Test
+    void updateToInProgress() {
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> eventStatus.updateToInProgress(getClientInstance()));
+    }
+
+    @Test
+    void updateToCompletedOk() {
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> eventStatus.updateToCompletedOk(getClientInstance()));
     }
 
     @Test

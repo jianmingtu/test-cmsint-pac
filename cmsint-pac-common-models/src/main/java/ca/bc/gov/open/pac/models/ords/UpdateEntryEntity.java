@@ -15,7 +15,7 @@ public class UpdateEntryEntity implements Serializable {
     public UpdateEntryEntity(Client client, EventStatusCode eventStatusCode) {
         clientNumber = client.getClientNumber();
         eventSeqNum = client.getEventSeqNum();
-        computerSystemCd = client.getEventSeqNum();
+        computerSystemCd = client.getComputerSystemCd();
         eventTypeCode = eventStatusCode.getCode();
     }
 }

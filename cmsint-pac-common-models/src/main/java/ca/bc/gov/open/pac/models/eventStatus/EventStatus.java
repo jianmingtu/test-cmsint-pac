@@ -1,29 +1,26 @@
 package ca.bc.gov.open.pac.models.eventStatus;
 
-import ca.bc.gov.open.pac.models.Client;
-import ca.bc.gov.open.pac.models.OrdsErrorLog;
-import ca.bc.gov.open.pac.models.RequestSuccessLog;
+import ca.bc.gov.open.pac.loader.EventLoader;
+import ca.bc.gov.open.pac.models.*;
 import ca.bc.gov.open.pac.models.exceptions.ORDSException;
-import ca.bc.gov.open.pac.models.ords.OrdsProperties;
 import ca.bc.gov.open.pac.models.ords.UpdateEntryEntity;
 import java.net.URI;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.ws.client.core.WebServiceTemplate;
 
-@Component
 @EqualsAndHashCode
 @NoArgsConstructor
 @Slf4j
 public abstract class EventStatus {
 
-    protected RestTemplate restTemplate;
-    protected OrdsProperties ordProperties;
+    protected transient RestTemplate restTemplate;
+    protected transient OrdsPropertiesInterface ordProperties;
 
-    public EventStatus(OrdsProperties ordProperties, RestTemplate restTemplate) {
+    public EventStatus(OrdsPropertiesInterface ordProperties, RestTemplate restTemplate) {
         this.ordProperties = ordProperties;
         this.restTemplate = restTemplate;
     }
@@ -36,6 +33,26 @@ public abstract class EventStatus {
     public Client updateToCompletedDuplicate(Client client) {
         throw new UnsupportedOperationException(
                 "The status of the event cannot be updated to Completed Duplicate");
+    }
+
+    public Client updateToInProgress(Client client) {
+        throw new UnsupportedOperationException(
+                "The status of the event cannot be updated to In Progress");
+    }
+
+    public Client updateToCompletedOk(Client client) {
+        throw new UnsupportedOperationException(
+                "The status of the event cannot be updated to Completed OK");
+    }
+
+    public Client updateToConnectionError(Client client) {
+        throw new UnsupportedOperationException(
+                "The status of the event cannot be updated to Connection Error");
+    }
+
+    public Client updateToApplicationError(Client client) {
+        throw new UnsupportedOperationException(
+                "The status of the event cannot be updated to Application Error");
     }
 
     protected void updateStatusOnServer(Client client, EventStatusCode eventStatusCode) {
@@ -56,9 +73,26 @@ public abstract class EventStatus {
                                     ex.getMessage(),
                                     client)
                             .toString());
-            throw new ORDSException();
+            throw new ORDSException(
+                    "client "
+                            + client
+                            + "could failed to update the status to "
+                            + eventStatusCode.getCode());
         }
     }
 
     protected abstract String getMethodName();
+
+    public EventStatus setRestTemplate(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+        return this;
+    }
+
+    public EventStatus setOrdProperties(OrdsPropertiesInterface ordProperties) {
+        this.ordProperties = ordProperties;
+        return this;
+    }
+
+    public abstract EventLoader getLoader(
+            WebServiceTemplate webServiceTemplate, LoaderPacPropertiesInterface pacProperties);
 }

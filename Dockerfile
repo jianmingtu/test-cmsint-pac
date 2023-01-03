@@ -10,8 +10,8 @@ WORKDIR /build
 ## for the lack at a COPY --patern */pom.xml, we have to declare all the pom files manually
 COPY ./pom.xml pom.xml
 COPY ./cmsint-pac-common-models/pom.xml cmsint-pac-common-models/pom.xml
-COPY ./cmsint-pac-consumer/pom.xml cmsint-pac-consumer/pom.xml
-COPY ./cmsint-pac-poller/pom.xml cmsint-pac-poller/pom.xml
+COPY ./cmsint-pac-transformer/pom.xml cmsint-pac-transformer/pom.xml
+COPY ./cmsint-pac-extractor/pom.xml cmsint-pac-extractor/pom.xml
 
 RUN  mvn dependency:go-offline \
     -P${MVN_PROFILE} \
@@ -29,9 +29,9 @@ ARG MVN_PROFILE
 
 WORKDIR /build
 
-COPY ./cmsint-pac-consumer/src cmsint-pac-consumer/src
+COPY ./cmsint-pac-transformer/src cmsint-pac-transformer/src
 COPY ./cmsint-pac-common-models/src cmsint-pac-common-models/src
-COPY ./cmsint-pac-poller/src cmsint-pac-poller/src
+COPY ./cmsint-pac-extractor/src cmsint-pac-extractor/src
 
 
 RUN  mvn clean package \
@@ -49,4 +49,4 @@ ARG MVN_PROFILE
 
 COPY --from=build /build/${MVN_PROFILE}/target/${MVN_PROFILE}*.jar /app/application.jar
 
-ENTRYPOINT ["java", "-jar","/application.jar"]
+ENTRYPOINT ["java", "-jar","/app/application.jar"]

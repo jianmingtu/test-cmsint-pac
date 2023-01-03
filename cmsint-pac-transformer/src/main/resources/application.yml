@@ -1,0 +1,31 @@
+pac:
+  pacQueue: ${PAC_QUEUE_NAME:pac-queue}
+  pacRoutingKey: ${PAC_ROUTING_KEY:PAC}
+  exchangeName: ${RABBIT_EXCHANGE_NAME:EXCHANGE}
+  serviceUrl: ${PAC_SERVICE_URL:https://127.0.0.1/}
+  cmsDatePattern: ${CMS_DATE_PATTERN:yyyy-MM-dd}
+  pacDatePattern: ${PAC_DATE_PATTERN:yyyy-MM-dd}
+  icsDatePattern: ${ICS_DATE_PATTERN:yyyyMMdd}
+
+ords:
+  username: ${ORDS_USERNAME}
+  password: ${ORDS_PASSWORD}
+  baseUrl: ${ORDS_HOST:127.0.0.1}
+  cmsIntPath: "cmsintords/"
+  cmsPath: "cmsords/"
+  modulePath: "pac/v1/"
+  entriesEndpoint: "entries"
+
+spring:
+  rabbitmq:
+    host: ${RABBIT_MQ_HOST:127.0.0.1}
+    port: 5672
+    username: ${RABBIT_MQ_USERNAME}
+    password: ${RABBIT_MQ_PASSWORD}
+
+server:
+  port: ${TRANSFORMER_SERVER_PORT:8082}
+
+management:
+  server:
+    port: ${TRANSFORMER_MANAGEMENT_SERVER_PORT:8083}
