@@ -12,6 +12,7 @@ COPY ./pom.xml pom.xml
 COPY ./cmsint-pac-common-models/pom.xml cmsint-pac-common-models/pom.xml
 COPY ./cmsint-pac-transformer/pom.xml cmsint-pac-transformer/pom.xml
 COPY ./cmsint-pac-extractor/pom.xml cmsint-pac-extractor/pom.xml
+COPY ./cmsint-pac-loader/pom.xml cmsint-pac-loader/pom.xml
 
 RUN  mvn dependency:go-offline \
     -P${MVN_PROFILE} \
@@ -32,7 +33,7 @@ WORKDIR /build
 COPY ./cmsint-pac-transformer/src cmsint-pac-transformer/src
 COPY ./cmsint-pac-common-models/src cmsint-pac-common-models/src
 COPY ./cmsint-pac-extractor/src cmsint-pac-extractor/src
-
+COPY ./cmsint-pac-loader/src cmsint-pac-loader/src
 
 RUN  mvn clean package \
      -P${MVN_PROFILE} \
