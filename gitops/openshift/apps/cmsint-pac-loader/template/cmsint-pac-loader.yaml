@@ -68,16 +68,16 @@ objects:
               ports:
                 - containerPort: 8080
               env:
-                - name: EXTRACTOR_MANAGEMENT_SERVER_PORT
+                - name: LOADER_MANAGEMENT_SERVER_PORT
                   valueFrom:
                     secretKeyRef:
                       name: ${COMPONENT_NAME}
-                      key: EXTRACTOR_MANAGEMENT_SERVER_PORT
-                - name: EXTRACTOR_SERVER_PORT
+                      key: LOADER_MANAGEMENT_SERVER_PORT
+                - name: LOADER_SERVER_PORT
                   valueFrom:
                     secretKeyRef:
                       name: ${COMPONENT_NAME}
-                      key: EXTRACTOR_SERVER_PORT
+                      key: LOADER_SERVER_PORT
                 - name: ORDS_HOST
                   valueFrom:
                     secretKeyRef:

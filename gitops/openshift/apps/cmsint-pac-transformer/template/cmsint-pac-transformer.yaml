@@ -67,6 +67,16 @@ objects:
               imagePullPolicy: Always
               ports:
                 - containerPort: 8080
+                - name: TRANSFORMER_MANAGEMENT_SERVER_PORT
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${COMPONENT_NAME}
+                      key: TRANSFORMER_MANAGEMENT_SERVER_PORT
+                - name: TRANSFORMER_SERVER_PORT
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${COMPONENT_NAME}
+                      key: TRANSFORMER_SERVER_PORT
               env:
                 - name: CMS_DATE_PATTERN
                   valueFrom:
