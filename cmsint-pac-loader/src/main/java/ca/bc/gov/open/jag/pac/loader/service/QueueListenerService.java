@@ -26,12 +26,10 @@ public class QueueListenerService {
             loaderService.processPAC(client);
         } catch (ORDSException ex) {
             log.error("PAC BPM ERROR: " + message + " not processed successfully");
-            // temp disabled since error handling is not defined
-            // client.getStatus().updateToConnectionError(client);
+            client.getStatus().updateToConnectionError(client);
         } catch (Exception ignored) {
             log.error("PAC BPM ERROR: " + message + " not processed successfully");
-            // temp disabled since error handling is not defined
-            // client.getStatus().updateToApplicationError(client);
+            client.getStatus().updateToApplicationError(client);
         }
     }
 }

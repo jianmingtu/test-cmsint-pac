@@ -37,7 +37,7 @@ public class InProgressEventStatus extends EventStatus implements Serializable {
 
     @Override
     public Client updateToConnectionError(Client client) {
-        log.info("Updating Client status to 'Pending'");
+        log.info("Updating Client status to " + EventStatusCode.CONNECTION_ERROR);
 
         client.setStatus(new ConnectionErrorEventStatus(ordsProperties, restTemplate));
 
@@ -48,7 +48,7 @@ public class InProgressEventStatus extends EventStatus implements Serializable {
 
     @Override
     public Client updateToApplicationError(Client client) {
-        log.info("Updating Client status to 'Pending'");
+        log.info("Updating Client status to " + EventStatusCode.APPLICATION_ERROR);
 
         client.setStatus(new ApplicationErrorEventStatus(ordsProperties, restTemplate));
 
