@@ -15,14 +15,14 @@ public class PendingEventStatus extends EventStatus implements Serializable {
 
     public static final String METHOD_NAME = "updateToCompletedDuplicate";
 
-    public PendingEventStatus(OrdsPropertiesInterface ordProperties, RestTemplate restTemplate) {
-        super(ordProperties, restTemplate);
+    public PendingEventStatus(OrdsPropertiesInterface ordsProperties, RestTemplate restTemplate) {
+        super(ordsProperties, restTemplate);
     }
 
     @Override
     public Client updateToCompletedDuplicate(Client client) {
         log.info("Updating Client status to 'Completed Duplicate'");
-        client.setStatus(new CompletedDuplicateEventStatus(ordProperties, restTemplate));
+        client.setStatus(new CompletedDuplicateEventStatus(ordsProperties, restTemplate));
 
         updateStatusOnServer(client, EventStatusCode.COMPLETED_DUPLICATE);
 
@@ -32,7 +32,7 @@ public class PendingEventStatus extends EventStatus implements Serializable {
     @Override
     public Client updateToInProgress(Client client) {
         log.info("Updating Client status to 'In Progress'");
-        client.setStatus(new InProgressEventStatus(ordProperties, restTemplate));
+        client.setStatus(new InProgressEventStatus(ordsProperties, restTemplate));
 
         updateStatusOnServer(client, EventStatusCode.IN_PROGRESS);
 
@@ -43,7 +43,7 @@ public class PendingEventStatus extends EventStatus implements Serializable {
     public Client updateToConnectionError(Client client) {
         log.info("Updating Client status to 'Pending'");
 
-        client.setStatus(new ConnectionErrorEventStatus(ordProperties, restTemplate));
+        client.setStatus(new ConnectionErrorEventStatus(ordsProperties, restTemplate));
 
         updateStatusOnServer(client, EventStatusCode.CONNECTION_ERROR);
 
@@ -54,7 +54,7 @@ public class PendingEventStatus extends EventStatus implements Serializable {
     public Client updateToApplicationError(Client client) {
         log.info("Updating Client status to 'Pending'");
 
-        client.setStatus(new ApplicationErrorEventStatus(ordProperties, restTemplate));
+        client.setStatus(new ApplicationErrorEventStatus(ordsProperties, restTemplate));
 
         updateStatusOnServer(client, EventStatusCode.APPLICATION_ERROR);
 

@@ -34,9 +34,9 @@ public class Client implements Serializable {
             ProcessEntity processEntity,
             EventEntity eventEntity,
             RestTemplate restTemplate,
-            OrdsPropertiesInterface ordProperties) {
+            OrdsPropertiesInterface ordsProperties) {
         this(processEntity, eventEntity);
-        this.status = new NewEventStatus(ordProperties, restTemplate);
+        this.status = new NewEventStatus(ordsProperties, restTemplate);
     }
 
     public Client(Client client, DemographicsEntity demographicsEntity) {

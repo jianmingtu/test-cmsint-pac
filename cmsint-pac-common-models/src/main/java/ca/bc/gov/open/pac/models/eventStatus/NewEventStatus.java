@@ -17,15 +17,15 @@ public class NewEventStatus extends EventStatus implements Serializable {
 
     public static final String METHOD_NAME = "updateToPending";
 
-    public NewEventStatus(OrdsPropertiesInterface ordProperties, RestTemplate restTemplate) {
-        super(ordProperties, restTemplate);
+    public NewEventStatus(OrdsPropertiesInterface ordsProperties, RestTemplate restTemplate) {
+        super(ordsProperties, restTemplate);
     }
 
     @Override
     public Client updateToPending(Client client) {
         log.info("Updating Client status to 'Pending'");
 
-        client.setStatus(new PendingEventStatus(ordProperties, restTemplate));
+        client.setStatus(new PendingEventStatus(ordsProperties, restTemplate));
 
         updateStatusOnServer(client, EventStatusCode.PENDING);
 

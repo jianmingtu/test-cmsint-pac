@@ -15,8 +15,9 @@ public class InProgressEventStatus extends EventStatus implements Serializable {
 
     public static final String METHOD_NAME = "updateToCompletedDuplicate";
 
-    public InProgressEventStatus(OrdsPropertiesInterface ordProperties, RestTemplate restTemplate) {
-        super(ordProperties, restTemplate);
+    public InProgressEventStatus(
+            OrdsPropertiesInterface ordsProperties, RestTemplate restTemplate) {
+        super(ordsProperties, restTemplate);
     }
 
     @Override
@@ -27,7 +28,7 @@ public class InProgressEventStatus extends EventStatus implements Serializable {
     @Override
     public Client updateToCompletedOk(Client client) {
         log.info("Updating Client status to 'Completed OK'");
-        client.setStatus(new InProgressEventStatus(ordProperties, restTemplate));
+        client.setStatus(new InProgressEventStatus(ordsProperties, restTemplate));
 
         updateStatusOnServer(client, EventStatusCode.COMPLETED_OK);
 
@@ -38,7 +39,7 @@ public class InProgressEventStatus extends EventStatus implements Serializable {
     public Client updateToConnectionError(Client client) {
         log.info("Updating Client status to 'Pending'");
 
-        client.setStatus(new ConnectionErrorEventStatus(ordProperties, restTemplate));
+        client.setStatus(new ConnectionErrorEventStatus(ordsProperties, restTemplate));
 
         updateStatusOnServer(client, EventStatusCode.CONNECTION_ERROR);
 
@@ -49,7 +50,7 @@ public class InProgressEventStatus extends EventStatus implements Serializable {
     public Client updateToApplicationError(Client client) {
         log.info("Updating Client status to 'Pending'");
 
-        client.setStatus(new ApplicationErrorEventStatus(ordProperties, restTemplate));
+        client.setStatus(new ApplicationErrorEventStatus(ordsProperties, restTemplate));
 
         updateStatusOnServer(client, EventStatusCode.APPLICATION_ERROR);
 

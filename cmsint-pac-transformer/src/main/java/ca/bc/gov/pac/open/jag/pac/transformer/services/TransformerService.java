@@ -55,21 +55,21 @@ public class TransformerService {
             clientWithUpdatedDates
                     .getStatus()
                     .setRestTemplate(restTemplate)
-                    .setOrdProperties(ordsProperties)
-                    .updateToInProgress(clientWithUpdatedDates);
+                    .setOrdsProperties(ordsProperties)
+                    .updateToInProgress(clientWithUpdatedDates); // cmsords/pac/v1/entries
             sendToQueue(clientWithUpdatedDates);
 
         } catch (ORDSException ex) {
             client.getStatus()
                     .setRestTemplate(restTemplate)
-                    .setOrdProperties(ordsProperties)
+                    .setOrdsProperties(ordsProperties)
                     .updateToConnectionError(client);
             log.error("PAC BPM ERROR: " + client + " not processed successfully");
             log.error(ex.getMessage());
         } catch (Exception ex) {
             client.getStatus()
                     .setRestTemplate(restTemplate)
-                    .setOrdProperties(ordsProperties)
+                    .setOrdsProperties(ordsProperties)
                     .updateToApplicationError(client);
             log.error("PAC BPM ERROR: " + client + " not processed successfully");
             log.error(ex.getMessage());

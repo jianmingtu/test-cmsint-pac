@@ -10,8 +10,8 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 public class ApplicationErrorEventStatus extends EventStatus {
 
     public ApplicationErrorEventStatus(
-            OrdsPropertiesInterface ordProperties, RestTemplate restTemplate) {
-        super(ordProperties, restTemplate);
+            OrdsPropertiesInterface ordsProperties, RestTemplate restTemplate) {
+        super(ordsProperties, restTemplate);
     }
 
     @Override
