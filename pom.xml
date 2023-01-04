@@ -86,7 +86,6 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
-                <module>cmsint-pac-code-coverage</module>
                 <module>cmsint-pac-common-models</module>
                 <module>cmsint-pac-extractor</module>
                 <module>cmsint-pac-transformer</module>
