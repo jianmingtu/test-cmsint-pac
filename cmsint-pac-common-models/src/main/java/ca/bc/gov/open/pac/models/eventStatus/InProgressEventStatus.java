@@ -27,7 +27,7 @@ public class InProgressEventStatus extends EventStatus implements Serializable {
 
     @Override
     public Client updateToCompletedOk(Client client) {
-        log.info("Updating Client status to 'Completed OK'");
+        log.info("Updating Client status to " + EventStatusCode.COMPLETED_OK);
         client.setStatus(new InProgressEventStatus(ordsProperties, restTemplate));
 
         updateStatusOnServer(client, EventStatusCode.COMPLETED_OK);
