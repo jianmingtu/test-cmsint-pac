@@ -18,10 +18,10 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 public abstract class EventStatus {
 
     protected transient RestTemplate restTemplate;
-    protected transient OrdsPropertiesInterface ordProperties;
+    protected transient OrdsPropertiesInterface ordsProperties;
 
-    public EventStatus(OrdsPropertiesInterface ordProperties, RestTemplate restTemplate) {
-        this.ordProperties = ordProperties;
+    public EventStatus(OrdsPropertiesInterface ordsProperties, RestTemplate restTemplate) {
+        this.ordsProperties = ordsProperties;
         this.restTemplate = restTemplate;
     }
 
@@ -58,7 +58,8 @@ public abstract class EventStatus {
     protected void updateStatusOnServer(Client client, EventStatusCode eventStatusCode) {
         URI url =
                 UriComponentsBuilder.fromHttpUrl(
-                                ordProperties.getCmsBaseUrl() + ordProperties.getEntriesEndpoint())
+                                ordsProperties.getCmsBaseUrl()
+                                        + ordsProperties.getEntriesEndpoint())
                         .build()
                         .toUri();
 
@@ -88,8 +89,8 @@ public abstract class EventStatus {
         return this;
     }
 
-    public EventStatus setOrdProperties(OrdsPropertiesInterface ordProperties) {
-        this.ordProperties = ordProperties;
+    public EventStatus setOrdsProperties(OrdsPropertiesInterface ordsProperties) {
+        this.ordsProperties = ordsProperties;
         return this;
     }
 

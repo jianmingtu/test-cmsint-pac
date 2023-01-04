@@ -14,6 +14,18 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 public class AppConfig {
 
     @Bean
+    public WebServiceTemplate webServiceTemplate() {
+        WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
+        Jaxb2Marshaller jaxb2Marshaller = new Jaxb2Marshaller();
+        webServiceTemplate.setMessageFactory(messageFactory());
+        jaxb2Marshaller.setContextPaths("com.health.phis.ws");
+        webServiceTemplate.setMarshaller(jaxb2Marshaller);
+        webServiceTemplate.setUnmarshaller(jaxb2Marshaller);
+        webServiceTemplate.afterPropertiesSet();
+        return webServiceTemplate;
+    }
+
+    @Bean
     public SaajSoapMessageFactory messageFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(SOAPMessage.WRITE_XML_DECLARATION, "true");
@@ -21,18 +33,5 @@ public class AppConfig {
         messageFactory.setMessageProperties(props);
         messageFactory.setSoapVersion(SoapVersion.SOAP_11);
         return messageFactory;
-    }
-
-    @Bean
-    public WebServiceTemplate webServiceTemplate() {
-        WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
-        Jaxb2Marshaller jaxb2Marshaller = new Jaxb2Marshaller();
-        jaxb2Marshaller.setPackagesToScan(
-                "ca.bc.gov.open.pac.models.eventTypeCode", "com.health.phis.ws");
-        webServiceTemplate.setMessageFactory(messageFactory());
-        webServiceTemplate.setMarshaller(jaxb2Marshaller);
-        webServiceTemplate.setUnmarshaller(jaxb2Marshaller);
-        webServiceTemplate.afterPropertiesSet();
-        return webServiceTemplate;
     }
 }

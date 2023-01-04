@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import ca.bc.gov.open.pac.models.Client;
 import ca.bc.gov.open.pac.models.eventTypeCode.*;
-import ca.bc.gov.open.pac.models.eventTypeCode.SynchronizeClientEntity;
 import ca.bc.gov.open.pac.models.ords.EventEntity;
 import ca.bc.gov.open.pac.models.ords.ProcessEntity;
+import com.health.phis.ws.SynchronizeClient;
 import org.junit.jupiter.api.Test;
 
 class EventTypeEnumTest {
@@ -16,7 +16,7 @@ class EventTypeEnumTest {
     void cadmEventCodeProducesCadmSynchronizeClient() {
 
         CadmSynchronizeClientEntity expectedClient = new CadmSynchronizeClientEntity(client);
-        SynchronizeClientEntity actualClient = EventTypeEnum.CADM.getSynchronizeClient(client);
+        SynchronizeClient actualClient = EventTypeEnum.CADM.getSynchronizeClient(client);
 
         assertEquals(expectedClient, actualClient);
     }
@@ -25,7 +25,7 @@ class EventTypeEnumTest {
     void cdemEventCodeProducesCdemSynchronizeClient() {
 
         CdemSynchronizeClientEntity expectedClient = new CdemSynchronizeClientEntity(client);
-        SynchronizeClientEntity actualClient = EventTypeEnum.CDEM.getSynchronizeClient(client);
+        SynchronizeClient actualClient = EventTypeEnum.CDEM.getSynchronizeClient(client);
 
         assertEquals(expectedClient, actualClient);
     }
@@ -34,7 +34,7 @@ class EventTypeEnumTest {
     void cimgEventCodeProducesCimgSynchronizeClient() {
 
         CimgSynchronizeClientEntity expectedClient = new CimgSynchronizeClientEntity(client);
-        SynchronizeClientEntity actualClient = EventTypeEnum.CIMG.getSynchronizeClient(client);
+        SynchronizeClient actualClient = EventTypeEnum.CIMG.getSynchronizeClient(client);
 
         assertEquals(expectedClient, actualClient);
     }
@@ -43,7 +43,7 @@ class EventTypeEnumTest {
     void ckeyEventCodeProducesCkeySynchronizeClient() {
 
         CkeySynchronizeClientEntity expectedClient = new CkeySynchronizeClientEntity(client);
-        SynchronizeClientEntity actualClient = EventTypeEnum.CKEY.getSynchronizeClient(client);
+        SynchronizeClient actualClient = EventTypeEnum.CKEY.getSynchronizeClient(client);
 
         assertEquals(expectedClient, actualClient);
     }
@@ -52,7 +52,7 @@ class EventTypeEnumTest {
     void clocEventCodeProducesClocSynchronizeClient() {
 
         ClocSynchronizeClientEntity expectedClient = new ClocSynchronizeClientEntity(client);
-        SynchronizeClientEntity actualClient = EventTypeEnum.CLOC.getSynchronizeClient(client);
+        SynchronizeClient actualClient = EventTypeEnum.CLOC.getSynchronizeClient(client);
 
         assertEquals(expectedClient, actualClient);
     }
@@ -61,7 +61,7 @@ class EventTypeEnumTest {
     void clunEventCodeProducesClunSynchronizeClient() {
 
         ClunSynchronizeClientEntity expectedClient = new ClunSynchronizeClientEntity(client);
-        SynchronizeClientEntity actualClient = EventTypeEnum.CLUN.getSynchronizeClient(client);
+        SynchronizeClient actualClient = EventTypeEnum.CLUN.getSynchronizeClient(client);
 
         assertEquals(expectedClient, actualClient);
     }
@@ -70,7 +70,7 @@ class EventTypeEnumTest {
     void crelEventCodeProducesClunSynchronizeClient() {
 
         CrelSynchronizeClientEntity expectedClient = new CrelSynchronizeClientEntity(client);
-        SynchronizeClientEntity actualClient = EventTypeEnum.CREL.getSynchronizeClient(client);
+        SynchronizeClient actualClient = EventTypeEnum.CREL.getSynchronizeClient(client);
 
         assertEquals(expectedClient, actualClient);
     }

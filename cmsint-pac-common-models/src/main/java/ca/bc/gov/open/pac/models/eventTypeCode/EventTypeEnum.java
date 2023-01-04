@@ -1,6 +1,7 @@
 package ca.bc.gov.open.pac.models.eventTypeCode;
 
 import ca.bc.gov.open.pac.models.Client;
+import com.health.phis.ws.SynchronizeClient;
 import java.util.Arrays;
 import java.util.function.Function;
 
@@ -13,9 +14,9 @@ public enum EventTypeEnum {
     CLOC(ClocSynchronizeClientEntity::new),
     CIMG(CimgSynchronizeClientEntity::new);
 
-    private final Function<Client, SynchronizeClientEntity> synchronizeClientFunction;
+    private final Function<Client, SynchronizeClient> synchronizeClientFunction;
 
-    private EventTypeEnum(Function<Client, SynchronizeClientEntity> synchronizeClientFunction) {
+    private EventTypeEnum(Function<Client, SynchronizeClient> synchronizeClientFunction) {
         this.synchronizeClientFunction = synchronizeClientFunction;
     }
 
@@ -24,7 +25,7 @@ public enum EventTypeEnum {
                 .anyMatch((EventTypeEnum eventType) -> eventType.name().equalsIgnoreCase(code));
     }
 
-    public SynchronizeClientEntity getSynchronizeClient(Client client) {
+    public SynchronizeClient getSynchronizeClient(Client client) {
         return synchronizeClientFunction.apply(client);
     }
 }

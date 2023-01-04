@@ -4,6 +4,20 @@ pac:
   exchangeName: ${RABBIT_EXCHANGE_NAME:EXCHANGE}
   serviceUrl: ${PAC_SERVICE_URL:https://127.0.0.1/}
 
+ords:
+  username: ${ORDS_USERNAME}
+  password: ${ORDS_PASSWORD}
+  baseUrl: ${ORDS_HOST:127.0.0.1}
+  cmsIntPath: "cmsintords/"
+  cmsPath: "cmsords/"
+  modulePath: "pac/v1/"
+  processesEndpoint: "processes"
+  eventsEndpoint: "events"
+  eventsTypeEndpoint: "events/type"
+  successEndpoint: "success"
+  entriesEndpoint: "entries"
+  demographicsEndpoint: "demographics"
+
 spring:
   rabbitmq:
     host: ${RABBIT_MQ_HOST:127.0.0.1}

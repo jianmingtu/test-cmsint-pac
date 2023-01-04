@@ -1,10 +1,15 @@
 package ca.bc.gov.open.pac.models.eventTypeCode;
 
 import ca.bc.gov.open.pac.models.Client;
-import lombok.Getter;
+import com.health.phis.ws.SynchronizeClient;
+import javax.xml.bind.annotation.XmlRootElement;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-public class CadmSynchronizeClientEntity extends SynchronizeClientEntity {
+@XmlRootElement
+@Data
+@NoArgsConstructor
+public class CadmSynchronizeClientEntity extends SynchronizeClient {
 
     public CadmSynchronizeClientEntity(Client client) {
         csNumber = client.getDemographicInfo().getCsNum();

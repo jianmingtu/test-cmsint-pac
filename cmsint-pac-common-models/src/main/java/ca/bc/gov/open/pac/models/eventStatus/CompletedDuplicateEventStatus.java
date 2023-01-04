@@ -13,8 +13,8 @@ public class CompletedDuplicateEventStatus extends EventStatus implements Serial
     public static final String METHOD_NAME = "updateToCompletedDuplicate";
 
     public CompletedDuplicateEventStatus(
-            OrdsPropertiesInterface ordProperties, RestTemplate restTemplate) {
-        super(ordProperties, restTemplate);
+            OrdsPropertiesInterface ordsProperties, RestTemplate restTemplate) {
+        super(ordsProperties, restTemplate);
     }
 
     @Override

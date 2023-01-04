@@ -29,7 +29,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Slf4j
 public class PACExtractorService {
 
-    private final OrdsProperties ordProperties;
+    private final OrdsProperties ordsProperties;
 
     private final Queue pacQueue;
 
@@ -48,7 +48,7 @@ public class PACExtractorService {
             RabbitTemplate rabbitTemplate,
             AmqpAdmin amqpAdmin,
             QueueConfig queueConfig) {
-        this.ordProperties = ordsProperties;
+        this.ordsProperties = ordsProperties;
         this.pacQueue = pacQueue;
         this.restTemplate = restTemplate;
         this.rabbitTemplate = rabbitTemplate;
@@ -71,25 +71,27 @@ public class PACExtractorService {
         amqpAdmin.declareQueue(pacQueue);
     }
 
-    @Scheduled(fixedDelay = 60 * 1000)
+    @Scheduled(fixedDelay = 5 * 1000)
     public void pollOrdsForNewRecords() {
         log.info("Polling db for new records");
 
         try {
-            List<ProcessEntity> processesEntity = getNewProcesses();
-
+            List<ProcessEntity> processesEntity = getNewProcesses(); // cmsintords/pac/v1/processes
             log.info("Pulled " + processesEntity.size() + " new records");
 
             processesEntity.stream()
-                    .map(this::getEventForProcess)
-                    .map(client -> client.getStatus().updateToPending(client))
-                    //                    .map(this::getClientNewerSequence)
-                    .map(this::getDemographicsInfo)
+                    .map(this::getEventForProcess) // cmsintords/pac/v1/events
+                    .map(
+                            client ->
+                                    client.getStatus()
+                                            .updateToPending(client)) // cmsords/pac/v1/entries
+                    .map(this::getClientNewerSequence) // cmsords/pac/v1/events
+                    .map(this::getDemographicsInfo) // cmsords/pac/v1/demographics
                     .forEach(this::sendToRabbitMq);
 
-            if (!processesEntity.isEmpty())
+            if (!processesEntity.isEmpty()) {
                 log.info(processesEntity.size() + " new records sent to Queue");
-
+            }
         } catch (Exception ex) {
             log.error("Failed to pull new records from the db: " + ex.getMessage());
         }
@@ -98,7 +100,7 @@ public class PACExtractorService {
     public Client getDemographicsInfo(Client client) {
         URI url =
                 getUri(
-                        ordProperties.getCmsBaseUrl() + ordProperties.getDemographicsEndpoint(),
+                        ordsProperties.getCmsBaseUrl() + ordsProperties.getDemographicsEndpoint(),
                         Arrays.asList(
                                 new QueryParam("clientNumber", client.getClientNumber()),
                                 new QueryParam("eventTypeCode", client.getEventTypeCode())));
@@ -106,10 +108,10 @@ public class PACExtractorService {
             DemographicsEntity demographicsEntity =
                     restTemplate.getForObject(url, DemographicsEntity.class);
 
-            if (demographicsEntity == null)
+            if (demographicsEntity == null) {
                 throw new NullPointerException(
                         "Response object from " + url.getPath() + " is null");
-
+            }
             return new Client(client, demographicsEntity);
         } catch (Exception ex) {
             logError(url.getPath(), ex, null);
@@ -134,7 +136,7 @@ public class PACExtractorService {
     public Client getClientNewerSequence(Client client) {
         URI url =
                 getUri(
-                        ordProperties.getCmsBaseUrl() + ordProperties.getEventsEndpoint(),
+                        ordsProperties.getCmsBaseUrl() + ordsProperties.getEventsEndpoint(),
                         Arrays.asList(
                                 new QueryParam("clientNumber", client.getClientNumber()),
                                 new QueryParam("eventSeqNum", client.getEventSeqNum()),
@@ -143,15 +145,16 @@ public class PACExtractorService {
         try {
             NewerEventEntity newerEventEntity =
                     restTemplate.getForObject(url, NewerEventEntity.class);
-
             log.info(new RequestSuccessLog("Request Success", url.getPath()).toString());
 
-            if (newerEventEntity == null)
+            if (newerEventEntity == null) {
                 throw new NullPointerException(
                         "Response object from " + url.getPath() + " is null");
+            }
 
-            if (!newerEventEntity.hasNewerEvent())
+            if (!newerEventEntity.hasNewerEvent()) {
                 client.getStatus().updateToCompletedDuplicate(client);
+            }
 
             return client;
         } catch (Exception ex) {
@@ -163,19 +166,17 @@ public class PACExtractorService {
     public List<ProcessEntity> getNewProcesses() {
         URI url =
                 getUri(
-                        ordProperties.getCmsIntBaseUrl() + ordProperties.getProcessesEndpoint(),
+                        ordsProperties.getCmsIntBaseUrl() + ordsProperties.getProcessesEndpoint(),
                         new QueryParam("state", "NEW"));
         try {
-
             ProcessEntity[] processEntityArray =
                     restTemplate.getForObject(url, ProcessEntity[].class);
-
             log.info(new RequestSuccessLog("Request Success", url.getPath()).toString());
 
-            if (processEntityArray == null) return Collections.emptyList();
-
+            if (processEntityArray == null) {
+                return Collections.emptyList();
+            }
             return Arrays.asList(processEntityArray);
-
         } catch (Exception ex) {
             logError(url.getPath(), ex, null);
             throw new ORDSException();
@@ -199,25 +200,21 @@ public class PACExtractorService {
                 queueConfig.getTopicExchangeName(), queueConfig.getPacRoutingkey(), client);
     }
 
-    //  Scheduled every minute in MS
-
     public Client getEventForProcess(ProcessEntity processEntity) throws ORDSException {
         URI url =
                 getUri(
-                        ordProperties.getCmsIntBaseUrl() + ordProperties.getEventsEndpoint(),
+                        ordsProperties.getCmsIntBaseUrl() + ordsProperties.getEventsEndpoint(),
                         Arrays.asList(
                                 new QueryParam("eventSeqNum", processEntity.getEventSeqNum()),
                                 new QueryParam("clientNumber", processEntity.getClientNumber())));
         try {
             EventEntity eventEntity = restTemplate.getForObject(url, EventEntity.class);
-
             log.info(new RequestSuccessLog("Request Success", url.getPath()).toString());
 
-            if (eventEntity == null)
+            if (eventEntity == null) {
                 throw new NullPointerException("Response object from " + url.getPath() + "is null");
-
-            return new Client(processEntity, eventEntity, restTemplate, ordProperties);
-
+            }
+            return new Client(processEntity, eventEntity, restTemplate, ordsProperties);
         } catch (Exception ex) {
             logError(url.getPath(), ex, null);
             throw new ORDSException();

@@ -10,8 +10,8 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 public class ConnectionErrorEventStatus extends EventStatus {
 
     public ConnectionErrorEventStatus(
-            OrdsPropertiesInterface ordProperties, RestTemplate restTemplate) {
-        super(ordProperties, restTemplate);
+            OrdsPropertiesInterface ordsProperties, RestTemplate restTemplate) {
+        super(ordsProperties, restTemplate);
     }
 
     @Override
