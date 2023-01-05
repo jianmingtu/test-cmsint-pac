@@ -77,6 +77,8 @@ For exact values of secrets not specified here, refer to the secrets for the Dev
 | PAC_ROUTING_KEY               |                                                     PAC |
 | RABBIT_EXCHANGE_NAME          |                                                EXCHANGE |
 | PAC_SERVICE_URL               | http://example.com/ - make sure to include a trailing / |
+| WS_AUTH_USER                  |                              PAC_SERVICE_URL's username |
+| WS_AUTH_PASS                  |                              PAC_SERVICE_URL's password |
 | RABBIT_MQ_HOST                |               http://ecample.com - no trailing / needed |
 | RABBIT_MQ_USERNAME            |                                                username |
 | RABBIT_MQ_PASSWORD            |                                   super-secret-password |
