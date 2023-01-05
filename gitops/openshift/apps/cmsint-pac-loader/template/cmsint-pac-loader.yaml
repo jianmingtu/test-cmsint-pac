@@ -93,6 +93,16 @@ objects:
                     secretKeyRef:
                       name: ${COMPONENT_NAME}
                       key: ORDS_PASSWORD
+                - name: WS_AUTH_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${COMPONENT_NAME}
+                      key: WS_AUTH_USER
+                - name: WS_AUTH_PASS
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${COMPONENT_NAME}
+                      key: WS_AUTH_PASS
                 - name: PAC_QUEUE_NAME
                   valueFrom:
                     secretKeyRef:
