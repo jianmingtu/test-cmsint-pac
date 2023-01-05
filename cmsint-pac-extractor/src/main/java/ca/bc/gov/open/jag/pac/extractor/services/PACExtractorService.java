@@ -5,6 +5,7 @@ import ca.bc.gov.open.jag.pac.extractor.config.QueueConfig;
 import ca.bc.gov.open.pac.models.Client;
 import ca.bc.gov.open.pac.models.OrdsErrorLog;
 import ca.bc.gov.open.pac.models.RequestSuccessLog;
+import ca.bc.gov.open.pac.models.eventStatus.CompletedDuplicateEventStatus;
 import ca.bc.gov.open.pac.models.exceptions.ORDSException;
 import ca.bc.gov.open.pac.models.ords.DemographicsEntity;
 import ca.bc.gov.open.pac.models.ords.EventEntity;
@@ -86,12 +87,12 @@ public class PACExtractorService {
                                     client.getStatus()
                                             .updateToPending(client)) // cmsords/pac/v1/entries
                     .map(this::getClientNewerSequence) // cmsords/pac/v1/events
+                    .filter(
+                            client ->
+                                    client.getStatus().getClass()
+                                            != CompletedDuplicateEventStatus.class)
                     .map(this::getDemographicsInfo) // cmsords/pac/v1/demographics
                     .forEach(this::sendToRabbitMq);
-
-            if (!processesEntity.isEmpty()) {
-                log.info(processesEntity.size() + " new records sent to Queue");
-            }
         } catch (Exception ex) {
             log.error("Failed to pull new records from the db: " + ex.getMessage());
         }
@@ -196,8 +197,16 @@ public class PACExtractorService {
     }
 
     public void sendToRabbitMq(Client client) {
-        this.rabbitTemplate.convertAndSend(
-                queueConfig.getTopicExchangeName(), queueConfig.getPacRoutingkey(), client);
+        if (client != null) {
+            this.rabbitTemplate.convertAndSend(
+                    queueConfig.getTopicExchangeName(), queueConfig.getPacRoutingkey(), client);
+            log.info(
+                    "Client "
+                            + client.getClientNumber()
+                            + " with SeqNum "
+                            + client.getEventSeqNum()
+                            + " sent to Queue");
+        }
     }
 
     public Client getEventForProcess(ProcessEntity processEntity) throws ORDSException {
