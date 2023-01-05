@@ -18,6 +18,10 @@ ords:
   entriesEndpoint: "entries"
   demographicsEndpoint: "demographics"
 
+web-service:
+  password: ${WS_AUTH_PASS}
+  username: ${WS_AUTH_USER}
+
 spring:
   rabbitmq:
     host: ${RABBIT_MQ_HOST:127.0.0.1}
