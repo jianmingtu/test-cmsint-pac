@@ -7,9 +7,7 @@ pac:
 ords:
   username: ${ORDS_USERNAME}
   password: ${ORDS_PASSWORD}
-  baseUrl: ${ORDS_HOST:127.0.0.1}
-  cmsIntPath: "cmsintords/"
-  cmsPath: "cmsords/"
+  cmsOrdsUrl: ${CMS_ORDS_HOST:127.0.0.1}
   modulePath: "pac/v1/"
   processesEndpoint: "processes"
   eventsEndpoint: "events"

@@ -8,20 +8,19 @@ class OrdsPropertiesInterfaceTest {
 
     private final OrdsProperties ordsProperties = new OrdsProperties();
 
-    private final String baseUrl = "http://test.com/";
-    private final String cmsIntPath = "cmsint/";
-    private final String cmsPath = "cms/";
+    private final String cmsIntOrdsUrl = "http://test.com/cmsint/";
+    private final String cmsOrdsUrl = "http://test.com/cms/";
     private final String modulePath = "module/";
 
     @Test
     void getCmsIntBaseUrl() {
         var actual = ordsProperties.getCmsIntBaseUrl();
-        assertEquals(baseUrl + cmsIntPath + modulePath, actual);
+        assertEquals(cmsIntOrdsUrl + modulePath, actual);
     }
 
     @Test
     void getCmsBaseUrl() {
         var actual = ordsProperties.getCmsBaseUrl();
-        assertEquals(baseUrl + cmsPath + modulePath, actual);
+        assertEquals(cmsOrdsUrl + modulePath, actual);
     }
 }
