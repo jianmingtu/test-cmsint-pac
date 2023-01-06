@@ -4,7 +4,6 @@ import ca.bc.gov.open.pac.models.Client;
 import ca.bc.gov.open.pac.models.dateFormatters.DateFormatEnum;
 import ca.bc.gov.open.pac.models.dateFormatters.DateFormatterInterface;
 import ca.bc.gov.open.pac.models.eventStatus.PendingEventStatus;
-import ca.bc.gov.open.pac.models.exceptions.ORDSException;
 import ca.bc.gov.pac.open.jag.pac.transformer.configurations.OrdsProperties;
 import ca.bc.gov.pac.open.jag.pac.transformer.configurations.PacProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -59,13 +58,6 @@ public class TransformerService {
                     .updateToInProgress(clientWithUpdatedDates); // cmsords/pac/v1/entries
             sendToQueue(clientWithUpdatedDates);
 
-        } catch (ORDSException ex) {
-            client.getStatus()
-                    .setRestTemplate(restTemplate)
-                    .setOrdsProperties(ordsProperties)
-                    .updateToConnectionError(client);
-            log.error("PAC BPM ERROR: " + client + " not processed successfully");
-            log.error(ex.getMessage());
         } catch (Exception ex) {
             client.getStatus()
                     .setRestTemplate(restTemplate)

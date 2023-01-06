@@ -84,21 +84,21 @@ public class DemographicInfo implements Serializable {
                 surname,
                 givenName1,
                 givenName2,
-                updateBirthDate,
                 gender,
                 photoGUID,
-                probableDischargeDate,
+                pacLocationCd,
                 outReason,
                 isActive,
                 fromCsNum,
+                userId,
                 mergeUserId,
-                livingUnit,
                 icsLocationCd,
                 isIn,
-                sysDate,
-                pacLocationCd,
-                userId,
-                custodyCenter);
+                custodyCenter,
+                livingUnit,
+                updateBirthDate,
+                probableDischargeDate,
+                sysDate);
     }
 
     public DemographicInfo updateProbableDischargeDateDateFormat(
@@ -109,21 +109,21 @@ public class DemographicInfo implements Serializable {
                 surname,
                 givenName1,
                 givenName2,
-                birthDate,
                 gender,
                 photoGUID,
-                updateProbableDischargeDate,
+                pacLocationCd,
                 outReason,
                 isActive,
                 fromCsNum,
+                userId,
                 mergeUserId,
-                livingUnit,
                 icsLocationCd,
                 isIn,
-                sysDate,
-                pacLocationCd,
-                userId,
-                custodyCenter);
+                custodyCenter,
+                livingUnit,
+                birthDate,
+                updateProbableDischargeDate,
+                sysDate);
     }
 
     public DemographicInfo updateSysDateFormat(DateFormatterInterface dateFormatter) {
@@ -133,20 +133,20 @@ public class DemographicInfo implements Serializable {
                 surname,
                 givenName1,
                 givenName2,
-                birthDate,
                 gender,
                 photoGUID,
-                probableDischargeDate,
+                pacLocationCd,
                 outReason,
                 isActive,
                 fromCsNum,
+                userId,
                 mergeUserId,
-                livingUnit,
                 icsLocationCd,
                 isIn,
-                updateSysDate,
-                pacLocationCd,
-                userId,
-                custodyCenter);
+                custodyCenter,
+                livingUnit,
+                birthDate,
+                probableDischargeDate,
+                updateSysDate);
     }
 }
