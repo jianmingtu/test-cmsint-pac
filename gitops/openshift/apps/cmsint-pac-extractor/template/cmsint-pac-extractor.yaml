@@ -118,11 +118,6 @@ objects:
                     secretKeyRef:
                       name: ${COMPONENT_NAME}
                       key: PAC_ROUTING_KEY
-                - name: PAC_SERVICE_URL
-                  valueFrom:
-                    secretKeyRef:
-                      name: ${COMPONENT_NAME}
-                      key: PAC_SERVICE_URL
                 - name: RABBIT_EXCHANGE_NAME
                   valueFrom:
                     secretKeyRef:
