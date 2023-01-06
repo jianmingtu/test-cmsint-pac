@@ -11,22 +11,21 @@ import org.springframework.context.annotation.Configuration;
 public class OrdsProperties implements OrdsPropertiesInterface {
     private String username;
     private String password;
-    private String baseUrl = "http://test.com/";
+    private String cmsIntOrdsUrl = "http://test.com/cmsint/";
+    private String cmsOrdsUrl = "http://test.com/cms/";
     private String eventsEndpoint;
     private String processesEndpoint;
     private String eventsTypeEndpoint;
     private String successEndpoint;
     private String entriesEndpoint;
     private String demographicsEndpoint;
-    private String cmsIntPath = "cmsint/";
-    private String cmsPath = "cms/";
     private String modulePath = "module/";
 
     public String getCmsIntBaseUrl() {
-        return baseUrl + cmsIntPath + modulePath;
+        return cmsIntOrdsUrl + modulePath;
     }
 
     public String getCmsBaseUrl() {
-        return baseUrl + cmsPath + modulePath;
+        return cmsOrdsUrl + modulePath;
     }
 }
