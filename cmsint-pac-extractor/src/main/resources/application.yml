@@ -4,11 +4,12 @@ pac:
   exchange-name: ${RABBIT_EXCHANGE_NAME:EXCHANGE}
 
 ords:
-  username: ${ORDS_USERNAME}
-  password: ${ORDS_PASSWORD}
-  baseUrl: ${ORDS_HOST:127.0.0.1}
-  cmsIntPath: "cmsintords/"
-  cmsPath: "cmsords/"
+  cmsIntUsername: ${CMSINT_ORDS_USERNAME}
+  cmsIntPassword: ${CMSINT_ORDS_PASSWORD}
+  cmsUsername: ${CMS_ORDS_USERNAME}
+  cmsPassword: ${CMS_ORDS_PASSWORD}
+  cmsIntOrdsUrl: ${CMSINT_ORDS_HOST:127.0.0.1}
+  cmsOrdsUrl: ${CMS_ORDS_HOST:127.0.0.1}
   modulePath: "pac/v1/"
   processesEndpoint: "processes"
   eventsEndpoint: "events"

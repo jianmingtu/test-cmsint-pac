@@ -40,9 +40,12 @@ For exact values of secrets not specified here, refer to the secrets for the Dev
 | PAC_QUEUE_NAME                   |                                               pac-queue |
 | PAC_ROUTING_KEY                  |                                                     PAC |
 | RABBIT_EXCHANGE_NAME             |                                                EXCHANGE |
-| ORDS_USERNAME                    |                                                    user |
-| ORDS_PASSWORD                    |                                   super-secret-password |
-| ORDS_HOST                        | http://example.com/ - make sure to include a trailing / |
+| CMSINT_ORDS_USERNAME             |                                                    user |
+| CMSINT_ORDS_PASSWORD             |                                   super-secret-password |
+| CMSINT_ORDS_HOST                 | http://example.com/ - make sure to include a trailing / |
+| CMS_ORDS_USERNAME                |                                                    user |
+| CMS_ORDS_PASSWORD                |                                   super-secret-password |
+| CMS_ORDS_HOST                    | http://example.com/ - make sure to include a trailing / |
 | RABBIT_MQ_HOST                   |               http://ecample.com - no trailing / needed |
 | RABBIT_MQ_USERNAME               |                                                username |
 | RABBIT_MQ_PASSWORD               |                                   super-secret-password |
@@ -62,7 +65,7 @@ For exact values of secrets not specified here, refer to the secrets for the Dev
 | ICS_DATE_PATTERN                   |    yyyy-MM-dd (any valid Java date pattern is accepted) |
 | ORDS_USERNAME                      |                                                    user |
 | ORDS_PASSWORD                      |                                   super-secret-password |
-| ORDS_HOST                          | http://example.com/ - make sure to include a trailing / |
+| CMS_ORDS_HOST                      | http://example.com/ - make sure to include a trailing / |
 | RABBIT_MQ_HOST                     |               http://ecample.com - no trailing / needed |
 | RABBIT_MQ_USERNAME                 |                                                username |
 | RABBIT_MQ_PASSWORD                 |                                   super-secret-password |
@@ -84,6 +87,9 @@ For exact values of secrets not specified here, refer to the secrets for the Dev
 | RABBIT_MQ_PASSWORD            |                                   super-secret-password |
 | LOADER_SERVER_PORT            |                                                    8080 |
 | LOADER_MANAGEMENT_SERVER_PORT |                                                    8081 |
+| ORDS_USERNAME                 |                                                    user |
+| ORDS_PASSWORD                 |                                   super-secret-password |
+| CMS_ORDS_HOST                 | http://example.com/ - make sure to include a trailing / |
 
 ## Image Build for Containerized Environments
 

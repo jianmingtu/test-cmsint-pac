@@ -78,11 +78,11 @@ objects:
                     secretKeyRef:
                       name: ${COMPONENT_NAME}
                       key: LOADER_SERVER_PORT
-                - name: ORDS_HOST
+                - name: CMS_ORDS_HOST
                   valueFrom:
                     secretKeyRef:
                       name: ${COMPONENT_NAME}
-                      key: ORDS_HOST
+                      key: CMS_ORDS_HOST
                 - name: ORDS_USERNAME
                   valueFrom:
                     secretKeyRef:
