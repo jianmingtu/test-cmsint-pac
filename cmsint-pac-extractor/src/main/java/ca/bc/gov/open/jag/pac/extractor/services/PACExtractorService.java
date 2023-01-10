@@ -153,7 +153,7 @@ public class PACExtractorService {
                         "Response object from " + url.getPath() + " is null");
             }
 
-            if (!newerEventEntity.hasNewerEvent()) {
+            if (newerEventEntity.hasNewerEvent()) {
                 client.getStatus().updateToCompletedDuplicate(client);
             }
 

@@ -222,8 +222,8 @@ public class PACExtractorServiceTest {
     @ParameterizedTest
     @CsvSource(
             value = {
-                "false,ca.bc.gov.open.pac.models.eventStatus.CompletedDuplicateEventStatus",
-                "true,ca.bc.gov.open.pac.models.eventStatus.PendingEventStatus"
+                "true,ca.bc.gov.open.pac.models.eventStatus.CompletedDuplicateEventStatus",
+                "false,ca.bc.gov.open.pac.models.eventStatus.PendingEventStatus"
             })
     void clientOnCorrectStateDependingOnIfItHasOrNotANewerEvent(
             boolean hasNewerEvent, String eventStatusClassString) {
