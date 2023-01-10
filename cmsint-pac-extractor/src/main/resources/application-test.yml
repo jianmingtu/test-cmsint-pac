@@ -10,7 +10,6 @@ pac:
   pac-routing-key: ${PAC_ROUTING_KEY:PAC}
   exchange-name: ${RABBIT_EXCHANGE_NAME:EXCHANGE}
 
-
 spring:
   rabbitmq:
     host: ${RABBIT_MQ_HOST:127.0.0.1}

@@ -118,6 +118,11 @@ objects:
                     secretKeyRef:
                       name: ${COMPONENT_NAME}
                       key: PAC_ROUTING_KEY
+                - name: EXTRACTOR_INTERVAL_CRON
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${COMPONENT_NAME}
+                      key: EXTRACTOR_INTERVAL_CRON
                 - name: RABBIT_EXCHANGE_NAME
                   valueFrom:
                     secretKeyRef:

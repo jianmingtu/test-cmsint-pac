@@ -72,7 +72,7 @@ public class PACExtractorService {
         amqpAdmin.declareQueue(pacQueue);
     }
 
-    @Scheduled(fixedDelay = 5 * 1000)
+    @Scheduled(cron = "${crdp.extractor-interval-cron}")
     public void pollOrdsForNewRecords() {
         log.info("Polling db for new records");
 

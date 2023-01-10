@@ -1,6 +1,7 @@
 pac:
   pac-queue: ${PAC_QUEUE_NAME:pac-queue}
   pac-routing-key: ${PAC_ROUTING_KEY:PAC}
+  extractor-interval-cron: ${EXTRACTOR_INTERVAL_CRON}
   exchange-name: ${RABBIT_EXCHANGE_NAME:EXCHANGE}
 
 ords:
