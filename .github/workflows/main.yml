@@ -7,22 +7,25 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
-        app1:
-            description: 'App Name (cmsint-pac-extractor)'
-            required: true
-            default: 'cmsint-pac-extractor'
-        app2:
-          description: 'App Name (cmsint-pac-transformer)'
-          required: true
-          default: 'cmsint-pac-transformer'
-        app3:
-          description: 'App Name (cmsint-pac-loader)'
-          required: true
-          default: 'cmsint-pac-loader'
-        env:
-            description: 'Image Target Env'  
-            required: true
-            default: 'dev'
+      app1:
+        description: 'App Name (cmsint-pac-extractor)'
+        required: true
+        default: 'cmsint-pac-extractor'
+      app2:
+        description: 'App Name (cmsint-pac-transformer)'
+        required: true
+        default: 'cmsint-pac-transformer'
+      app3:
+        description: 'App Name (cmsint-pac-loader)'
+        required: true
+        default: 'cmsint-pac-loader'
+      env:
+        type: choice
+        description: Image Target environment
+        options: 
+        - dev
+        required: true
+        default: 'dev'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
