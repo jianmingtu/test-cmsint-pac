@@ -103,7 +103,7 @@ public class DemographicInfo implements Serializable {
 
     public DemographicInfo updateProbableDischargeDateDateFormat(
             DateFormatterInterface dateFormatter) {
-        var updateProbableDischargeDate = dateFormatter.format(birthDate);
+        var updateProbableDischargeDate = dateFormatter.format(probableDischargeDate);
         return new DemographicInfo(
                 csNum,
                 surname,
@@ -127,7 +127,7 @@ public class DemographicInfo implements Serializable {
     }
 
     public DemographicInfo updateSysDateFormat(DateFormatterInterface dateFormatter) {
-        var updateSysDate = dateFormatter.format(birthDate);
+        var updateSysDate = dateFormatter.format(sysDate);
         return new DemographicInfo(
                 csNum,
                 surname,
