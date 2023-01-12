@@ -74,10 +74,12 @@ public class PACExtractorService {
 
     @Scheduled(cron = "${pac.extractor-interval-cron}")
     public void pollOrdsForNewRecords() {
-        log.info("Polling db for new records");
 
         try {
             List<ProcessEntity> processesEntity = getNewProcesses(); // cmsintords/pac/v1/processes
+            if (processesEntity.size() == 0) {
+                return;
+            }
             log.info("Pulled " + processesEntity.size() + " new records");
 
             processesEntity.stream()
@@ -172,7 +174,8 @@ public class PACExtractorService {
         try {
             ProcessEntity[] processEntityArray =
                     restTemplate.getForObject(url, ProcessEntity[].class);
-            log.info(new RequestSuccessLog("Request Success", url.getPath()).toString());
+            // For simplification, no success log on every polling attempt
+            // log.info(new RequestSuccessLog("Request Success", url.getPath()).toString());
 
             if (processEntityArray == null) {
                 return Collections.emptyList();
@@ -186,11 +189,7 @@ public class PACExtractorService {
 
     private void logError(String method, Exception ex, Object request) throws ORDSException {
         String ordsErrormessage =
-                new OrdsErrorLog(
-                                "Error received from ORDS",
-                                "getEventType",
-                                ex.getMessage(),
-                                request)
+                new OrdsErrorLog("Error received from ORDS", method, ex.getMessage(), request)
                         .toString();
 
         log.error(ordsErrormessage);
@@ -201,11 +200,12 @@ public class PACExtractorService {
             this.rabbitTemplate.convertAndSend(
                     queueConfig.getTopicExchangeName(), queueConfig.getPacRoutingkey(), client);
             log.info(
-                    "Client "
+                    "Enqueued Client:"
                             + client.getClientNumber()
-                            + " with SeqNum "
-                            + client.getEventSeqNum()
-                            + " sent to Queue");
+                            + " EventType:"
+                            + client.getEventTypeCode()
+                            + " SeqNum:"
+                            + client.getEventSeqNum());
         }
     }
 
