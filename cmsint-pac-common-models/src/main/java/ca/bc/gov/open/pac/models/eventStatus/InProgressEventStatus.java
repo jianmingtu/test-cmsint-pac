@@ -27,7 +27,10 @@ public class InProgressEventStatus extends EventStatus implements Serializable {
 
     @Override
     public Client updateToCompletedOk(Client client) {
-        log.info("Updating Client status to " + EventStatusCode.COMPLETED_OK);
+        log.info(
+                super.getClientInfoLoggingStr(client)
+                        + " status to "
+                        + EventStatusCode.COMPLETED_OK);
         client.setStatus(new InProgressEventStatus(ordsProperties, restTemplate));
 
         updateStatusOnServer(client, EventStatusCode.COMPLETED_OK);
@@ -37,7 +40,10 @@ public class InProgressEventStatus extends EventStatus implements Serializable {
 
     @Override
     public Client updateToConnectionError(Client client) {
-        log.info("Updating Client status to " + EventStatusCode.CONNECTION_ERROR);
+        log.info(
+                super.getClientInfoLoggingStr(client)
+                        + " status to "
+                        + EventStatusCode.CONNECTION_ERROR);
 
         client.setStatus(new ConnectionErrorEventStatus(ordsProperties, restTemplate));
 
@@ -48,7 +54,10 @@ public class InProgressEventStatus extends EventStatus implements Serializable {
 
     @Override
     public Client updateToApplicationError(Client client) {
-        log.info("Updating Client status to " + EventStatusCode.APPLICATION_ERROR);
+        log.info(
+                super.getClientInfoLoggingStr(client)
+                        + " status to "
+                        + EventStatusCode.APPLICATION_ERROR);
 
         client.setStatus(new ApplicationErrorEventStatus(ordsProperties, restTemplate));
 

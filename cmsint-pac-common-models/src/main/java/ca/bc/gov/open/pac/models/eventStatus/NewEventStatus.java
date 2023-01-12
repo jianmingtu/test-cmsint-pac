@@ -23,7 +23,7 @@ public class NewEventStatus extends EventStatus implements Serializable {
 
     @Override
     public Client updateToPending(Client client) {
-        log.info("Updating Client status to 'Pending'");
+        log.info(super.getClientInfoLoggingStr(client) + " status to " + EventStatusCode.PENDING);
 
         client.setStatus(new PendingEventStatus(ordsProperties, restTemplate));
 

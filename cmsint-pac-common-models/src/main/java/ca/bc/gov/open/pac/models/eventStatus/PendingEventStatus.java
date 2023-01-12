@@ -21,7 +21,10 @@ public class PendingEventStatus extends EventStatus implements Serializable {
 
     @Override
     public Client updateToCompletedDuplicate(Client client) {
-        log.info("Updating Client status to 'Completed Duplicate'");
+        log.info(
+                super.getClientInfoLoggingStr(client)
+                        + " status to "
+                        + EventStatusCode.COMPLETED_DUPLICATE);
         client.setStatus(new CompletedDuplicateEventStatus(ordsProperties, restTemplate));
 
         updateStatusOnServer(client, EventStatusCode.COMPLETED_DUPLICATE);
@@ -31,7 +34,10 @@ public class PendingEventStatus extends EventStatus implements Serializable {
 
     @Override
     public Client updateToInProgress(Client client) {
-        log.info("Updating Client status to 'In Progress'");
+        log.info(
+                super.getClientInfoLoggingStr(client)
+                        + " status to "
+                        + EventStatusCode.IN_PROGRESS);
         client.setStatus(new InProgressEventStatus(ordsProperties, restTemplate));
 
         updateStatusOnServer(client, EventStatusCode.IN_PROGRESS);
@@ -41,7 +47,10 @@ public class PendingEventStatus extends EventStatus implements Serializable {
 
     @Override
     public Client updateToConnectionError(Client client) {
-        log.info("Updating Client status to 'Pending'");
+        log.info(
+                super.getClientInfoLoggingStr(client)
+                        + " status to "
+                        + EventStatusCode.CONNECTION_ERROR);
 
         client.setStatus(new ConnectionErrorEventStatus(ordsProperties, restTemplate));
 
@@ -52,7 +61,10 @@ public class PendingEventStatus extends EventStatus implements Serializable {
 
     @Override
     public Client updateToApplicationError(Client client) {
-        log.info("Updating Client status to 'Pending'");
+        log.info(
+                super.getClientInfoLoggingStr(client)
+                        + " status to "
+                        + EventStatusCode.APPLICATION_ERROR);
 
         client.setStatus(new ApplicationErrorEventStatus(ordsProperties, restTemplate));
 

@@ -25,6 +25,15 @@ public abstract class EventStatus {
         this.restTemplate = restTemplate;
     }
 
+    public String getClientInfoLoggingStr(Client client) {
+        return "Client:"
+                + client.getClientNumber()
+                + " EventTypeCd:"
+                + client.getEventTypeCode()
+                + " SeqNum:"
+                + client.getEventSeqNum();
+    }
+
     public Client updateToPending(Client client) {
         throw new UnsupportedOperationException(
                 "The status of the event cannot be updated to Pending");
