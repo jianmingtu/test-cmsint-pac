@@ -77,9 +77,6 @@ public class PACExtractorService {
 
         try {
             List<ProcessEntity> processesEntity = getNewProcesses(); // cmsintords/pac/v1/processes
-            if (processesEntity.size() == 0) {
-                return;
-            }
             log.info("Pulled " + processesEntity.size() + " new records");
 
             processesEntity.stream()

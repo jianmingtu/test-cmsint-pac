@@ -182,6 +182,7 @@ public class PACExtractorServiceTest {
                 .thenReturn(new ProcessEntity[0]);
 
         pacExtractorService.pollOrdsForNewRecords();
+        assertThat(output).contains("Pulled 0 new records");
     }
 
     @Test
