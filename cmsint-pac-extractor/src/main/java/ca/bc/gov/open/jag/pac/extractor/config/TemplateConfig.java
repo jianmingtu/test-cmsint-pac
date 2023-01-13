@@ -24,11 +24,22 @@ public class TemplateConfig {
 
     @Bean(name = "restTemplateCMSInt")
     public RestTemplate restTemplateCMSInt() {
+
+        log.info("cmsIntUsername:" + cmsIntUsername + " , cmsIntPassword:" + cmsIntPassword);
+
+        log.info("cmsUsername:" + cmsUsername + " , cmsPassword:" + cmsPassword);
+
         RestTemplate restTemplate = new RestTemplate();
         restTemplate
                 .getInterceptors()
                 .add(
                         (request, body, execution) -> {
+                            log.info("URL:" + request.getURI().toString());
+                            log.info(
+                                    "cmsIntUsername:"
+                                            + cmsIntUsername
+                                            + " , cmsIntPassword:"
+                                            + cmsIntPassword);
                             String auth = cmsIntUsername + ":" + cmsIntPassword;
                             byte[] encodedAuth = Base64.encodeBase64(auth.getBytes());
                             request.getHeaders()
@@ -45,6 +56,9 @@ public class TemplateConfig {
                 .getInterceptors()
                 .add(
                         (request, body, execution) -> {
+                            log.info("URL:" + request.getURI().toString());
+                            log.info(
+                                    "cmsUsername:" + cmsUsername + " , cmsPassword:" + cmsPassword);
                             String auth = cmsUsername + ":" + cmsPassword;
                             byte[] encodedAuth = Base64.encodeBase64(auth.getBytes());
                             request.getHeaders()
