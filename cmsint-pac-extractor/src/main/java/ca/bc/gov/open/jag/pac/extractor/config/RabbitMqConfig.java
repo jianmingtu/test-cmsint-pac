@@ -1,6 +1,5 @@
 package ca.bc.gov.open.jag.pac.extractor.config;
 
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class RabbitMqConfig {
@@ -27,51 +25,12 @@ public class RabbitMqConfig {
     @Value("${spring.rabbitmq.password}")
     private String password;
 
-    @Value("${ords.cmsIntUsername}")
-    private String cmsIntUsername;
-
-    @Value("${ords.cmsIntPassword}")
-    private String cmsIntPassword;
-
-    @Value("${ords.cmsUsername}")
-    private String cmsUsername;
-
-    @Value("${ords.cmsPassword}")
-    private String cmsPassword;
-
     OrdsProperties ordsProperties;
 
     @Autowired
     public RabbitMqConfig(QueueConfig queueConfig, OrdsProperties ordsProperties) {
         this.queueConfig = queueConfig;
         this.ordsProperties = ordsProperties;
-    }
-
-    @Bean
-    public RestTemplate restTemplate() {
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate
-                .getInterceptors()
-                .add(
-                        (request, body, execution) -> {
-                            String auth;
-                            if (request.getURI()
-                                    .toString()
-                                    .startsWith(ordsProperties.getCmsIntBaseUrl())) {
-                                auth = cmsIntUsername + ":" + cmsIntPassword;
-                            } else if (request.getURI()
-                                    .toString()
-                                    .startsWith(ordsProperties.getCmsOrdsUrl())) {
-                                auth = cmsUsername + ":" + cmsPassword;
-                            } else {
-                                auth = "";
-                            }
-                            byte[] encodedAuth = Base64.encodeBase64(auth.getBytes());
-                            request.getHeaders()
-                                    .add("Authorization", "Basic " + new String(encodedAuth));
-                            return execution.execute(request, body);
-                        });
-        return restTemplate;
     }
 
     @Bean(name = "pac-queue")
