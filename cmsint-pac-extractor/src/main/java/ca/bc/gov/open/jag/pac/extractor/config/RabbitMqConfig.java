@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class RabbitMqConfig {
@@ -26,14 +25,12 @@ public class RabbitMqConfig {
     @Value("${spring.rabbitmq.password}")
     private String password;
 
-    @Autowired
-    public RabbitMqConfig(QueueConfig queueConfig) {
-        this.queueConfig = queueConfig;
-    }
+    OrdsProperties ordsProperties;
 
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
+    @Autowired
+    public RabbitMqConfig(QueueConfig queueConfig, OrdsProperties ordsProperties) {
+        this.queueConfig = queueConfig;
+        this.ordsProperties = ordsProperties;
     }
 
     @Bean(name = "pac-queue")

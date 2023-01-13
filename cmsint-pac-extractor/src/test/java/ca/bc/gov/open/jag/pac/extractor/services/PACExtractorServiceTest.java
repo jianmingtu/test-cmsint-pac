@@ -44,7 +44,8 @@ public class PACExtractorServiceTest {
     private static final String testString = "test";
     private static final String testUrl = "http://example.com";
     private static final String testEndpoint = "/endpoint";
-    @Mock private RestTemplate mockRestTemplate;
+    @Mock private RestTemplate mockRestTemplateCMS;
+    @Mock private RestTemplate mockRestTemplateCMSInt;
     @Mock private RabbitTemplate mockRabbitTemplate;
     @Mock private AmqpAdmin mockedAmqpAdmin;
 
@@ -82,7 +83,7 @@ public class PACExtractorServiceTest {
             new Client(
                     new ProcessEntity(clientNumber, eventSeqNumber, computerSystemCd),
                     new EventEntity(clientNumber, eventSeqNumber, eventTypeCode),
-                    mockRestTemplate,
+                    mockRestTemplateCMS,
                     mockOrdsProperties);
 
     private final DemographicsEntity actualDemographics =
@@ -117,7 +118,8 @@ public class PACExtractorServiceTest {
                 new PACExtractorService(
                         mockOrdsProperties,
                         null,
-                        mockRestTemplate,
+                        mockRestTemplateCMSInt,
+                        mockRestTemplateCMS,
                         mockRabbitTemplate,
                         mockedAmqpAdmin,
                         null);
@@ -139,12 +141,12 @@ public class PACExtractorServiceTest {
 
         when(mockedAmqpAdmin.declareQueue(any())).thenReturn(null);
 
-        doNothing().when(mockRestTemplate).put(any(URI.class), any(UpdateEntryEntity.class));
+        doNothing().when(mockRestTemplateCMS).put(any(URI.class), any(UpdateEntryEntity.class));
     }
 
     @Test
     void getNewProcessesHasNoNewProcess() {
-        when(mockRestTemplate.getForObject(any(URI.class), eq(ProcessEntity[].class)))
+        when(mockRestTemplateCMSInt.getForObject(any(URI.class), eq(ProcessEntity[].class)))
                 .thenReturn(new ProcessEntity[0]);
 
         List<ProcessEntity> newProcesses = pacExtractorService.getNewProcesses();
@@ -157,7 +159,7 @@ public class PACExtractorServiceTest {
                 new ProcessEntity(clientNumber, eventSeqNumber, computerSystemCd);
         ProcessEntity[] processEntitiesArray = {processEntity};
 
-        when(mockRestTemplate.getForObject(any(URI.class), eq(ProcessEntity[].class)))
+        when(mockRestTemplateCMSInt.getForObject(any(URI.class), eq(ProcessEntity[].class)))
                 .thenReturn(processEntitiesArray);
 
         List<ProcessEntity> newProcesses = pacExtractorService.getNewProcesses();
@@ -167,7 +169,7 @@ public class PACExtractorServiceTest {
 
     @Test
     void getNewProcessesThrowsExceptionWhenExecuting() {
-        when(mockRestTemplate.getForObject(any(URI.class), eq(ProcessEntity[].class)))
+        when(mockRestTemplateCMSInt.getForObject(any(URI.class), eq(ProcessEntity[].class)))
                 .thenThrow(new RuntimeException("test exception"));
 
         assertThrows(ORDSException.class, pacExtractorService::getNewProcesses);
@@ -178,7 +180,7 @@ public class PACExtractorServiceTest {
         ResponseEntity<ProcessEntity[]> responseEntity =
                 new ResponseEntity<>(new ProcessEntity[0], HttpStatus.OK);
 
-        when(mockRestTemplate.getForObject(any(URI.class), eq(ProcessEntity[].class)))
+        when(mockRestTemplateCMSInt.getForObject(any(URI.class), eq(ProcessEntity[].class)))
                 .thenReturn(new ProcessEntity[0]);
 
         pacExtractorService.pollOrdsForNewRecords();
@@ -187,7 +189,7 @@ public class PACExtractorServiceTest {
 
     @Test
     void pollOrdsForNewRecordsFailsDuringRequest(CapturedOutput output) {
-        when(mockRestTemplate.getForObject(any(URI.class), eq(ProcessEntity[].class)))
+        when(mockRestTemplateCMSInt.getForObject(any(URI.class), eq(ProcessEntity[].class)))
                 .thenThrow(new RuntimeException("testing exception"));
 
         pacExtractorService.pollOrdsForNewRecords();
@@ -201,7 +203,7 @@ public class PACExtractorServiceTest {
 
         Client expectedClient = new Client(genericProcessEntity, eventEntity);
 
-        when(mockRestTemplate.getForObject(any(URI.class), eq(EventEntity.class)))
+        when(mockRestTemplateCMSInt.getForObject(any(URI.class), eq(EventEntity.class)))
                 .thenReturn(eventEntity);
 
         Client actualClient = pacExtractorService.getEventForProcess(genericProcessEntity);
@@ -210,7 +212,7 @@ public class PACExtractorServiceTest {
 
     @Test
     void problematicGettingEventTypeRaisesOrdsException() {
-        when(mockRestTemplate.getForObject(any(URI.class), eq(EventEntity.class)))
+        when(mockRestTemplateCMSInt.getForObject(any(URI.class), eq(EventEntity.class)))
                 .thenThrow(ORDSException.class);
 
         assertThrows(
@@ -229,7 +231,7 @@ public class PACExtractorServiceTest {
             boolean hasNewerEvent, String eventStatusClassString) {
 
         Class<?> eventStatusClass = Class.forName(eventStatusClassString);
-        mockedClient.setStatus(new PendingEventStatus(mockOrdsProperties, mockRestTemplate));
+        mockedClient.setStatus(new PendingEventStatus(mockOrdsProperties, mockRestTemplateCMS));
 
         NewerEventEntity newerEventEntity = new NewerEventEntity();
         newerEventEntity.setHasNewerEvent(hasNewerEvent);
@@ -237,7 +239,7 @@ public class PACExtractorServiceTest {
         ResponseEntity<NewerEventEntity> responseEntity =
                 new ResponseEntity<>(newerEventEntity, HttpStatus.OK);
 
-        when(mockRestTemplate.getForObject(any(URI.class), eq(NewerEventEntity.class)))
+        when(mockRestTemplateCMS.getForObject(any(URI.class), eq(NewerEventEntity.class)))
                 .thenReturn(newerEventEntity);
 
         Client actualClient = pacExtractorService.getClientNewerSequence(mockedClient);
@@ -246,7 +248,7 @@ public class PACExtractorServiceTest {
 
     @Test
     void gettingDemographicsInfoFurtherPopulatesTheClientObject() {
-        when(mockRestTemplate.getForObject(any(URI.class), eq(DemographicsEntity.class)))
+        when(mockRestTemplateCMS.getForObject(any(URI.class), eq(DemographicsEntity.class)))
                 .thenReturn(actualDemographics);
 
         Client actualClient = pacExtractorService.getDemographicsInfo(mockedClient);
@@ -256,7 +258,7 @@ public class PACExtractorServiceTest {
 
     @Test
     void gettingNullResponseFromOrdsWhenDemographicsInfoThrowsOrdsException() {
-        when(mockRestTemplate.getForObject(any(URI.class), eq(DemographicsEntity.class)))
+        when(mockRestTemplateCMSInt.getForObject(any(URI.class), eq(DemographicsEntity.class)))
                 .thenReturn(null);
 
         assertThrows(

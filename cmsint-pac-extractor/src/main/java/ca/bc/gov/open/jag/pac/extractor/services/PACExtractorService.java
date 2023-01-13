@@ -34,7 +34,9 @@ public class PACExtractorService {
 
     private final Queue pacQueue;
 
-    private final RestTemplate restTemplate;
+    private final RestTemplate restTemplateCMSInt;
+
+    private final RestTemplate restTemplateCMS;
 
     private final RabbitTemplate rabbitTemplate;
 
@@ -45,13 +47,15 @@ public class PACExtractorService {
     public PACExtractorService(
             OrdsProperties ordsProperties,
             @Qualifier("pac-queue") Queue pacQueue,
-            RestTemplate restTemplate,
+            @Qualifier("restTemplateCMSInt") RestTemplate restTemplateCMSInt,
+            @Qualifier("restTemplateCMS") RestTemplate restTemplateCMS,
             RabbitTemplate rabbitTemplate,
             AmqpAdmin amqpAdmin,
             QueueConfig queueConfig) {
         this.ordsProperties = ordsProperties;
         this.pacQueue = pacQueue;
-        this.restTemplate = restTemplate;
+        this.restTemplateCMSInt = restTemplateCMSInt;
+        this.restTemplateCMS = restTemplateCMS;
         this.rabbitTemplate = rabbitTemplate;
         this.amqpAdmin = amqpAdmin;
         this.queueConfig = queueConfig;
@@ -106,7 +110,7 @@ public class PACExtractorService {
                                 new QueryParam("eventTypeCode", client.getEventTypeCode())));
         try {
             DemographicsEntity demographicsEntity =
-                    restTemplate.getForObject(url, DemographicsEntity.class);
+                    restTemplateCMS.getForObject(url, DemographicsEntity.class);
 
             if (demographicsEntity == null) {
                 throw new NullPointerException(
@@ -144,7 +148,7 @@ public class PACExtractorService {
 
         try {
             NewerEventEntity newerEventEntity =
-                    restTemplate.getForObject(url, NewerEventEntity.class);
+                    restTemplateCMS.getForObject(url, NewerEventEntity.class);
             log.info(new RequestSuccessLog("Request Success", url.getPath()).toString());
 
             if (newerEventEntity == null) {
@@ -170,7 +174,7 @@ public class PACExtractorService {
                         new QueryParam("state", "NEW"));
         try {
             ProcessEntity[] processEntityArray =
-                    restTemplate.getForObject(url, ProcessEntity[].class);
+                    restTemplateCMSInt.getForObject(url, ProcessEntity[].class);
             // For simplification, no success log on every polling attempt
             // log.info(new RequestSuccessLog("Request Success", url.getPath()).toString());
 
@@ -214,13 +218,13 @@ public class PACExtractorService {
                                 new QueryParam("eventSeqNum", processEntity.getEventSeqNum()),
                                 new QueryParam("clientNumber", processEntity.getClientNumber())));
         try {
-            EventEntity eventEntity = restTemplate.getForObject(url, EventEntity.class);
+            EventEntity eventEntity = restTemplateCMSInt.getForObject(url, EventEntity.class);
             log.info(new RequestSuccessLog("Request Success", url.getPath()).toString());
 
             if (eventEntity == null) {
                 throw new NullPointerException("Response object from " + url.getPath() + "is null");
             }
-            return new Client(processEntity, eventEntity, restTemplate, ordsProperties);
+            return new Client(processEntity, eventEntity, restTemplateCMS, ordsProperties);
         } catch (Exception ex) {
             logError(url.getPath(), ex, null);
             throw new ORDSException();
