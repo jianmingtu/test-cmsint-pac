@@ -25,12 +25,9 @@ public class RabbitMqConfig {
     @Value("${spring.rabbitmq.password}")
     private String password;
 
-    OrdsProperties ordsProperties;
-
     @Autowired
-    public RabbitMqConfig(QueueConfig queueConfig, OrdsProperties ordsProperties) {
+    public RabbitMqConfig(QueueConfig queueConfig) {
         this.queueConfig = queueConfig;
-        this.ordsProperties = ordsProperties;
     }
 
     @Bean(name = "pac-queue")
