@@ -1,8 +1,8 @@
 package ca.bc.gov.open.jag.pac.extractor.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -23,34 +23,16 @@ public class TemplateConfig {
     private String cmsPassword;
 
     @Bean(name = "restTemplateCMSInt")
-    public RestTemplate restTemplateCMSInt() {
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate
-                .getInterceptors()
-                .add(
-                        (request, body, execution) -> {
-                            String auth = cmsIntUsername + ":" + cmsIntPassword;
-                            byte[] encodedAuth = Base64.encodeBase64(auth.getBytes());
-                            request.getHeaders()
-                                    .add("Authorization", "Basic " + new String(encodedAuth));
-                            return execution.execute(request, body);
-                        });
+    public RestTemplate restTemplateCMSInt(RestTemplateBuilder restTemplateBuilder) {
+        var restTemplate =
+                restTemplateBuilder.basicAuthentication(cmsIntUsername, cmsIntPassword).build();
         return restTemplate;
     }
 
     @Bean(name = "restTemplateCMS")
-    public RestTemplate restTemplateCMS() {
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate
-                .getInterceptors()
-                .add(
-                        (request, body, execution) -> {
-                            String auth = cmsUsername + ":" + cmsPassword;
-                            byte[] encodedAuth = Base64.encodeBase64(auth.getBytes());
-                            request.getHeaders()
-                                    .add("Authorization", "Basic " + new String(encodedAuth));
-                            return execution.execute(request, body);
-                        });
+    public RestTemplate restTemplateCMS(RestTemplateBuilder restTemplateBuilder) {
+        var restTemplate =
+                restTemplateBuilder.basicAuthentication(cmsUsername, cmsPassword).build();
         return restTemplate;
     }
 }
