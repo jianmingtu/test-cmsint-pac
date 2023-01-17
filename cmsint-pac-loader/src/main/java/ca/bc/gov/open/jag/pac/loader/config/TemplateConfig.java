@@ -25,6 +25,7 @@ public class TemplateConfig {
     @Value("${ords.password}")
     private String password;
 
+    @Bean
     public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
         var restTemplate = restTemplateBuilder.basicAuthentication(username, password).build();
         restTemplate.getMessageConverters().add(0, createMappingJacksonHttpMessageConverter());
