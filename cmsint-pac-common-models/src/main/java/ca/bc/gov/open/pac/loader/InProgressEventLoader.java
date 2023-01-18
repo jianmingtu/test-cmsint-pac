@@ -23,6 +23,8 @@ public class InProgressEventLoader implements EventLoader {
     private void invokeSoapService(SynchronizeClient synchronizeClient) {
         // Invoke Soap Service
         try {
+            log.info("Client to SOAP Service: " + synchronizeClient.toString());
+
             SynchronizeClientResponse synchronizeClientResponse =
                     (SynchronizeClientResponse)
                             webServiceTemplate.marshalSendAndReceive(
