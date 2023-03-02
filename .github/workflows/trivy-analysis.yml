@@ -26,10 +26,6 @@ jobs:
           distribution: 'temurin'
           java-version: 11
         
-      # Runs build steps
-      - name: Maven Package
-        run: mvn -ntp clean package
-        
       - name: Maven Verify
         run: mvn -ntp clean verify
 
@@ -38,9 +34,9 @@ jobs:
         env:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
-          CONTEXT: ./cmsint-pac-extractor
+          CONTEXT: .
         run: |
-          docker build -t cmsint-pac-extractor:${{ github.sha }} ${CONTEXT}
+          docker build -t cmsint-pac-extractor:${{ github.sha }} --build-arg MVN_PROFILE=cmsint-pac-extractor ${CONTEXT}
 
       #Run Vulnerability Scan usinig Trivy scanner
       - name: Run Trivy vulnerability scanner for cmsint-pac-extractor
@@ -61,9 +57,9 @@ jobs:
         env:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
-          CONTEXT: ./cmsint-pac-transformer
+          CONTEXT: .
         run: |
-          docker build -t cmsint-pac-transformer:${{ github.sha }} ${CONTEXT}
+          docker build -t cmsint-pac-transformer:${{ github.sha }} --build-arg MVN_PROFILE=cmsint-pac-transformer ${CONTEXT}
 
       #Run Vulnerability Scan usinig Trivy scanner
       - name: Run Trivy vulnerability scanner for cmsint-pac-transformer
@@ -71,6 +67,29 @@ jobs:
         with:
           scan-type: image
           image-ref: cmsint-pac-transformer:${{ github.sha }}
+          #format: template
+          #template: '@/contrib/sarif.tpl'
+          #output: trivy-results.sarif
+          #exit-code: 1
+          format: table
+          ignore-unfixed: true
+          severity: HIGH,CRITICAL
+      
+      #Build cmsint-pac-loader image for scanning
+      - name: Build cmsint-pac-loader image from Dockerfile
+        env:
+          COMPOSE_DOCKER_CLI_BUILD: 1
+          DOCKER_BUILDKIT: 1
+          CONTEXT: .
+        run: |
+          docker build -t cmsint-pac-loader:${{ github.sha }} --build-arg MVN_PROFILE=cmsint-pac-loader ${CONTEXT}
+
+      #Run Vulnerability Scan usinig Trivy scanner
+      - name: Run Trivy vulnerability scanner for cmsint-pac-loader
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: image
+          image-ref: cmsint-pac-loader:${{ github.sha }}
           #format: template
           #template: '@/contrib/sarif.tpl'
           #output: trivy-results.sarif
