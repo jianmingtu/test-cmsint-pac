@@ -91,8 +91,7 @@ jobs:
           scan-type: image
           image-ref: cmsint-pac-loader:${{ github.sha }}
           #format: table
-          format: template
-          template: '@/contrib/sarif.tpl'
+          format: sarif
           output: trivy-results.sarif
           exit-code: 1
           ignore-unfixed: true
@@ -104,4 +103,3 @@ jobs:
         if: always()
         with:
           sarif_file: trivy-results.sarif
-          
