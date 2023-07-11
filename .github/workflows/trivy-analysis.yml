@@ -45,8 +45,7 @@ jobs:
           scan-type: image
           image-ref: cmsint-pac-extractor:${{ github.sha }}
           #format: table
-          format: template
-          template: '@/contrib/sarif.tpl'
+          format: sarif
           output: trivy-results.sarif
           exit-code: 1
           ignore-unfixed: true
@@ -68,8 +67,7 @@ jobs:
           scan-type: image
           image-ref: cmsint-pac-transformer:${{ github.sha }}
           #format: table
-          format: template
-          template: '@/contrib/sarif.tpl'
+          format: sarif
           output: trivy-results.sarif
           exit-code: 1
           ignore-unfixed: true
