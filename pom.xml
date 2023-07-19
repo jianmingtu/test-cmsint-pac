@@ -90,6 +90,7 @@
                 <module>cmsint-pac-extractor</module>
                 <module>cmsint-pac-transformer</module>
                 <module>cmsint-pac-loader</module>
+                <module>cmsint-pac-code-coverage</module>
             </modules>
         </profile>
 
