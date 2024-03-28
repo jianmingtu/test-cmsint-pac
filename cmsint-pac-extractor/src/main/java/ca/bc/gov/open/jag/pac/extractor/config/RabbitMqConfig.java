@@ -1,7 +1,6 @@
 package ca.bc.gov.open.jag.pac.extractor.config;
 
 import org.springframework.amqp.core.*;
-import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -53,20 +52,14 @@ public class RabbitMqConfig {
     }
 
     @Bean
-    public ConnectionFactory connectionFactory() {
-        CachingConnectionFactory connectionFactory = new CachingConnectionFactory(rabbitHost);
-        connectionFactory.setUsername(username);
-        connectionFactory.setPassword(password);
-        return connectionFactory;
-    }
-
-    @Bean
-    public RabbitTemplate rabbitTemplate() {
-        return new RabbitTemplate(connectionFactory());
-    }
-
-    @Bean
     public Jackson2JsonMessageConverter converter(){
         return new Jackson2JsonMessageConverter();
+    }
+
+    @Bean
+    public AmqpTemplate amqpTemplate(ConnectionFactory connectionFactory){
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+        rabbitTemplate.setMessageConverter(converter());
+        return rabbitTemplate;
     }
 }

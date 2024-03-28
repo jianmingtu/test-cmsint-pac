@@ -3,6 +3,7 @@ package ca.bc.gov.open.jag.pac.extractor.services;
 import ca.bc.gov.open.jag.pac.extractor.config.OrdsProperties;
 import ca.bc.gov.open.jag.pac.extractor.config.QueueConfig;
 import ca.bc.gov.open.pac.models.Client;
+import ca.bc.gov.open.pac.models.ClientDto;
 import ca.bc.gov.open.pac.models.OrdsErrorLog;
 import ca.bc.gov.open.pac.models.RequestSuccessLog;
 import ca.bc.gov.open.pac.models.eventStatus.CompletedDuplicateEventStatus;
@@ -199,7 +200,7 @@ public class PACExtractorService {
     public void sendToRabbitMq(Client client) {
         if (client != null) {
             this.rabbitTemplate.convertAndSend(
-                    queueConfig.getTopicExchangeName(), queueConfig.getPacRoutingkey(), client);
+                    queueConfig.getTopicExchangeName(), queueConfig.getPacRoutingkey(), client.Dto());
             log.info(
                     "Enqueued Client:"
                             + client.getClientNumber()
