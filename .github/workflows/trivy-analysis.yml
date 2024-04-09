@@ -44,7 +44,6 @@ jobs:
         with:
           scan-type: image
           image-ref: cmsint-pac-extractor:${{ github.sha }}
-          #format: table
           format: sarif
           output: trivy-results.sarif
           exit-code: 1
