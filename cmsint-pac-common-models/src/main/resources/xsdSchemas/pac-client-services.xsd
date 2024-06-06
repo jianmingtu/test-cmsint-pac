@@ -14,6 +14,7 @@
                 <xs:element minOccurs="0" name="outReason" type="xs:string"/>
                 <xs:element minOccurs="0" name="centre" type="xs:string"/>
                 <xs:element minOccurs="0" name="livingUnit" type="xs:string"/>
+                <xs:element minOccurs="0" name="nextCourtDt" type="xs:string"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -27,18 +28,39 @@
     <xs:element name="synchronizeClient">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="csNumber" type="xs:string"/>
-                <xs:element minOccurs="0" name="surname" type="xs:string"/>
-                <xs:element minOccurs="0" name="givenName1" type="xs:string"/>
-                <xs:element minOccurs="0" name="givenName2" type="xs:string"/>
-                <xs:element minOccurs="0" name="birthDate" type="xs:string"/>
-                <xs:element minOccurs="0" name="gender" type="xs:string"/>
-                <xs:element minOccurs="0" name="photoGuid" type="xs:string"/>
-                <xs:element minOccurs="0" name="probableDischargeDate" type="xs:string"/>
-                <xs:element minOccurs="0" name="outLocation" type="xs:string"/>
-                <xs:element minOccurs="0" name="outReason" type="xs:string"/>
-                <xs:element minOccurs="0" name="centre" type="xs:string"/>
-                <xs:element minOccurs="0" name="livingUnit" type="xs:string"/>
+                <xs:element minOccurs="1" maxOccurs="1" name="csNumber" nillable="false">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:minLength value="1"></xs:minLength>
+                            <xs:maxLength value="8"></xs:maxLength>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element minOccurs="0" maxOccurs="1" name="phn" type="xs:string" nillable="true"/>
+                <xs:element minOccurs="0" maxOccurs="1" name="surname" nillable="false">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:minLength value="1"></xs:minLength>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element minOccurs="0" maxOccurs="1" name="givenName1" nillable="false">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:minLength value="1"></xs:minLength>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element minOccurs="0" maxOccurs="1" name="givenName2" type="xs:string" />
+                <xs:element minOccurs="0" maxOccurs="1" name="birthDate" type="xs:string" />
+                <xs:element minOccurs="0" maxOccurs="1" name="gender" type="xs:string" />
+                <xs:element minOccurs="0" maxOccurs="1" name="photoGuid" type="xs:string" />
+                <xs:element minOccurs="0" maxOccurs="1" name="probableDischargeDate" type="xs:string" />
+                <xs:element minOccurs="0" maxOccurs="1" name="outLocation" type="xs:string" />
+                <xs:element minOccurs="0" maxOccurs="1" name="outReason" type="xs:string" />
+                <xs:element minOccurs="0" maxOccurs="1" name="centre" type="xs:string" />
+                <xs:element minOccurs="0" maxOccurs="1" name="livingUnit" type="xs:string" />
+                <xs:element minOccurs="0"  name="nextCourtDt" type="xs:string" />
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -67,6 +89,7 @@
             <xs:element minOccurs="0" name="photoGuid" type="xs:string"/>
             <xs:element minOccurs="0" name="probableDischargeDate" type="xs:string"/>
             <xs:element minOccurs="0" name="surname" type="xs:string"/>
+            <xs:element minOccurs="0" name="nextCourtDt" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
     <xs:element name="Exception" type="tns:Exception"/>

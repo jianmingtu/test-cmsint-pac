@@ -21,5 +21,6 @@ public class CdemSynchronizeClientEntity extends SynchronizeClient {
         photoGuid = client.getDemographicInfo().getPhotoGUID();
         centre = client.getDemographicInfo().getCustodyCenter();
         livingUnit = client.getDemographicInfo().getLivingUnit();
+        nextCourtDt = client.getDemographicInfo().getNextCourtDt();
     }
 }
