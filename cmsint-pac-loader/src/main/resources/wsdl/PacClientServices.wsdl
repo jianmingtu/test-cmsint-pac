@@ -89,6 +89,7 @@
       <xs:element minOccurs="0" name="photoGuid" type="xs:string"/>
       <xs:element minOccurs="0" name="probableDischargeDate" type="xs:string"/>
       <xs:element minOccurs="0" name="surname" type="xs:string"/>
+      <xs:element minOccurs="0" name="nextCourtDt" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Exception" type="tns:Exception"/>

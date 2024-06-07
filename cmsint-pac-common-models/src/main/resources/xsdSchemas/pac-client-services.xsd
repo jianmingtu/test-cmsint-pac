@@ -36,7 +36,6 @@
                         </xs:restriction>
                     </xs:simpleType>
                 </xs:element>
-                <xs:element minOccurs="0" maxOccurs="1" name="phn" type="xs:string" nillable="true"/>
                 <xs:element minOccurs="0" maxOccurs="1" name="surname" nillable="false">
                     <xs:simpleType>
                         <xs:restriction base="xs:string">
